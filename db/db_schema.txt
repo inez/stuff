@@ -1,0 +1,55 @@
+* Items
+
+(must)
+** id (number)
+** name (string)
+** create_at (timestamp)
+** longitude
+** latitude
+** photo (byte[] or string)
+** fk_user_id (number)
+(nice to have)
+** description (string)
+** status (enum?)
+** expires on (timestamp)
+
+------------------------------
+
+* Users
+
+(must)
+** id (number)
+** remote_id (string)
+** first_name (string)
+** last_name (string)
+** photo (byte[] or string)
+** location (string) - e.g. "San Francisco, California" - pulled from Facebook if possible
+** created_at (timestamp)
+(nice to have)
+** about_me (string) - one liner, such as "lending lawnmower since 1998"
+** remote_type (enum) - MVP facebook, but in the future maybe different identitiy providers as well
+
+------------------------------
+
+* Messages
+
+(must)
+** id (number)
+** text (string)
+** fk_item_id (number)
+** fk_from_user_id (number)
+** fk_to_user_id (number)
+** created_at (timestamp)
+(nice to have)
+** seen_at (timestamp)
+
+------------------------------
+
+* Locations
+* Whole table is a "nice ot have" but not a "must". It allows us to keep history how location of particular user was changing, however it wouldn't be used anyhow in MVP - could be handled by having longitude and latitude fields directly in Users table.
+
+** id
+** fk_user_id
+** created_at
+** longitude
+** latitude
