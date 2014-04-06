@@ -1,9 +1,11 @@
 package com.inez.parsefacebookintegration;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -11,6 +13,7 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 public class UserDetailsActivity extends Activity {
 
@@ -45,6 +48,18 @@ public class UserDetailsActivity extends Activity {
 					}
 				});
 		request.executeAsync();
+	}
+	
+	public void onLogoutClick(View view) {
+		ParseUser.logOut();
+		startLoginActivity();
+	}
+	
+	private void startLoginActivity() {
+		Intent intent = new Intent(this, LoginActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 	}
 
 }
