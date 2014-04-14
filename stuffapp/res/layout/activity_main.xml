@@ -13,35 +13,40 @@
         android:layout_centerHorizontal="true" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/iv_home"
+            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_home" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/iv_search"
+            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_search" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/iv_add"
+            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/iv_message"
+            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_message" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/iv_profile"
+            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
