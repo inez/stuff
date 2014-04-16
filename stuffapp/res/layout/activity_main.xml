@@ -4,54 +4,61 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/ll_menu" >
+    </FrameLayout>
+
     <LinearLayout
-        android:background="#f7f7f7"
-        android:padding="5dp"
+        android:id="@+id/ll_menu"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:background="#f7f7f7"
+        android:padding="5dp" >
 
         <ImageView
             android:id="@+id/iv_home"
-            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMenuItemClick"
             android:src="@drawable/ic_home" />
 
         <ImageView
             android:id="@+id/iv_search"
-            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMenuItemClick"
             android:src="@drawable/ic_search" />
 
         <ImageView
             android:id="@+id/iv_add"
-            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMenuItemClick"
             android:src="@drawable/ic_add" />
 
         <ImageView
             android:id="@+id/iv_message"
-            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMenuItemClick"
             android:src="@drawable/ic_message" />
 
         <ImageView
             android:id="@+id/iv_profile"
-            android:onClick="onMenuItemClick"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMenuItemClick"
             android:src="@drawable/ic_profile" />
-
     </LinearLayout>
 
 </RelativeLayout>
