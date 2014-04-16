@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 
 import com.parse.LogInCallback;
+import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
@@ -26,6 +27,8 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		
+		ParseAnalytics.trackAppOpened(getIntent());
 		
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
