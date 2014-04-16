@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">stuffapp</string>
+    <string name="app_name">STUFF</string>
+    <string name="app_id">609118362507708</string>
+    <string name="title_activity_login">LoginActivity</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
