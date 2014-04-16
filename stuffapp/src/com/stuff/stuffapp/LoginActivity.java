@@ -30,6 +30,7 @@ public class LoginActivity extends Activity {
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
 			Log.d(TAG, "Already logged in.");
+			showMainActivity();
 		} else {
 			Log.d(TAG, "Not logged in yet.");			
 		}
@@ -61,8 +62,10 @@ public class LoginActivity extends Activity {
 					Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
 				} else if (user.isNew()) {
 					Log.d(TAG, "User signed up and logged in through Facebook!");
+					showMainActivity();
 				} else {
 					Log.d(TAG, "User logged in through Facebook!");
+					showMainActivity();
 				}
 			}
 			
@@ -72,4 +75,10 @@ public class LoginActivity extends Activity {
 	public void onLogoutClick(View view) {
 		ParseUser.logOut();
 	}
+	
+	private void showMainActivity() {
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+	}
+	
 }
