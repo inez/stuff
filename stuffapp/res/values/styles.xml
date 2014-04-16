@@ -17,7 +17,7 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
-    <style name="NoActionBar" parent="android:Theme.Light">
+    <style name="NoActionBar" parent="AppTheme">
 		<item name="android:windowNoTitle">true</item>
 	</style>
 

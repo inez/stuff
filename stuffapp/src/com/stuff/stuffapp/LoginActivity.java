@@ -82,6 +82,7 @@ public class LoginActivity extends Activity {
 	private void showMainActivity() {
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	
 }
