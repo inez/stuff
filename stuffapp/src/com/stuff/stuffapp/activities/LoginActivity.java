@@ -1,4 +1,4 @@
-package com.stuff.stuffapp;
+package com.stuff.stuffapp.activities;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +16,9 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.R.layout;
+import com.stuff.stuffapp.R.menu;
 
 public class LoginActivity extends Activity {
 

@@ -1,4 +1,8 @@
-package com.stuff.stuffapp;
+package com.stuff.stuffapp.fragments;
+
+import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.R.id;
+import com.stuff.stuffapp.R.layout;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

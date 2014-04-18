@@ -1,4 +1,4 @@
-package com.stuff.stuffapp;
+package com.stuff.stuffapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,9 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
 import com.parse.ParseFacebookUtils;
+import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.R.id;
+import com.stuff.stuffapp.R.layout;
 
 public class ProfileFragment extends Fragment {
 

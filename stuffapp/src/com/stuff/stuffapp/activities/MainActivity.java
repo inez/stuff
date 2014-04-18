@@ -1,33 +1,29 @@
-package com.stuff.stuffapp;
-
-import java.util.HashMap;
+package com.stuff.stuffapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
 
-public class MainActivity extends FragmentActivity {
-	
-	public final static int HOME = 1;
-	public final static int SEARCH = 2;
-	public final static int ADD = 3;
-	public final static int MESSAGE = 4;
-	public final static int PROFILE = 5;
+import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.fragments.MainFragment;
+import com.stuff.stuffapp.fragments.ProfileFragment;
+import com.stuff.stuffapp.helpers.Ids;
 
-	private static String LOG_TAG = "MainActivity";
+public class MainActivity extends FragmentActivity {
+
+	private SparseArray<Fragment> fragments;
 	
-	private HashMap<Integer, Fragment> fragments;
+	private int currentFragmentId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		fragments = new HashMap<Integer, Fragment>();
+		fragments = new SparseArray<Fragment>();
 	}
 
 	@Override
@@ -38,51 +34,55 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	public void onMenuItemClick(View view) {
+		int fragmentId = 0;
+
 		switch ( view.getId() ) {
 			case R.id.iv_home:
-				Log.d(LOG_TAG, "Home clicked");
-				displayFragment(HOME);
+				fragmentId = Ids.HOME;
 				break;
 			case R.id.iv_search:
-				Log.d(LOG_TAG, "Search clicked");
-				displayFragment(SEARCH);
+				fragmentId = Ids.SEARCH;
 				break;
 			case R.id.iv_add:
-				Log.d(LOG_TAG, "Add clicked");
-				displayFragment(ADD);
+				fragmentId = Ids.ADD;
 				break;
 			case R.id.iv_message:
-				Log.d(LOG_TAG, "Message clicked");
-				displayFragment(MESSAGE);
+				fragmentId = Ids.MESSAGE;
 				break;
 			case R.id.iv_profile:
-				Log.d(LOG_TAG, "Profile clicked");
-				displayFragment(PROFILE);
+				fragmentId = Ids.PROFILE;
 				break;
 		}
 		
+		if ( fragmentId == currentFragmentId ) {
+			return;
+		}
+
+		if(fragmentId != 0) {
+			displayFragment(fragmentId);
+			currentFragmentId = fragmentId;
+		}
 	}
 	
 	private void displayFragment(int fragmentId) {
-		Fragment fragment;
-		if(!fragments.containsKey(fragmentId)) {
+		Fragment fragment = fragments.get(fragmentId);
+
+		if(fragment==null){
 			switch(fragmentId) {
-				case PROFILE:
-					fragments.put(fragmentId, ProfileFragment.newInstance());
+				case Ids.PROFILE:
+					fragment = ProfileFragment.newInstance();
 					break;
 				default:
-					fragments.put(fragmentId, MainFragment.newInstance(String.valueOf(fragmentId)));
+					fragment = MainFragment.newInstance(String.valueOf(fragmentId));
 					break;
 			}
+			fragments.append(fragmentId, fragment);
 		}
-		fragment = fragments.get(fragmentId);
-		
-		
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.fl_container, fragment);
-		ft.addToBackStack(String.valueOf(fragmentId));
+		ft.addToBackStack(null);
 		ft.commit();
-		
 	}
 
 }
