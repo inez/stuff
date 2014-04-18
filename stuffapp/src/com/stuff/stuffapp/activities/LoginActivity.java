@@ -3,7 +3,6 @@ package com.stuff.stuffapp.activities;
 import java.util.Arrays;
 import java.util.List;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -89,7 +88,7 @@ public class LoginActivity extends Activity {
 										userProfile.put("facebookId", facebookUser.getId());
 										userProfile.put("name", facebookUser.getName());
 										userProfile.put("location", (String) facebookUser.getLocation().getProperty("name"));
-									} catch (JSONException e) {
+									} catch (Exception e) {
 										Log.d(TAG, "Error parsing returned user data.");
 									}
 									ParseUser parseUser = ParseUser.getCurrentUser();
