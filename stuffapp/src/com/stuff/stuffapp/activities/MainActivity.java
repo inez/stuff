@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.View;
 
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.fragments.AddFragment;
 import com.stuff.stuffapp.fragments.MainFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
 import com.stuff.stuffapp.helpers.Ids;
@@ -69,6 +70,9 @@ public class MainActivity extends FragmentActivity {
 
 		if(fragment==null){
 			switch(fragmentId) {
+				case Ids.ADD:
+					fragment = AddFragment.newInstance();
+					break;
 				case Ids.PROFILE:
 					fragment = ProfileFragment.newInstance();
 					break;

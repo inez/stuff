@@ -77,6 +77,8 @@ public class LoginActivity extends Activity {
 					} else {
 						Log.d(TAG, "User logged in through Facebook!");
 					}
+					// FIXME: This request is used to retrieve from Facebook data required to display correctly profile fragment.
+					// It is async so there is a possibility that user could go to profile fragment before it is finished.
 					Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
 						new Request.GraphUserCallback() {
 							@Override
