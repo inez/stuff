@@ -1,15 +1,13 @@
 package com.stuff.stuffapp.fragments;
 
-import com.stuff.stuffapp.R;
-import com.stuff.stuffapp.R.id;
-import com.stuff.stuffapp.R.layout;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.stuff.stuffapp.R;
 
 public class MainFragment extends Fragment {
 

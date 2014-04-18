@@ -29,4 +29,13 @@
         android:ems="10"
         android:inputType="textMultiLine" />
 
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_description"
+        android:layout_alignRight="@+id/et_description"
+        android:layout_below="@+id/et_description"
+        android:text="@string/add_item" />
+
 </RelativeLayout>

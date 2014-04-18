@@ -8,5 +8,6 @@
     <string name="please_wait">Please wait&#8230;</string>
     <string name="add_item_name_hint">Item name&#8230;</string>
     <string name="add_item_description_hint">Optional description&#8230;</string>
+    <string name="add_item">Add item</string>
     
 </resources>
