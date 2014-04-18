@@ -4,8 +4,8 @@
     android:layout_height="match_parent" >
 
     <EditText
-        android:id="@+id/textView2"
-        android:hint="Item name..."
+        android:id="@+id/et_name"
+        android:hint="@string/add_item_name_hint"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -15,7 +15,18 @@
         android:layout_marginTop="20dp">
         <requestFocus/>
     </EditText>
-        
 
+    <EditText
+        android:id="@+id/et_description"
+        android:hint="@string/add_item_description_hint"
+        android:lines="4"
+        android:gravity="left|top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_name"
+        android:layout_alignRight="@+id/et_name"
+        android:layout_below="@+id/et_name"
+        android:ems="10"
+        android:inputType="textMultiLine" />
 
 </RelativeLayout>

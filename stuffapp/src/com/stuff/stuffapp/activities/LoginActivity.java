@@ -61,7 +61,7 @@ public class LoginActivity extends Activity {
 	
 	public void onLoginClick(View view) {
 		Log.d(TAG, "onLoginClick");
-		progressDialog = ProgressDialog.show(LoginActivity.this, "", "Wait", true);
+		progressDialog = ProgressDialog.show(LoginActivity.this, "", getString(R.string.please_wait), true);
 		List<String> permissions = Arrays.asList("basic_info", "user_about_me", "user_location");
 		ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
 
