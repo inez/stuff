@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.fragments.AddFragment;
+import com.stuff.stuffapp.fragments.HomeFragment;
 import com.stuff.stuffapp.fragments.MainFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
 import com.stuff.stuffapp.helpers.Ids;
@@ -70,6 +71,9 @@ public class MainActivity extends FragmentActivity {
 
 		if(fragment==null){
 			switch(fragmentId) {
+				case Ids.HOME:
+					fragment = HomeFragment.newInstance();
+					break;
 				case Ids.ADD:
 					fragment = AddFragment.newInstance();
 					break;
