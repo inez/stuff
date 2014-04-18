@@ -3,6 +3,9 @@ package com.stuff.stuffapp.activities;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,14 +14,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.model.GraphUser;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
-import com.stuff.stuffapp.R.layout;
-import com.stuff.stuffapp.R.menu;
 
 public class LoginActivity extends Activity {
 
@@ -62,15 +66,38 @@ public class LoginActivity extends Activity {
 		ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
 
 			@Override
-			public void done(ParseUser user, ParseException err) {
+			public void done(ParseUser parseUser, ParseException err) {
 				progressDialog.dismiss();
-				if (user == null) {
+				
+				if ( parseUser == null) {
 					Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
-				} else if (user.isNew()) {
-					Log.d(TAG, "User signed up and logged in through Facebook!");
-					showMainActivity();
 				} else {
-					Log.d(TAG, "User logged in through Facebook!");
+					if (parseUser.isNew()) {
+						Log.d(TAG, "User signed up and logged in through Facebook!");
+					} else {
+						Log.d(TAG, "User logged in through Facebook!");
+					}
+					Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
+						new Request.GraphUserCallback() {
+							@Override
+							public void onCompleted(GraphUser facebookUser, Response response) {
+								if (facebookUser != null) {
+									JSONObject userProfile = new JSONObject();
+									try {
+										userProfile.put("facebookId", facebookUser.getId());
+										userProfile.put("name", facebookUser.getName());
+										userProfile.put("location", (String) facebookUser.getLocation().getProperty("name"));
+									} catch (JSONException e) {
+										Log.d(TAG, "Error parsing returned user data.");
+									}
+									ParseUser parseUser = ParseUser.getCurrentUser();
+									parseUser.put("profile", userProfile);
+									parseUser.saveInBackground();
+								}
+							}
+						}
+					);
+					request.executeAsync();
 					showMainActivity();
 				}
 			}
