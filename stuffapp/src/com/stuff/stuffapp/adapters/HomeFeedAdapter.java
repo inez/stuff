@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.stuff.stuffapp.R;
@@ -32,11 +33,15 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 			v = View.inflate(getContext(), R.layout.item_list_home, null);
 		}
 		
+		ParseImageView iv_photo = (ParseImageView) v.findViewById(R.id.iv_photo);
+		iv_photo.setParseFile(item.getPhotoFile());
+		iv_photo.loadInBackground();
+
 		TextView tv_name = (TextView) v.findViewById(R.id.tv_name);
 		tv_name.setText(item.getName());
 
-		TextView tv_description = (TextView) v.findViewById(R.id.tv_description);
-		tv_description.setText(item.getDescription());
+		//TextView tv_description = (TextView) v.findViewById(R.id.tv_description);
+		//tv_description.setText(item.getDescription());
 
 		return v;
 	}
