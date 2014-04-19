@@ -1,5 +1,7 @@
 package com.stuff.stuffapp.fragments;
 
+import java.io.ByteArrayOutputStream;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
@@ -47,6 +50,8 @@ public class AddFragment extends Fragment {
 	private EditText et_description;
 	
 	private ProgressDialog progressDialog;
+	
+	private Bitmap photo;
 	
 	public static AddFragment newInstance() {
 		AddFragment fragment = new AddFragment();
@@ -85,6 +90,19 @@ public class AddFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				if ( et_name.getText().toString().trim().length() == 0 ) {
+					Toast.makeText(getActivity(), "Please provide a name", Toast.LENGTH_LONG).show();
+					return;
+				}
+				if ( et_name.getText().toString().trim().length() < 5 ) {
+					Toast.makeText(getActivity(), "Name must be at least 5 characters", Toast.LENGTH_LONG).show();
+					return;
+				}
+				if ( photo == null ) {
+					Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_LONG).show();
+					return;
+				}
+
 				progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.please_wait), true);
 
 				ParseUser parseUser = ParseUser.getCurrentUser();
@@ -99,6 +117,11 @@ public class AddFragment extends Fragment {
 				item.setOwner(parseUser);
 				item.setName(et_name.getText().toString());
 				item.setDescription(et_description.getText().toString());
+
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+				byte[] photoData = bos.toByteArray();
+				item.setPhotoFile(new ParseFile(photoData, "photo.jpg"));
 
 				item.saveInBackground(new SaveCallback() {
 					
@@ -125,11 +148,10 @@ public class AddFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 123) {
                 Uri selectedImageUri = data.getData();
-                String path = getPath(selectedImageUri);
 
                 try {
-					Bitmap image = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
-					Bitmap imageScaled = Bitmap.createScaledBitmap(image, 600, 600 * image.getHeight() / image.getWidth(), false);
+					photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
+					photo = Bitmap.createScaledBitmap(photo, 600, 600 * photo.getHeight() / photo.getWidth(), false);
 
 					Cursor cursor = getActivity().getContentResolver().query(selectedImageUri, new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
 					if (cursor.getCount() == 1) {
@@ -137,17 +159,14 @@ public class AddFragment extends Fragment {
 						int orientation =  cursor.getInt(0);
 						Matrix matrix = new Matrix();
 						matrix.postRotate(orientation);
-						imageScaled = Bitmap.createBitmap(imageScaled, 0, 0, imageScaled.getWidth(), imageScaled.getHeight(), matrix, true);
+						photo = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
 					}
 
 					ImageView iv_preview = (ImageView) view.findViewById(R.id.iv_preview);
-					iv_preview.setImageBitmap(imageScaled);
+					iv_preview.setImageBitmap(photo);
 					iv_preview.setVisibility(ImageView.VISIBLE);
 				} catch (Exception e) {
 				}
-
-                //ImageView iv1 = (ImageView) view.findViewById(R.id.imageView1);
-                //iv1.setImageURI(selectedImageUri);
             }
         }
     }
@@ -160,7 +179,8 @@ public class AddFragment extends Fragment {
         InputMethodManager mgr = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.showSoftInput(et_name, InputMethodManager.SHOW_IMPLICIT);
 	}
-	
+
+	/*
 	public String getPath(Uri contentUri) {
 	    String res = null;
 	    String[] proj = { MediaStore.Images.Media.DATA };
@@ -172,6 +192,7 @@ public class AddFragment extends Fragment {
 	    cursor.close();
 	    return res;
 	}
+	*/
 	
 	
 
