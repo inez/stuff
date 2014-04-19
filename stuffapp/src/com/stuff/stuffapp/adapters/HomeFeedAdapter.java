@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -42,6 +43,12 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 
 		//TextView tv_description = (TextView) v.findViewById(R.id.tv_description);
 		//tv_description.setText(item.getDescription());
+
+		if ( null != item.getLocation() ) {
+		    TextView tvCoordinates = (TextView) v.findViewById(R.id.tvCoordinates);
+		    ParseGeoPoint coord = item.getLocation();
+		    tvCoordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
+		}
 
 		return v;
 	}
