@@ -2,6 +2,7 @@ package com.stuff.stuffapp.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -59,5 +60,12 @@ public class Item extends ParseObject {
 	public void setPhotoFile100(ParseFile file) {
         put("photo100", file);
     }
-	
+
+	public ParseGeoPoint getLocation() {
+	    return getParseGeoPoint("location");
+	}
+
+	public void setLocation(ParseGeoPoint geopoint) {
+	    put("location", geopoint);
+	}
 }

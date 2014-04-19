@@ -25,9 +25,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.parse.LocationCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
@@ -52,6 +54,7 @@ public class AddFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	
 	private Bitmap photo;
+	private ParseGeoPoint userLocation;
 
 	public static AddFragment newInstance() {
 		AddFragment fragment = new AddFragment();
@@ -118,6 +121,7 @@ public class AddFragment extends Fragment {
 				item.setName(et_name.getText().toString());
 				item.setDescription(et_description.getText().toString());
 				item.setPhotoFile(new ParseFile(getBitmapAsBytaArray(photo), "photo.jpg"));
+				item.setLocation(userLocation);
 
 				Bitmap photo200 = Bitmap.createScaledBitmap(photo, 200, 200 * photo.getHeight() / photo.getWidth(), false);
 				item.setPhotoFile200(new ParseFile(getBitmapAsBytaArray(photo200), "photo200.jpg"));
@@ -143,6 +147,21 @@ public class AddFragment extends Fragment {
 
         });
 
+        // get location from current Parse user
+        ParseGeoPoint.getCurrentLocationInBackground(5000, new LocationCallback() {
+            @Override
+            public void done(ParseGeoPoint geoPoint, ParseException error) {
+                if ( null == error ) {
+                    AddFragment.this.userLocation = geoPoint;
+                    Log.d(AddFragment.TAG, "Got user location: " + geoPoint.getLatitude() + ", " + geoPoint.getLongitude());
+                }
+                else {
+                    Toast.makeText(getActivity(), "Unable to get user's location", Toast.LENGTH_SHORT).show();
+                    Log.e(AddFragment.TAG, "Unable to get user's location: " + error.getMessage());
+                }
+            }
+        });
+        
 		return view;
     }
 	

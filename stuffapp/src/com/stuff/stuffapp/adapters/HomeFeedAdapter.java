@@ -1,13 +1,12 @@
 package com.stuff.stuffapp.adapters;
-
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -40,7 +39,6 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 
 		final ParseImageView iv_photo = (ParseImageView) v.findViewById(R.id.iv_photo);
 		iv_photo.setParseFile(item.getPhotoFile200());
-		iv_photo.loadInBackground();
 		iv_photo.loadInBackground(new GetDataCallback() {
 			@Override
 			public void done(byte[] arg0, ParseException arg1) {
@@ -54,7 +52,16 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		//TextView tv_description = (TextView) v.findViewById(R.id.tv_description);
 		//tv_description.setText(item.getDescription());
 
+        TextView tvCoordinates = (TextView) v.findViewById(R.id.tvCoordinates);
+        ParseGeoPoint coord = item.getLocation();
+		if ( null != coord ) {
+		    tvCoordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
+		} else {
+		    // need to clear out the coordinate text if item has no location
+		    // otherwise might print coordinates from a previously-displayed item entry
+		    tvCoordinates.setText(null);
+		}
+
 		return v;
 	}
-
 }
