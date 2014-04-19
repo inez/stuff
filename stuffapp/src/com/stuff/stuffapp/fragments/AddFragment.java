@@ -120,8 +120,8 @@ public class AddFragment extends Fragment {
 				item.setOwner(parseUser);
 				item.setName(et_name.getText().toString());
 				item.setDescription(et_description.getText().toString());
-				item.setPhotoFile(new ParseFile(getBitmapAsBytaArray(photo), "photo.jpg"));
 				item.setLocation(userLocation);
+				item.setPhotoFile(new ParseFile(getBitmapAsBytaArray(photo), "photo.jpg"));
 
 				Bitmap photo200 = Bitmap.createScaledBitmap(photo, 200, 200 * photo.getHeight() / photo.getWidth(), false);
 				item.setPhotoFile200(new ParseFile(getBitmapAsBytaArray(photo200), "photo200.jpg"));

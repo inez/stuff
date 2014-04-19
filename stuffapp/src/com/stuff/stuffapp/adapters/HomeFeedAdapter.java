@@ -15,8 +15,6 @@ import com.stuff.stuffapp.models.Item;
 
 public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 
-	private static String TAG = "HomeFeedAdapter";
-
 	public HomeFeedAdapter(Context context) {
 		super(context, new ParseQueryAdapter.QueryFactory<Item>() {
 
@@ -52,14 +50,14 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		//TextView tv_description = (TextView) v.findViewById(R.id.tv_description);
 		//tv_description.setText(item.getDescription());
 
-        TextView tvCoordinates = (TextView) v.findViewById(R.id.tvCoordinates);
+        TextView tv_coordinates = (TextView) v.findViewById(R.id.tv_coordinates);
         ParseGeoPoint coord = item.getLocation();
 		if ( null != coord ) {
-		    tvCoordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
+			tv_coordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
 		} else {
 		    // need to clear out the coordinate text if item has no location
 		    // otherwise might print coordinates from a previously-displayed item entry
-		    tvCoordinates.setText(null);
+			tv_coordinates.setText(null);
 		}
 
 		return v;
