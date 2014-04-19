@@ -26,13 +26,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_home, container, false);
-        
-        HomeFeedAdapter mainAdapter = new HomeFeedAdapter(getActivity());
-        mainAdapter.setTextKey("name");
 
-        ListView listView1 = (ListView) view.findViewById(R.id.listView1);
-        listView1.setAdapter(mainAdapter);
-        
+        HomeFeedAdapter mainAdapter = new HomeFeedAdapter(getActivity());
+
+        ListView lv_home = (ListView) view.findViewById(R.id.lv_home);
+        lv_home.setAdapter(mainAdapter);
+
 		return view;
     }
 

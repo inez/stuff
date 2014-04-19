@@ -10,12 +10,14 @@ import android.view.View;
 
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.fragments.AddFragment;
+import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
 import com.stuff.stuffapp.fragments.HomeFragment;
 import com.stuff.stuffapp.fragments.MainFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
 import com.stuff.stuffapp.helpers.Ids;
+import com.stuff.stuffapp.models.Item;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements OnItemAddedListener {
 
 	private SparseArray<Fragment> fragments;
 	
@@ -26,6 +28,7 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		fragments = new SparseArray<Fragment>();
+		displayFragment(Ids.HOME);
 	}
 
 	@Override
@@ -62,7 +65,6 @@ public class MainActivity extends FragmentActivity {
 
 		if(fragmentId != 0) {
 			displayFragment(fragmentId);
-			currentFragmentId = fragmentId;
 		}
 	}
 	
@@ -91,6 +93,13 @@ public class MainActivity extends FragmentActivity {
 		ft.replace(R.id.fl_container, fragment);
 		ft.addToBackStack(null);
 		ft.commit();
+
+		currentFragmentId = fragmentId;
+	}
+
+	@Override
+	public void onItemAdded(Item item) {
+		displayFragment(Ids.HOME);
 	}
 
 }

@@ -38,4 +38,19 @@
         android:layout_below="@+id/et_description"
         android:text="@string/add_item" />
 
+    <Button
+        android:id="@+id/button_add_from_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_add"
+        android:layout_below="@+id/button_add"
+        android:text="Add picture from gallery" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_add_from_gallery"
+        android:layout_below="@+id/button_add_from_gallery" />
+
 </RelativeLayout>
