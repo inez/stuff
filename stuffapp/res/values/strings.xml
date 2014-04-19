@@ -9,5 +9,7 @@
     <string name="add_item_name_hint">Item name&#8230;</string>
     <string name="add_item_description_hint">Optional description&#8230;</string>
     <string name="add_item">Add item</string>
+    <string name="add_select_picture">Select picture</string>
+    <string name="add_capture_picture">Capture picture</string>
     
 </resources>

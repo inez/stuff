@@ -1,6 +1,7 @@
 package com.stuff.stuffapp.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -34,5 +35,13 @@ public class Item extends ParseObject {
 	public ParseUser getOwner() {
 		return (ParseUser) getParseObject("user");
 	}
+	
+	public ParseFile getPhotoFile() {
+        return getParseFile("photo");
+    }
+
+	public void setPhotoFile(ParseFile file) {
+        put("photo", file);
+    }
 
 }

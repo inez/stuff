@@ -87,6 +87,7 @@ public class LoginActivity extends Activity {
 									try {
 										userProfile.put("facebookId", facebookUser.getId());
 										userProfile.put("name", facebookUser.getName());
+										userProfile.put("firstName", facebookUser.getFirstName());
 										userProfile.put("location", (String) facebookUser.getLocation().getProperty("name"));
 									} catch (Exception e) {
 										Log.d(TAG, "Error parsing returned user data.");

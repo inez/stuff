@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +20,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.parse.ParseACL;
 import com.parse.ParseException;
@@ -54,22 +58,25 @@ public class AddFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_add, container, false);
 
-        
-        Button button_add_from_gallery = (Button) view.findViewById(R.id.button_add_from_gallery);
-        button_add_from_gallery.setOnClickListener(new OnClickListener() {
+        LinearLayout ll_select_picture = (LinearLayout) view.findViewById(R.id.ll_select_picture);
+        ll_select_picture.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setType("image/*");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(Intent.createChooser(intent,"Select Picture"), 123);
+				startActivityForResult(Intent.createChooser(intent, "Select Picture"), 123);
 			}
-        });
+		});
 
-        
-        
-        
-        
+        LinearLayout ll_capture_picture = (LinearLayout) view.findViewById(R.id.ll_capture_picture);
+        ll_capture_picture.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Not supported yet", Toast.LENGTH_SHORT).show();
+			}
+		});
+
         button_add = (Button) view.findViewById(R.id.button_add);
         et_name = (EditText) view.findViewById(R.id.et_name);
         et_description = (EditText) view.findViewById(R.id.et_description);
@@ -118,8 +125,29 @@ public class AddFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 123) {
                 Uri selectedImageUri = data.getData();
-                ImageView iv1 = (ImageView) view.findViewById(R.id.imageView1);
-                iv1.setImageURI(selectedImageUri);
+                String path = getPath(selectedImageUri);
+
+                try {
+					Bitmap image = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
+					Bitmap imageScaled = Bitmap.createScaledBitmap(image, 600, 600 * image.getHeight() / image.getWidth(), false);
+
+					Cursor cursor = getActivity().getContentResolver().query(selectedImageUri, new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
+					if (cursor.getCount() == 1) {
+						cursor.moveToFirst();
+						int orientation =  cursor.getInt(0);
+						Matrix matrix = new Matrix();
+						matrix.postRotate(orientation);
+						imageScaled = Bitmap.createBitmap(imageScaled, 0, 0, imageScaled.getWidth(), imageScaled.getHeight(), matrix, true);
+					}
+
+					ImageView iv_preview = (ImageView) view.findViewById(R.id.iv_preview);
+					iv_preview.setImageBitmap(imageScaled);
+					iv_preview.setVisibility(ImageView.VISIBLE);
+				} catch (Exception e) {
+				}
+
+                //ImageView iv1 = (ImageView) view.findViewById(R.id.imageView1);
+                //iv1.setImageURI(selectedImageUri);
             }
         }
     }
