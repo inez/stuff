@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.location.Criteria;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -148,7 +149,12 @@ public class AddFragment extends Fragment {
         });
 
         // get location from current Parse user
-        ParseGeoPoint.getCurrentLocationInBackground(5000, new LocationCallback() {
+        Criteria criteria = new Criteria();
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        ParseGeoPoint.getCurrentLocationInBackground(5000, criteria, new LocationCallback() {
             @Override
             public void done(ParseGeoPoint geoPoint, ParseException error) {
                 if ( null == error ) {
