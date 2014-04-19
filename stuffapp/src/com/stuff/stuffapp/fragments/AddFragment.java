@@ -52,7 +52,7 @@ public class AddFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	
 	private Bitmap photo;
-	
+
 	public static AddFragment newInstance() {
 		AddFragment fragment = new AddFragment();
 		return fragment;
@@ -117,11 +117,13 @@ public class AddFragment extends Fragment {
 				item.setOwner(parseUser);
 				item.setName(et_name.getText().toString());
 				item.setDescription(et_description.getText().toString());
+				item.setPhotoFile(new ParseFile(getBitmapAsBytaArray(photo), "photo.jpg"));
 
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-				byte[] photoData = bos.toByteArray();
-				item.setPhotoFile(new ParseFile(photoData, "photo.jpg"));
+				Bitmap photo200 = Bitmap.createScaledBitmap(photo, 200, 200 * photo.getHeight() / photo.getWidth(), false);
+				item.setPhotoFile200(new ParseFile(getBitmapAsBytaArray(photo200), "photo200.jpg"));
+
+				Bitmap photo100 = Bitmap.createScaledBitmap(photo200, 100, 100 * photo200.getHeight() / photo200.getWidth(), false);
+				item.setPhotoFile100(new ParseFile(getBitmapAsBytaArray(photo100), "photo100.jpg"));
 
 				item.saveInBackground(new SaveCallback() {
 					
@@ -178,6 +180,13 @@ public class AddFragment extends Fragment {
 		// Display soft keyboard
         InputMethodManager mgr = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.showSoftInput(et_name, InputMethodManager.SHOW_IMPLICIT);
+	}
+	
+	// TODO: Make it a static helper
+	private byte[] getBitmapAsBytaArray(Bitmap bitmap) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+		return bos.toByteArray();
 	}
 
 	/*

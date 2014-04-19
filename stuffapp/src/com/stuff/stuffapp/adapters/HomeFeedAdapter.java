@@ -34,7 +34,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		}
 		
 		ParseImageView iv_photo = (ParseImageView) v.findViewById(R.id.iv_photo);
-		iv_photo.setParseFile(item.getPhotoFile());
+		iv_photo.setParseFile(item.getPhotoFile200());
 		iv_photo.loadInBackground();
 
 		TextView tv_name = (TextView) v.findViewById(R.id.tv_name);

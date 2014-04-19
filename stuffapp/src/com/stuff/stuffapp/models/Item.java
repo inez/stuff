@@ -44,4 +44,20 @@ public class Item extends ParseObject {
         put("photo", file);
     }
 
+	public ParseFile getPhotoFile200() {
+        return getParseFile("photo200");
+    }
+
+	public void setPhotoFile200(ParseFile file) {
+        put("photo200", file);
+    }
+
+	public ParseFile getPhotoFile100() {
+        return getParseFile("photo100");
+    }
+
+	public void setPhotoFile100(ParseFile file) {
+        put("photo100", file);
+    }
+	
 }
