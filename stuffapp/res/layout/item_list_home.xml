@@ -26,8 +26,7 @@
 	    android:layout_marginBottom="15dp"
 	    android:layout_marginLeft="10dp"
 	    android:layout_marginRight="10dp"
-	    android:layout_marginTop="10dp"
-	    android:orientation="vertical" >
+	    android:layout_marginTop="10dp" >
 
 	    <TextView
 	        android:id="@+id/tv_name"
@@ -41,7 +40,7 @@
 	        android:id="@+id/tvCoordinates"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
+	        android:layout_alignLeft="@+id/tv_name"
 	        android:layout_below="@+id/tv_name" />
 
 	</RelativeLayout>	
