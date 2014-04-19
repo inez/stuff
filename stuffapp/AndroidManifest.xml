@@ -43,8 +43,8 @@
         <activity
             android:name="com.stuff.stuffapp.activities.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/NoActionBar"
-            android:windowSoftInputMode="adjustNothing" />
+            android:theme="@style/NoActionBar" />
+            <!--android:windowSoftInputMode="adjustNothing"-->
 	</application>
 
 </manifest>
