@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -12,12 +13,15 @@ import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.fragments.AddFragment;
 import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
 import com.stuff.stuffapp.fragments.HomeFragment;
+import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.fragments.MainFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
 import com.stuff.stuffapp.helpers.Ids;
 import com.stuff.stuffapp.models.Item;
 
-public class MainActivity extends FragmentActivity implements OnItemAddedListener {
+public class MainActivity extends FragmentActivity implements OnItemClickedListener, OnItemAddedListener {
+
+	private static String TAG = "MainActivity";
 
 	private SparseArray<Fragment> fragments;
 	
@@ -98,7 +102,13 @@ public class MainActivity extends FragmentActivity implements OnItemAddedListene
 	}
 
 	@Override
+	public void onItemClicked(Item item) {
+		Log.d(TAG, item.getName());
+	}
+
+	@Override
 	public void onItemAdded(Item item) {
+		fragments.remove(Ids.ADD);
 		displayFragment(Ids.HOME);
 	}
 

@@ -6,13 +6,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.HomeFeedAdapter;
+import com.stuff.stuffapp.models.Item;
 
 public class HomeFragment extends Fragment {
 
+	public interface OnItemClickedListener {
+        public void onItemClicked(Item item);
+    }
+	
 	private static String TAG = "HomeFragment";
 	
 	private View view;
@@ -31,6 +38,13 @@ public class HomeFragment extends Fragment {
 
         ListView lv_home = (ListView) view.findViewById(R.id.lv_home);
         lv_home.setAdapter(mainAdapter);
+        lv_home.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Item item = (Item) arg0.getItemAtPosition(arg2);
+				((OnItemClickedListener) getActivity()).onItemClicked(item);
+			}
+		});
 
 		return view;
     }
