@@ -11,18 +11,18 @@
         android:layout_centerHorizontal="true" >
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/et_query"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/button_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="Search" />
     </LinearLayout>
 
     <ListView
