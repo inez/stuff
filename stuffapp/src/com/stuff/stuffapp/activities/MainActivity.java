@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.SparseArray;
@@ -68,8 +69,10 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
             }
         };
 
-		fragments = new SparseArray<Fragment>();
-		displayFragment(Ids.HOME);
+        if (savedInstanceState == null) {
+        	fragments = new SparseArray<Fragment>();
+			displayFragment(Ids.HOME);
+        }
 	}
 
 	/**
@@ -166,9 +169,11 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			fragments.append(fragmentId, fragment);
 		}
 
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		FragmentManager fm = getSupportFragmentManager();
+		fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+		FragmentTransaction ft = fm.beginTransaction();
 		ft.replace(R.id.fl_container, fragment);
-		//ft.addToBackStack(null);
 		ft.commit();
 
 		currentFragmentId = fragmentId;
@@ -180,7 +185,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.fl_container, DetailsFragment.newInstance(item));
-		ft.addToBackStack(null);
+		ft.addToBackStack("details");
 		ft.commit();
 	}
 
