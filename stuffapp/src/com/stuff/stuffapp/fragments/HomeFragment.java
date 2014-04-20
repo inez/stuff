@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.HomeFeedAdapter;
 import com.stuff.stuffapp.models.Item;
@@ -38,13 +39,20 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         
         if(savedInstanceState == null) {
+        	
 
         	if ( mainAdapter == null ) {
         		mainAdapter = new HomeFeedAdapter(getActivity());
         	}
-	
+
+        	
 	        ListView lv_home = (ListView) view.findViewById(R.id.lv_home);
-	        lv_home.setAdapter(mainAdapter);
+	        
+	        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mainAdapter);
+        	swingBottomInAnimationAdapter.setInitialDelayMillis(300);
+    		swingBottomInAnimationAdapter.setAbsListView(lv_home);
+        	
+	        lv_home.setAdapter(swingBottomInAnimationAdapter);
 	        lv_home.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {

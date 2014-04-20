@@ -4,6 +4,13 @@
     android:layout_height="match_parent" >
 
     <ListView
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+    	android:dividerHeight="8dp"
+		android:divider="@null"
+		android:fadingEdge="none"
+    	android:background="#e2e2e2"
         android:id="@+id/lv_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
