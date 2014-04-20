@@ -1,4 +1,8 @@
 package com.stuff.stuffapp.adapters;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -15,14 +19,16 @@ import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.models.Item;
 
 public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
+    private Context mContext;
 
-	static class ViewHolder {
+    static class ViewHolder {
 		ParseImageView iv_photo;
 		TextView tv_name;
-		TextView tv_coordinates;
+		TextView tv_coordinates, tv_distance;
 	}
 	
 	public HomeFeedAdapter(Context context) {
@@ -37,6 +43,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 			}
 			
 		});
+		mContext = context;
 	}
 
 	@Override
@@ -48,6 +55,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 			holder.iv_photo =  (ParseImageView) v.findViewById(R.id.iv_photo);
 			holder.tv_name = (TextView) v.findViewById(R.id.tv_name);
 			holder.tv_coordinates = (TextView) v.findViewById(R.id.tv_coordinates);
+			holder.tv_distance = (TextView) v.findViewById(R.id.tv_distance);
 			v.setTag(holder);
 		} else {
 			holder = (ViewHolder) v.getTag(); 
@@ -80,10 +88,20 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
         ParseGeoPoint coord = item.getLocation();
 		if ( null != coord ) {
 			holder.tv_coordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
+			ParseGeoPoint userLocation = ((MainActivity) mContext).getLastKnownLocation();
+			double distanceToItem = userLocation.distanceInMilesTo(coord);
+			NumberFormat df = DecimalFormat.getInstance();
+			df.setMinimumFractionDigits(1);
+			df.setMaximumFractionDigits(1);
+			df.setRoundingMode(RoundingMode.UP);
+            // TODO: support internationalization
+			holder.tv_distance.setText("Approximately " + df.format(distanceToItem) + " miles");
 		} else {
 		    // need to clear out the coordinate text if item has no location
 		    // otherwise might print coordinates from a previously-displayed item entry
 			holder.tv_coordinates.setText(null);
+			// TODO: support internationalization
+			holder.tv_distance.setText("Distance unavailable");
 		}
 
 		return v;
