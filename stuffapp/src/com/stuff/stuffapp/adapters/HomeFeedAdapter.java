@@ -1,9 +1,13 @@
 package com.stuff.stuffapp.adapters;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -15,6 +19,12 @@ import com.stuff.stuffapp.models.Item;
 
 public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 
+	static class ViewHolder {
+		ParseImageView iv_photo;
+		TextView tv_name;
+		TextView tv_coordinates;
+	}
+	
 	public HomeFeedAdapter(Context context) {
 		super(context, new ParseQueryAdapter.QueryFactory<Item>() {
 
@@ -22,7 +32,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 			public ParseQuery<Item> create() {
 				ParseQuery<Item> query = new ParseQuery<Item>(Item.class);
 				query.orderByDescending("createdAt");
-				query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+				//query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
 				return query;
 			}
 			
@@ -31,33 +41,49 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 
 	@Override
 	public View getItemView(Item item, View v, ViewGroup parent) {
+		final ViewHolder holder;
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.item_list_home, null);
+			holder = new ViewHolder();
+			holder.iv_photo =  (ParseImageView) v.findViewById(R.id.iv_photo);
+			holder.tv_name = (TextView) v.findViewById(R.id.tv_name);
+			holder.tv_coordinates = (TextView) v.findViewById(R.id.tv_coordinates);
+			v.setTag(holder);
+		} else {
+			holder = (ViewHolder) v.getTag(); 
 		}
 
-		final ParseImageView iv_photo = (ParseImageView) v.findViewById(R.id.iv_photo);
-		iv_photo.setParseFile(item.getPhotoFile200());
-		iv_photo.loadInBackground(new GetDataCallback() {
+		holder.iv_photo.setVisibility(View.INVISIBLE);
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.displayImage(item.getPhotoFile200().getUrl(), holder.iv_photo, new ImageLoadingListener() {
+			
 			@Override
-			public void done(byte[] arg0, ParseException arg1) {
-				iv_photo.setVisibility(View.VISIBLE);
+			public void onLoadingStarted(String arg0, View arg1) {
 			}
-		});
+			
+			@Override
+			public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+			}
+			
+			@Override
+			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+				holder.iv_photo.setVisibility(View.VISIBLE);
+			}
 
-		TextView tv_name = (TextView) v.findViewById(R.id.tv_name);
-		tv_name.setText(item.getName());
+			@Override
+			public void onLoadingCancelled(String arg0, View arg1) {
+			}
+		}) ;
 
-		//TextView tv_description = (TextView) v.findViewById(R.id.tv_description);
-		//tv_description.setText(item.getDescription());
+		holder.tv_name.setText(item.getName());
 
-        TextView tv_coordinates = (TextView) v.findViewById(R.id.tv_coordinates);
         ParseGeoPoint coord = item.getLocation();
 		if ( null != coord ) {
-			tv_coordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
+			holder.tv_coordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
 		} else {
 		    // need to clear out the coordinate text if item has no location
 		    // otherwise might print coordinates from a previously-displayed item entry
-			tv_coordinates.setText(null);
+			holder.tv_coordinates.setText(null);
 		}
 
 		return v;
