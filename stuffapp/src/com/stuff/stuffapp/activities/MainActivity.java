@@ -21,6 +21,7 @@ import com.stuff.stuffapp.fragments.AddFragment;
 import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
 import com.stuff.stuffapp.fragments.DetailsFragment;
 import com.stuff.stuffapp.fragments.HomeFragment;
+import com.stuff.stuffapp.fragments.SearchFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.fragments.MainFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
@@ -155,6 +156,9 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			switch(fragmentId) {
 				case Ids.HOME:
 					fragment = HomeFragment.newInstance();
+					break;
+				case Ids.SEARCH:
+					fragment = SearchFragment.newInstance();
 					break;
 				case Ids.ADD:
 					fragment = AddFragment.newInstance();
