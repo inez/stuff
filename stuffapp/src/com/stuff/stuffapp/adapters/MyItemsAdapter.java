@@ -40,7 +40,7 @@ public class MyItemsAdapter extends ParseQueryAdapter<Item> {
         TextView tv_myItemDesc = (TextView) view.findViewById(R.id.tv_my_item_desc);
 
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(item.getPhotoFile200().getUrl(), iv_myItem, new ImageLoadingListener() {
+        imageLoader.displayImage(item.getPhotoFile100().getUrl(), iv_myItem, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
             }
