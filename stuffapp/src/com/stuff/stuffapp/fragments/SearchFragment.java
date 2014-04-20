@@ -73,8 +73,12 @@ public class SearchFragment extends Fragment {
 			}
 		});
         
-        items = new ArrayList<Item>();
-        adapter = new SearchAdapter(getActivity(), items);
+        if(items==null) {
+        	items = new ArrayList<Item>();
+        }
+        if(adapter==null) {
+        	adapter = new SearchAdapter(getActivity(), items);
+        }
 
         lv_search.setAdapter(adapter);
 
