@@ -12,12 +12,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.adapters.SearchAdapter;
 import com.stuff.stuffapp.models.Item;
 
 public class SearchFragment extends Fragment {
@@ -29,9 +31,13 @@ public class SearchFragment extends Fragment {
 	private static String TAG = "SearchFragment";
 	
 	private View view;
+	private ListView lv_search;
 	private Button button_search;
 	private EditText et_query;
-
+	
+	private SearchAdapter adapter;
+	private List<Item> items;
+	
 	public static SearchFragment newInstance() {
 		SearchFragment fragment = new SearchFragment();
 		return fragment;
@@ -42,6 +48,7 @@ public class SearchFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_search, container, false);
         
+        lv_search = (ListView) view.findViewById(R.id.lv_search);
         button_search = (Button) view.findViewById(R.id.button_search);
         et_query = (EditText) view.findViewById(R.id.et_query);
         
@@ -57,14 +64,20 @@ public class SearchFragment extends Fragment {
 					@Override
 					public void done(List<Item> arg0, ParseException arg1) {
 						if(arg0 != null) {
-							for(Item item : arg0) {
-								Log.d(TAG, "Item: " + item.getName());
-							}
+							Log.d(TAG, "Got results");
+							adapter.clear();
+							adapter.addAll(arg0);
 						}
 					}
 				});
 			}
 		});
+        
+        items = new ArrayList<Item>();
+        adapter = new SearchAdapter(getActivity(), items);
+
+        lv_search.setAdapter(adapter);
+
 		return view;
     }
 	
