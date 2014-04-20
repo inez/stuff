@@ -34,23 +34,27 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_home, container, false);
+        
+        if(savedInstanceState == null) {
 
-        HomeFeedAdapter mainAdapter = new HomeFeedAdapter(getActivity());
-
-        ListView lv_home = (ListView) view.findViewById(R.id.lv_home);
-        lv_home.setAdapter(mainAdapter);
-        lv_home.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				//Item item = (Item) arg0.getItemAtPosition(arg2);
-				//((OnItemClickedListener) getActivity()).onItemClicked(item);
-
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.fl_container, DetailsFragment.newInstance());
-				ft.addToBackStack(null);
-				ft.commit();
-			}
-		});
+	        HomeFeedAdapter mainAdapter = new HomeFeedAdapter(getActivity());
+	
+	        ListView lv_home = (ListView) view.findViewById(R.id.lv_home);
+	        lv_home.setAdapter(mainAdapter);
+	        lv_home.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+					//Item item = (Item) arg0.getItemAtPosition(arg2);
+					//((OnItemClickedListener) getActivity()).onItemClicked(item);
+	
+					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					ft.replace(R.id.fl_container, DetailsFragment.newInstance());
+					ft.addToBackStack(null);
+					ft.commit();
+				}
+			});
+        
+        }
 
 		return view;
     }
