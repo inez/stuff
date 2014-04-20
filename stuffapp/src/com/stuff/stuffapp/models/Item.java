@@ -1,5 +1,7 @@
 package com.stuff.stuffapp.models;
 
+import java.io.Serializable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -7,7 +9,9 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 @ParseClassName("Item")
-public class Item extends ParseObject {
+public class Item extends ParseObject implements Serializable {
+
+	private static final long serialVersionUID = -1950121216738051696L;
 
 	public Item() {
 		super();
@@ -34,7 +38,7 @@ public class Item extends ParseObject {
 	}
 	
 	public ParseUser getOwner() {
-		return (ParseUser) getParseObject("user");
+		return (ParseUser) getParseObject("owner");
 	}
 	
 	public ParseFile getPhotoFile() {
