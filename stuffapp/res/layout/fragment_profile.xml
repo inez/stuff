@@ -3,15 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.facebook.widget.ProfilePictureView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/profile_view_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+<!--
+	<com.facebook.widget.ProfilePictureView
         android:id="@+id/profile_picture_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp" >
-    </com.facebook.widget.ProfilePictureView>
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -48,5 +53,5 @@
         android:layout_below="@+id/tv_my_items_label" >
 
     </ListView>
-
+-->
 </RelativeLayout>
