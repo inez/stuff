@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.location.Criteria;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,15 +25,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.parse.LocationCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.activities.MainActivity;
+import com.stuff.stuffapp.helpers.Ids;
 import com.stuff.stuffapp.models.Item;
 
 public class AddFragment extends Fragment {
@@ -56,7 +54,6 @@ public class AddFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	
 	private Bitmap photo;
-	private ParseGeoPoint userLocation;
 
 	public static AddFragment newInstance() {
 		AddFragment fragment = new AddFragment();
@@ -75,7 +72,7 @@ public class AddFragment extends Fragment {
 				Intent intent = new Intent();
 				intent.setType("image/*");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(Intent.createChooser(intent, "Select Picture"), 123);
+				startActivityForResult(Intent.createChooser(intent, "Select Picture"), Ids.ACTION_GET_CONTENT);
 			}
 		});
 
@@ -177,7 +174,7 @@ public class AddFragment extends Fragment {
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 123) {
+            if (requestCode == Ids.ACTION_GET_CONTENT) {
                 Uri selectedImageUri = data.getData();
 
                 try {
