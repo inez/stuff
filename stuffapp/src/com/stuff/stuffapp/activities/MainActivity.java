@@ -167,7 +167,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.fl_container, fragment);
-		ft.addToBackStack(null);
+		//ft.addToBackStack(null);
 		ft.commit();
 
 		currentFragmentId = fragmentId;
