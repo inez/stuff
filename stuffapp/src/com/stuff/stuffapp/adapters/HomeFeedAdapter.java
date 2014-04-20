@@ -38,7 +38,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 			public ParseQuery<Item> create() {
 				ParseQuery<Item> query = new ParseQuery<Item>(Item.class);
 				query.orderByDescending("createdAt");
-				//query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+				query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
 				return query;
 			}
 			
