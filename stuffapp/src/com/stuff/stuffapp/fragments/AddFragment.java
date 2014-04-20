@@ -34,6 +34,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.models.Item;
 
 public class AddFragment extends Fragment {
@@ -121,7 +122,8 @@ public class AddFragment extends Fragment {
 				item.setOwner(parseUser);
 				item.setName(et_name.getText().toString());
 				item.setDescription(et_description.getText().toString());
-				item.setLocation(userLocation);
+				//item.setLocation(userLocation);
+				item.setLocation(((MainActivity) getActivity()).getLastKnownLocation()); 
 				item.setPhotoFile(new ParseFile(getBitmapAsBytaArray(photo), "photo.jpg"));
 
 				Bitmap photo200 = Bitmap.createScaledBitmap(photo, 200, 200 * photo.getHeight() / photo.getWidth(), false);
@@ -148,6 +150,7 @@ public class AddFragment extends Fragment {
 
         });
 
+/*
         // get location from current Parse user
         Criteria criteria = new Criteria();
         criteria.setAltitudeRequired(false);
@@ -167,8 +170,9 @@ public class AddFragment extends Fragment {
                 }
             }
         });
-        
-		return view;
+*/        
+
+        return view;
     }
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
