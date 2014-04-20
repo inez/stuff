@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
@@ -39,6 +37,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 				ParseQuery<Item> query = new ParseQuery<Item>(Item.class);
 				query.orderByDescending("createdAt");
 				query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+				query.include("owner");
 				return query;
 			}
 			

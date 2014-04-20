@@ -18,6 +18,7 @@ import com.parse.ParseGeoPoint;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.fragments.AddFragment;
 import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
+import com.stuff.stuffapp.fragments.DetailsFragment;
 import com.stuff.stuffapp.fragments.HomeFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.fragments.MainFragment;
@@ -175,11 +176,18 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 
 	@Override
 	public void onItemClicked(Item item) {
-		Log.d(TAG, item.getName());
+		Log.d(TAG, "onItemClicked: " + item.getName());
+		
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.fl_container, DetailsFragment.newInstance(item));
+		ft.addToBackStack(null);
+		ft.commit();
 	}
 
 	@Override
 	public void onItemAdded(Item item) {
+		Log.d(TAG, "onItemAdded: " + item.getName());
+
 		fragments.remove(Ids.ADD);
 		displayFragment(Ids.HOME);
 	}

@@ -2,7 +2,6 @@ package com.stuff.stuffapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,13 +55,8 @@ public class HomeFragment extends Fragment {
 	        lv_home.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-					//Item item = (Item) arg0.getItemAtPosition(arg2);
-					//((OnItemClickedListener) getActivity()).onItemClicked(item);
-	
-					FragmentTransaction ft = getFragmentManager().beginTransaction();
-					ft.replace(R.id.fl_container, DetailsFragment.newInstance());
-					ft.addToBackStack(null);
-					ft.commit();
+					Item item = (Item) arg0.getItemAtPosition(arg2);
+					((OnItemClickedListener) getActivity()).onItemClicked(item);
 				}
 			});
         
