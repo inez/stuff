@@ -30,6 +30,7 @@ public class MessageComposeFragment extends Fragment{
 	
 	private static final String TAG = "MessageComposeFragment";
 	private static final String KEY_ITEM = "item";
+	private static final String KEY_MESSAGE = "message";
 	
 	private EditText etCompose = null;
 	private TextView tvRecepient = null;
@@ -75,7 +76,7 @@ public class MessageComposeFragment extends Fragment{
 				message.setFromUser(getCurrentUser());
 				message.setToUser(mForItem.getOwner());
 				ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
-				parseInstallation.put("message", message);
+				parseInstallation.put(KEY_MESSAGE, message);
 				parseInstallation.saveEventually(new SaveCallback(){
 
 					@Override
