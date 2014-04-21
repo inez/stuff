@@ -2,12 +2,17 @@ package com.stuff.stuffapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
 import android.widget.Button;
+
+import android.widget.ImageView;
+
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -68,6 +73,17 @@ public class DetailsFragment extends Fragment {
 			}
         	
         });
+        ImageView iv_message = (ImageView) view.findViewById(R.id.iv_message);
+        iv_message.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+				ft.replace(R.id.fl_container, MessageComposeFragment.newInstance(item));
+				ft.addToBackStack("compose");
+				ft.commit();
+			}
+		});
+
 
         return view;
 	}

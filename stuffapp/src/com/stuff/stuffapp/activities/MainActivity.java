@@ -1,6 +1,7 @@
 package com.stuff.stuffapp.activities;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -151,10 +152,15 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		}
 	}
 	
+	private View current;
+	
 	private void displayFragment(int fragmentId) {
-		Fragment fragment = fragments.get(fragmentId);
+		Log.d(TAG, "displayFragment: " + String.valueOf(fragmentId));
 
-		if(fragment==null){
+		Fragment fragment = fragments.get(fragmentId);
+		View v = null;
+
+		if ( fragment == null ) {
 			switch(fragmentId) {
 				case Ids.HOME:
 					fragment = HomeFragment.newInstance();
@@ -165,14 +171,41 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 				case Ids.ADD:
 					fragment = AddFragment.newInstance();
 					break;
+				case Ids.MESSAGE:
+					fragment = MainFragment.newInstance(String.valueOf(fragmentId));
+					break;
 				case Ids.PROFILE:
 					fragment = ProfileFragment.newInstance();
 					break;
-				default:
-					fragment = MainFragment.newInstance(String.valueOf(fragmentId));
-					break;
 			}
 			fragments.append(fragmentId, fragment);
+		}
+
+		switch(fragmentId) {
+			case Ids.HOME:
+				v = findViewById(R.id.iv_home);
+				break;
+			case Ids.SEARCH:
+				v = findViewById(R.id.iv_search);
+				break;
+			case Ids.ADD:
+				v = findViewById(R.id.iv_add);
+				break;
+			case Ids.MESSAGE:
+				v = findViewById(R.id.iv_message);
+				break;
+			case Ids.PROFILE:
+				v = findViewById(R.id.iv_profile);
+				break;
+		}
+
+		
+		if(v != null) {
+			v.setBackgroundColor(Color.parseColor("#cccccc"));
+			if(current != null) {
+				current.setBackgroundColor(Color.TRANSPARENT);
+			}
+			current = v;
 		}
 
 		FragmentManager fm = getSupportFragmentManager();
