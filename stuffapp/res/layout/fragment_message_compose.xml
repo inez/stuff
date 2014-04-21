@@ -4,44 +4,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/btSend"
+     <TextView
+        android:id="@+id/tvTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="22dp"
-        android:text="@string/label_send" />
-
-    <EditText
-        android:id="@+id/etCompose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:inputType="textMultiLine" >
-
-        <requestFocus />
-    </EditText>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="To:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/tvRecepient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
+        android:layout_alignBottom="@+id/tvTo"
+        android:layout_toRightOf="@+id/tvTo"
         android:ems="10"
         android:hint="To:" />
-
-    <TextView
-        android:id="@+id/tvTo"
+    
+    <EditText
+        android:id="@+id/etCompose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvRecepient"
-        android:layout_toLeftOf="@+id/tvRecepient"
-        android:text="To:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/btSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/etCompose"
+        android:text="@string/label_send" />
+
+
 
 </RelativeLayout>

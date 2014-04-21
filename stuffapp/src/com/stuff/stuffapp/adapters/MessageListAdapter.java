@@ -10,10 +10,6 @@ import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.models.Message;
 
 public class MessageListAdapter extends ParseQueryAdapter<Message>{
-	
-	private static final String ATTR_CREATED_AT = "createdAt";
-	private static final String ATTR_FROM_USER = "fromUser";
-	private static final String ATTR_TO_USER = "toUser";
 
 	private Context mContext;
 
@@ -23,10 +19,10 @@ public class MessageListAdapter extends ParseQueryAdapter<Message>{
 			@Override
 			public ParseQuery<Message> create() {
 				ParseQuery<Message> query = new ParseQuery<Message>(Message.class);
-				query.orderByDescending(ATTR_CREATED_AT);
+				query.orderByDescending("createdAt");
 				query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
-				query.include(ATTR_FROM_USER);
-				query.include(ATTR_TO_USER);
+				query.include("fromUser");
+				query.include("toUser");
 				return query;
 			}
 			
