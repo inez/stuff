@@ -158,7 +158,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		Fragment fragment = fragments.get(fragmentId);
 		View v = null;
 
-		if(fragment==null){
+		if(fragment==null || fragmentId == Ids.PROFILE){
 			switch(fragmentId) {
 				case Ids.HOME:
 					fragment = HomeFragment.newInstance();
