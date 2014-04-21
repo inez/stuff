@@ -91,8 +91,8 @@ public class ProfileFragment extends Fragment {
         });
 */
         // temporary
-        firstProfileFrag = new AboutMeFragment();
-        secondProfileFrag = new MyItemsFragment();
+        if(firstProfileFrag==null)firstProfileFrag = new AboutMeFragment();
+        if(secondProfileFrag==null)secondProfileFrag = new MyItemsFragment();
 
         return view;
     }
