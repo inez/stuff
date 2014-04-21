@@ -21,6 +21,7 @@ import com.stuff.stuffapp.fragments.AddFragment;
 import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
 import com.stuff.stuffapp.fragments.DetailsFragment;
 import com.stuff.stuffapp.fragments.HomeFragment;
+import com.stuff.stuffapp.fragments.MessageComposeFragment;
 import com.stuff.stuffapp.fragments.SearchFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.fragments.MainFragment;
@@ -138,6 +139,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			case R.id.iv_profile:
 				fragmentId = Ids.PROFILE;
 				break;
+
 		}
 		
 		if ( fragmentId == currentFragmentId ) {
@@ -199,6 +201,16 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 
 		fragments.remove(Ids.ADD);
 		displayFragment(Ids.HOME);
+	}
+	
+	@Override
+	public void onMessageCompose(Item item) {
+		Log.d(TAG, "onMessageCompose: " + item.getName());
+		
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.fl_container, MessageComposeFragment.newInstance(item));
+		ft.addToBackStack("messageCompose");
+		ft.commit();
 	}
 
 	/**
@@ -264,4 +276,6 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	public ParseGeoPoint getLastKnownLocation() {
 	    return new ParseGeoPoint(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
 	}
+
+
 }

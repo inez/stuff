@@ -2,11 +2,13 @@ package com.stuff.stuffapp.fragments;
 
 import java.util.Calendar;
 
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.models.Item;
 import com.stuff.stuffapp.models.Message;
 
@@ -21,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MessageComposeFragment extends Fragment{
@@ -29,9 +32,9 @@ public class MessageComposeFragment extends Fragment{
 	private static final String KEY_ITEM = "item";
 	
 	private EditText etCompose = null;
+	private TextView tvRecepient = null;
 	private Button btSend = null;
 	private Item mForItem = null; 
-	
 	
 	
 	public static MessageComposeFragment newInstance(Item item) {
@@ -56,6 +59,8 @@ public class MessageComposeFragment extends Fragment{
 		View view = inf.inflate(R.layout.fragment_message_compose,parent,false);
 		etCompose =  (EditText) view.findViewById(R.id.etCompose);
 		btSend = (Button) view.findViewById(R.id.btSend);
+		tvRecepient = (TextView) view.findViewById(R.id.tvRecepient);
+		tvRecepient.setText(Helper.getUserName(mForItem.getOwner()));
 		
 		//Handle send button click inside the fragment 
 		btSend.setOnClickListener(new OnClickListener(){			
@@ -71,12 +76,11 @@ public class MessageComposeFragment extends Fragment{
 				message.setToUser(mForItem.getOwner());
 				ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
 				parseInstallation.put("message", message);
-				
 				parseInstallation.saveEventually(new SaveCallback(){
 
 					@Override
 					public void done(ParseException e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 						
 					}
 					

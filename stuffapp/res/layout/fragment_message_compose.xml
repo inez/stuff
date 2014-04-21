@@ -25,22 +25,22 @@
         <requestFocus />
     </EditText>
 
-    <EditText
-        android:id="@+id/etTo"
+    <TextView
+        android:id="@+id/tvRecepient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
-        android:hint="To:"
-        android:ems="10" />
+        android:ems="10"
+        android:hint="To:" />
 
     <TextView
         android:id="@+id/tvTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etTo"
-        android:layout_toLeftOf="@+id/etTo"
+        android:layout_alignBottom="@+id/tvRecepient"
+        android:layout_toLeftOf="@+id/tvRecepient"
         android:text="To:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
