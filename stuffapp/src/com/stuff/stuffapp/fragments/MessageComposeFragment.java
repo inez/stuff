@@ -7,12 +7,14 @@ import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.models.Item;
 import com.stuff.stuffapp.models.Message;
 
 
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,10 +23,32 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MessageCompose extends Fragment{
+public class MessageComposeFragment extends Fragment{
+	
+	private static final String TAG = "MessageComposeFragment";
+	private static final String KEY_ITEM = "item";
 	
 	private EditText etCompose = null;
 	private Button btSend = null;
+	private Item mForItem = null; 
+	
+	
+	
+	public static MessageComposeFragment newInstance(Item item) {
+		MessageComposeFragment fragment = new MessageComposeFragment();
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(KEY_ITEM, item);
+		fragment.setArguments(bundle);
+		return fragment;
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Bundle args = getArguments();
+		mForItem = (Item) args.getSerializable(KEY_ITEM);
+	}
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
@@ -33,8 +57,8 @@ public class MessageCompose extends Fragment{
 		etCompose =  (EditText) view.findViewById(R.id.etCompose);
 		btSend = (Button) view.findViewById(R.id.btSend);
 		
-		btSend.setOnClickListener(new OnClickListener(){
-
+		//Handle send button click inside the fragment 
+		btSend.setOnClickListener(new OnClickListener(){			
 			@Override
 			public void onClick(View v) {
 				
@@ -43,11 +67,8 @@ public class MessageCompose extends Fragment{
 				
 				Message message = new Message();
 				message.setText(etCompose.getText().toString());
-				//TODO: populate with appropriate values- remove hardcode. 
-				message.setMessageId(1000);
-				message.setSeenAt(Calendar.getInstance().getTime());
-				//message.setFromUser(getCurrentUser());
-				//message.setToUser(getCurrentUser());
+				message.setFromUser(getCurrentUser());
+				message.setToUser(mForItem.getOwner());
 				ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
 				parseInstallation.put("message", message);
 				
@@ -74,14 +95,14 @@ public class MessageCompose extends Fragment{
 		
 	}
 		
-
-	
 	private ParseUser getCurrentUser() { 
-		
-		//TODO: This will get the current user .		
-		//Remove this and just add a call to getCurr
-		return null; 
+
+		ParseUser user = ParseUser.getCurrentUser();
+		Log.d(TAG,"Current User is :" + user);
+		return user; 
 	}
+	
+
 
 
 }

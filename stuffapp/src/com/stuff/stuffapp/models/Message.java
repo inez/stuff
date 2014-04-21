@@ -16,12 +16,7 @@ public class Message extends ParseObject implements Serializable {
 	public Message() {
 		super();
 	}
-	public long getMessageId() {
-		return getLong("messageId");
-	}
-	public void setMessageId(long messageId) {
-		put("messageId",messageId);
-	}
+
 	public String getText() {
 		return getString("text");
 	}
@@ -29,7 +24,7 @@ public class Message extends ParseObject implements Serializable {
 		put("text",text);
 	}
 	
-	/*public ParseUser getFromUser() {
+	public ParseUser getFromUser() {
 		return getParseUser("fromUser");
 	}
 	public void setFromUser(ParseUser fromUser) {
@@ -41,8 +36,6 @@ public class Message extends ParseObject implements Serializable {
 	public void setToUser(ParseUser toUser) {
 		put("toUser",toUser);
 	}
-	*/
-
 	
 	public Date getSeenAt() {
 		return getDate("seenAt");
