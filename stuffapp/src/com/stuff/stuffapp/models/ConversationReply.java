@@ -5,13 +5,13 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 @ParseClassName("TempConversationReply")
-public class TempConversationReply extends ParseObject {
+public class ConversationReply extends ParseObject {
 
-	public TempConversation getConversation() {
-		return (TempConversation) getParseObject("conversation");
+	public Conversation getConversation() {
+		return (Conversation) getParseObject("conversation");
 	}
 
-	public void setConversation(TempConversation conversation) {
+	public void setConversation(Conversation conversation) {
 		put("conversation", conversation);
 	}
 	

@@ -77,10 +77,10 @@ public class MessageComposeFragment extends Fragment{
 				Message message = new Message();
 				message.setText(etCompose.getText().toString());
 				message.setFromUser(getLoggedInUser());
-				//message.setToUser(mForItem.getOwner());
-				//message.setItem(mForItem);
+				message.setToUser(mForItem.getOwner());
+				message.setItem(mForItem);
 				//Log.d(TAG,getLoggedInUser().getObjectId());
-				//message.setFromUserId(getLoggedInUser().getUserName());
+				//message.setFromUserId(getLoggedInUser().getUserName()); 
 				message.setToUserId(mForItem.getOwner().getUsername());
 				message.setItemId(mForItem.getObjectId());
 				

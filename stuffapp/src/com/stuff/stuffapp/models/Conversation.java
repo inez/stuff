@@ -5,9 +5,9 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 @ParseClassName("TempConversation")
-public class TempConversation extends ParseObject  {
+public class Conversation extends ParseObject  {
 
-	public TempConversation() {
+	public Conversation() {
 		super();
 	}
 	
@@ -34,5 +34,6 @@ public class TempConversation extends ParseObject  {
 	public void setItem(Item item) {
 		put("item", item);
 	}
+	
 
 }
