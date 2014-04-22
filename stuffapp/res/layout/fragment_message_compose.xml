@@ -28,18 +28,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/btSend"
         android:ems="10"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:text="@string/hint_message" />
 
     <Button
         android:id="@+id/btSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="14dp"
-        android:layout_toRightOf="@+id/etCompose"
+        android:layout_alignParentRight="true"
         android:text="@string/label_send" />
-
-
 
 </RelativeLayout>
