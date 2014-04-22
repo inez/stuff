@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
             @Override
             public void onLocationChanged(Location location) {
                 Log.d(TAG + ".LocationListener", "Got location (" + location.getLatitude() + ", " + location.getLongitude() + ")");
-                if ( isBetterLocation(location, lastKnownLocation) ) {
+                if ( null == lastKnownLocation && isBetterLocation(location, lastKnownLocation) ) {
                     lastKnownLocation = location;
                     Log.d(TAG + ".LocationListener", "Updating with better location");
                 }
@@ -89,13 +89,20 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	    Criteria criteria = new Criteria();
 	    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 	    criteria.setPowerRequirement(Criteria.POWER_LOW);
+	    Log.d(TAG, "Searching for best location provider");
 	    String locationProvider = locationManager.getBestProvider(criteria, true);
+	    if ( locationProvider == null || locationProvider.isEmpty() )
+	        Log.e(TAG, "Could not get location provider");
+	    else
+	        Log.d(TAG, "Got provider " + locationProvider);
 	    assert !locationProvider.isEmpty();
 
-	    if ( null == lastKnownLocation ) {
-	        lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-	        Log.d(TAG, "Initialized last known location (" + lastKnownLocation.getLatitude() + ", " + lastKnownLocation.getLongitude() + ")");
-	    }
+//	    if ( null == lastKnownLocation ) {
+//	        Log.d(TAG, "Getting last known location from " + locationProvider);
+//	        lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+//	        assert lastKnownLocation != null;
+//	        Log.d(TAG, "Initialized last known location (" + lastKnownLocation.getLatitude() + ", " + lastKnownLocation.getLongitude() + ")");
+//	    }
 
 	    // get location updates every 5 minutes
 	    locationManager.requestLocationUpdates(locationProvider, FIVE_MINUTES, 0, locationListener);
@@ -295,6 +302,10 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	 * Returns last known location (e.g., to a fragment) as a ParseGeoPoint
 	 */
 	public ParseGeoPoint getLastKnownLocation() {
-	    return new ParseGeoPoint(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+	    if ( null != lastKnownLocation )
+	        return new ParseGeoPoint(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+	    else
+	        // TODO: deal with no last known location!
+	        return new ParseGeoPoint();
 	}
 }

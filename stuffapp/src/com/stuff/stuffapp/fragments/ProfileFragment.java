@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stuff.stuffapp.R;
-//import com.viewpagerindicator.UnderlinePageIndicator;
+import com.viewpagerindicator.UnderlinePageIndicator;
 
 public class ProfileFragment extends Fragment {
 	private static final String TAG = "ProfileFragment";
@@ -71,7 +71,7 @@ public class ProfileFragment extends Fragment {
 
         pagerAdapter = new ProfilePagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-/*
+
         // bind the title indicator to the view pager
         UnderlinePageIndicator underlinePageIndicator = (UnderlinePageIndicator) view.findViewById(R.id.profile_titles);
         underlinePageIndicator.setViewPager(viewPager);
@@ -89,10 +89,10 @@ public class ProfileFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
-*/
+
         // temporary
-        if(firstProfileFrag==null)firstProfileFrag = new AboutMeFragment();
-        if(secondProfileFrag==null)secondProfileFrag = new MyItemsFragment();
+        if ( firstProfileFrag==null ) firstProfileFrag = new AboutMeFragment();
+        if ( secondProfileFrag==null ) secondProfileFrag = new MyItemsFragment();
 
         return view;
     }
