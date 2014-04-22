@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stuff.stuffapp.R;
-import com.viewpagerindicator.UnderlinePageIndicator;
+import com.viewpagerindicator.TabPageIndicator;
 
 public class ProfileFragment extends Fragment {
 	private static final String TAG = "ProfileFragment";
@@ -73,22 +73,21 @@ public class ProfileFragment extends Fragment {
         viewPager.setAdapter(pagerAdapter);
 
         // bind the title indicator to the view pager
-        UnderlinePageIndicator underlinePageIndicator = (UnderlinePageIndicator) view.findViewById(R.id.profile_titles);
-        underlinePageIndicator.setViewPager(viewPager);
-        underlinePageIndicator.setFades(false);
-        underlinePageIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-            }
-            
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-            
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+        TabPageIndicator tabPageIndicator = (TabPageIndicator) view.findViewById(R.id.profile_titles);
+        tabPageIndicator.setViewPager(viewPager);
+//        tabPageIndicator.setOnPageChangeListener(new OnPageChangeListener() {
+//            @Override
+//            public void onPageSelected(int position) {
+//            }
+//            
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//            }
+//            
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
 
         // temporary
         if ( firstProfileFrag==null ) firstProfileFrag = new AboutMeFragment();
@@ -106,7 +105,9 @@ public class ProfileFragment extends Fragment {
 	 * Internal adapter class for ViewPager 
 	 */
 	public class ProfilePagerAdapter extends FragmentPagerAdapter {
-        public ProfilePagerAdapter(FragmentManager fm) {
+	    private final String[] TITLES = new String[] { "About Me", "My Items" };
+
+	    public ProfilePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -117,6 +118,11 @@ public class ProfileFragment extends Fragment {
             else if ( position == 1 )
                 return secondProfileFrag;
             else return firstProfileFrag;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position].toUpperCase();
         }
 
         @Override

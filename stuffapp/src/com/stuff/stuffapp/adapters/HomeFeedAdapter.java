@@ -85,9 +85,9 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		holder.tv_name.setText(item.getName());
 
         ParseGeoPoint coord = item.getLocation();
-		if ( null != coord ) {
+        ParseGeoPoint userLocation = ((MainActivity) mContext).getLastKnownLocation();
+		if ( null != coord && null != userLocation ) {
 			holder.tv_coordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
-			ParseGeoPoint userLocation = ((MainActivity) mContext).getLastKnownLocation();
 			double distanceToItem = userLocation.distanceInMilesTo(coord);
 			NumberFormat df = DecimalFormat.getInstance();
 			df.setMinimumFractionDigits(1);

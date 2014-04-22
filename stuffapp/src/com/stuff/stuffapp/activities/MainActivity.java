@@ -86,6 +86,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	    super.onResume();
 
 	    // select the right location provider
+	    // TODO: check for location permissions, handle error case
 	    // TODO: find out about using LocationManager.PASSIVE_PROVIDER instead
 	    Criteria criteria = new Criteria();
 	    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
@@ -98,12 +99,14 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	        Log.d(TAG, "Got provider " + locationProvider);
 	    assert !locationProvider.isEmpty();
 
-//	    if ( null == lastKnownLocation ) {
-//	        Log.d(TAG, "Getting last known location from " + locationProvider);
-//	        lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-//	        assert lastKnownLocation != null;
-//	        Log.d(TAG, "Initialized last known location (" + lastKnownLocation.getLatitude() + ", " + lastKnownLocation.getLongitude() + ")");
-//	    }
+	    if ( null == lastKnownLocation ) {
+	        Log.d(TAG, "Getting last known location from " + locationProvider);
+	        lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+	        if ( lastKnownLocation == null )
+	            Log.d(TAG, "There is no last known location");
+	        else
+	            Log.d(TAG, "Initialized last known location (" + lastKnownLocation.getLatitude() + ", " + lastKnownLocation.getLongitude() + ")");
+	    }
 
 	    // get location updates every 5 minutes
 	    locationManager.requestLocationUpdates(locationProvider, FIVE_MINUTES, 0, locationListener);
@@ -306,7 +309,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	 * Checks if two providers are the same
 	 */
 	private boolean isSameProvider(String provider1, String provider2) {
-	    if (provider1 == null) return provider2 == null;
+	    if ( provider1 == null ) return provider2 == null;
 	    return provider1.equals(provider2);
 	}
 
@@ -318,7 +321,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	        return new ParseGeoPoint(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
 	    else
 	        // TODO: deal with no last known location!
-	        return new ParseGeoPoint();
+	        return null;
 	}
 
 
