@@ -7,28 +7,32 @@ import com.parse.ParseUser;
 @ParseClassName("ConversationReply")
 public class ConversationReply extends ParseObject {
 
+	private static final String ATTR_CONVERSATION = "conversation";
+	private static final String ATTR_TEXT = "text";
+	private static final String ATTR_USER = "user";
+
 	public Conversation getConversation() {
-		return (Conversation) getParseObject("conversation");
+		return (Conversation) getParseObject(ATTR_CONVERSATION);
 	}
 
 	public void setConversation(Conversation conversation) {
-		put("conversation", conversation);
+		put(ATTR_CONVERSATION, conversation);
 	}
 	
 	public String getText() {
-		return getString("text");
+		return getString(ATTR_TEXT);
 	}
 
 	public void setText(String text) {
-		put("text", text);
+		put(ATTR_TEXT, text);
 	}
 	
 	public void setUser(ParseUser user) {
-		put("user", user);
+		put(ATTR_USER, user);
 	}
 	
 	public ParseUser getUser() {
-		return getParseUser("user");
+		return getParseUser(ATTR_USER);
 	}
 
 }
