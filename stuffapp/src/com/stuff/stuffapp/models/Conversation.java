@@ -4,7 +4,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-@ParseClassName("TempConversation")
+@ParseClassName("Conversation")
 public class Conversation extends ParseObject  {
 
 	public Conversation() {
