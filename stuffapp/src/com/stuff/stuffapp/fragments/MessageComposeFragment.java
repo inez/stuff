@@ -2,12 +2,16 @@ package com.stuff.stuffapp.fragments;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
+import com.parse.FindCallback;
 import com.parse.FunctionCallback;
+import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
@@ -72,28 +76,51 @@ public class MessageComposeFragment extends Fragment{
 			public void onClick(View v) {
 				
 				Toast.makeText(getActivity(), "Sending", Toast.LENGTH_LONG).show();
-				// TODO Auto-generated method stub
-				
+
+	/* This does NOT work			
 				Message message = new Message();
 				message.setText(etCompose.getText().toString());
 				message.setFromUser(getLoggedInUser());
 				message.setToUser(mForItem.getOwner());
-				message.setItem(mForItem);
-				//Log.d(TAG,getLoggedInUser().getObjectId());
-				//message.setFromUserId(getLoggedInUser().getUserName()); 
-				message.setToUserId(mForItem.getOwner().getUsername());
-				message.setItemId(mForItem.getObjectId());
+			    message.setItem(mForItem);
+				Log.d(TAG,getLoggedInUser().getObjectId());
+				message.saveInBackground(new SaveCallback(){
+
+					@Override
+					public void done(ParseException ex) {
+						// TODO Auto-generated method stub
+						if(ex != null) {
+							ex.printStackTrace();
+						}
+					}
+					
+				}); */
 				
-				ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
-				parseInstallation.put(KEY_MESSAGE, message);
-				try {
-					parseInstallation.save();
-				} catch (ParseException ex)
-				{
-					ex.printStackTrace();
-				}
-				
-				//saveMessage(message);
+	
+// This works! Read the item (for the owner) first (even though you already have the item and the user	) 	
+		 ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+		 query.getInBackground(mForItem.getObjectId(), new GetCallback<Item>() {
+		     public void done(Item item, ParseException ex) {
+		         if (ex == null) {
+		        	 
+		        	 Log.d(TAG, item.getObjectId());
+						com.stuff.stuffapp.models.Message m = new com.stuff.stuffapp.models.Message();
+						m.setText(etCompose.getText().toString());
+						m.setFromUser(ParseUser.getCurrentUser());
+						m.setToUser(item.getOwner());
+						m.setItem(item);
+						m.saveInBackground();
+		             
+		         } else {
+		             
+						Log.d(TAG, "Error retrieving object : " + ex.toString());
+						ex.printStackTrace();
+		         }
+		     }
+		 });
+		 
+		
+
 				
 			}
 			
