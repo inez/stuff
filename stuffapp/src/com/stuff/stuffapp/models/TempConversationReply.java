@@ -1,8 +1,10 @@
 package com.stuff.stuffapp.models;
 
+import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+@ParseClassName("TempConversationReply")
 public class TempConversationReply extends ParseObject {
 
 	public TempConversation getConversation() {
