@@ -10,6 +10,8 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.stuff.stuffapp.models.Item;
 import com.stuff.stuffapp.models.Message;
+import com.stuff.stuffapp.models.TempConversation;
+import com.stuff.stuffapp.models.TempConversationReply;
 
 public class StuffApplication extends Application {
 
@@ -18,6 +20,8 @@ public class StuffApplication extends Application {
 
 		ParseObject.registerSubclass(Item.class);
 		ParseObject.registerSubclass(Message.class);
+		ParseObject.registerSubclass(TempConversation.class);
+		ParseObject.registerSubclass(TempConversationReply.class);
 
 		// According to parse.com documentation Application ID and Client Key can be public
 		Parse.initialize(this, "2vWbCt6aWC1e0pCRk8BxsuXO1XXk9tqpp1ZMvOzr", "zKk8JQ6cHcIiUCx9r5hVlSsvDAgBGVlJeesXeii0");
