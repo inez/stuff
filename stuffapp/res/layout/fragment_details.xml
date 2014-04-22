@@ -6,7 +6,7 @@
 	<com.parse.ParseImageView
 	    android:id="@+id/iv_photo"
 	    android:layout_width="400dp"
-	    android:layout_height="400dp"
+	    android:layout_height="360dp"
 	    android:layout_alignParentTop="true"
 	    android:layout_centerHorizontal="true"
 	    android:layout_marginTop="10dp"
@@ -18,7 +18,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_below="@+id/iv_photo"
 	    android:layout_centerHorizontal="true"
-	    android:layout_marginTop="20dp"
+	    android:layout_marginTop="5dp"
 	    android:text="tv_name"
 	    android:textAppearance="?android:attr/textAppearanceLarge" />
 	
@@ -29,16 +29,24 @@
 	    android:layout_below="@+id/tv_name"
 	    android:layout_centerHorizontal="true"
 	    android:text="tv_desc" />
+	
+    <Button
+	    android:id="@+id/btContact"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_below="@+id/tv_desc"
+	    android:text="Contact" />
 
 	<TextView
 	    android:id="@+id/tv_owner"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/tv_desc"
+	    android:layout_below="@+id/btContact"
 	    android:layout_centerHorizontal="true"
-	    android:layout_marginTop="10dp"
 	    android:text="tv_owner Text"
 	    android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
 	<ImageView
 	    android:id="@+id/iv_message"

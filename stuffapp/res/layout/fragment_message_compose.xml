@@ -4,44 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+     <TextView
+        android:id="@+id/tvTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="To:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tvRecepient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvTo"
+        android:layout_toRightOf="@+id/tvTo"
+        android:ems="10"
+        android:hint="To:" />
+    
+    <EditText
+        android:id="@+id/etCompose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/btSend"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:text="@string/hint_message" />
+
     <Button
         android:id="@+id/btSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="22dp"
+        android:layout_alignParentRight="true"
         android:text="@string/label_send" />
-
-    <EditText
-        android:id="@+id/etCompose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:inputType="textMultiLine" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/etTo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
-        android:hint="To:"
-        android:ems="10" />
-
-    <TextView
-        android:id="@+id/tvTo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etTo"
-        android:layout_toLeftOf="@+id/etTo"
-        android:text="To:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
