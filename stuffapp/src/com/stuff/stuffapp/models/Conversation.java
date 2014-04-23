@@ -15,6 +15,7 @@ public class Conversation extends ParseObject  {
 		super();
 	}
 	
+	
 	public ParseUser getUserOne() {
 		return getParseUser(ATTR_USER_ONE);
 	}

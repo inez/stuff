@@ -77,7 +77,12 @@
             android:theme="@style/NoActionBar" />
             <!--android:windowSoftInputMode="adjustNothing"-->
             <service android:name="com.parse.PushService" />
-
+        
+        <activity
+            android:label="@string/app_name"
+            android:name="com.stuff.stuffapp.MessageActivity" >
+        </activity>
+            
         <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

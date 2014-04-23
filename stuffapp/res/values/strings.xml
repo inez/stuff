@@ -16,5 +16,8 @@
     <string name="hint_message">"Message about the Item. "</string>
     <string name="label_login">Login</string>
     <string name="label_my_items">My Items</string>
+    <string name="hello">Hello</string>
+	<string name="main_empty_list">There is no recent conversation, write new message
+		to start one.</string>
     
 </resources>

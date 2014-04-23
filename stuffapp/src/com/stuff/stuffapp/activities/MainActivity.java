@@ -23,15 +23,13 @@ import com.parse.PushService;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.fragments.AddFragment;
 import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
+import com.stuff.stuffapp.fragments.ConversationsFragment;
 import com.stuff.stuffapp.fragments.DetailsFragment;
 import com.stuff.stuffapp.fragments.HomeFragment;
-import com.stuff.stuffapp.fragments.MessageComposeFragment;
 import com.stuff.stuffapp.fragments.MessagesFragment;
 import com.stuff.stuffapp.fragments.SearchFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
-import com.stuff.stuffapp.fragments.MainFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
-import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.helpers.Ids;
 import com.stuff.stuffapp.models.Item;
 
@@ -261,10 +259,16 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	public void onMessageCompose(Item item) {
 		Log.d(TAG, "onMessageCompose: " + item.getName());
 		
+//		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//		ft.replace(R.id.flContainer, MessageComposeFragment.newInstance(item));
+//		ft.addToBackStack("messageCompose");
+//		ft.commit();
+		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, MessageComposeFragment.newInstance(item));
+		ft.replace(R.id.flContainer, ConversationsFragment.newInstance(item));
 		ft.addToBackStack("messageCompose");
-		ft.commit();
+		ft.commit();		
+		 
 	}
 
 	/**
