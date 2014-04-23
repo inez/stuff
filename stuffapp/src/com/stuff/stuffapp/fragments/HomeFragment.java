@@ -34,6 +34,8 @@ public class HomeFragment extends Fragment {
 	}
 	
 	private  HomeFeedAdapter mainAdapter;
+	
+	private SwingBottomInAnimationAdapter swingBottomInAnimationAdapter;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,9 +52,11 @@ public class HomeFragment extends Fragment {
         	
 	        ListView lvHome = (ListView) view.findViewById(R.id.lvHome);
 	        
-	        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mainAdapter);
-        	swingBottomInAnimationAdapter.setInitialDelayMillis(300);
-    		swingBottomInAnimationAdapter.setAbsListView(lvHome);
+	        if ( swingBottomInAnimationAdapter == null ) {
+	        	swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mainAdapter);
+        		swingBottomInAnimationAdapter.setInitialDelayMillis(300);
+    			swingBottomInAnimationAdapter.setAbsListView(lvHome);
+	        }
         	
     		lvHome.setAdapter(swingBottomInAnimationAdapter);
     		lvHome.setOnItemClickListener(new OnItemClickListener() {
