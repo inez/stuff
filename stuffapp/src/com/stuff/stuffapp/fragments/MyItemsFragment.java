@@ -26,7 +26,7 @@ public class MyItemsFragment extends Fragment {
         Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_my_items, container, false);
 
-        lvMyItems = (ListView) view.findViewById(R.id.lv_my_items);
+        lvMyItems = (ListView) view.findViewById(R.id.lvMyItems);
 
         return view;
     }

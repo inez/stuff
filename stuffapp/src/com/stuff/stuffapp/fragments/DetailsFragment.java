@@ -50,18 +50,18 @@ public class DetailsFragment extends Fragment {
         Log.d(TAG, "onCreateView: " + item.getName());
         view = inflater.inflate(R.layout.fragment_details, container, false);
 
-        ParseImageView iv_photo = (ParseImageView) view.findViewById(R.id.iv_photo);
+        ParseImageView ivPhoto = (ParseImageView) view.findViewById(R.id.ivPhoto);
         ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.displayImage(item.getPhotoFile().getUrl(), iv_photo);
+		imageLoader.displayImage(item.getPhotoFile().getUrl(), ivPhoto);
 
-        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-        tv_name.setText(item.getName());
+        TextView tvName = (TextView) view.findViewById(R.id.tvName);
+        tvName.setText(item.getName());
 
-        TextView tv_desc = (TextView) view.findViewById(R.id.tv_desc);
-        tv_desc.setText(item.getDescription());
+        TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        tvDescription.setText(item.getDescription());
 
-        TextView tv_owner = (TextView) view.findViewById(R.id.tv_owner);
-        tv_owner.setText(Helper.getUserName(item.getOwner()));
+        TextView tvOwner = (TextView) view.findViewById(R.id.tvOwner);
+        tvOwner.setText(Helper.getUserName(item.getOwner()));
         
         Button button = (Button)view.findViewById(R.id.btContact);
         button.setOnClickListener(new OnClickListener(){
@@ -73,12 +73,12 @@ public class DetailsFragment extends Fragment {
 			}
         	
         });
-        ImageView iv_message = (ImageView) view.findViewById(R.id.iv_message);
-        iv_message.setOnClickListener(new OnClickListener() {
+        ImageView ivMessage = (ImageView) view.findViewById(R.id.ivMessage);
+        ivMessage.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-				ft.replace(R.id.fl_container, MessageComposeFragment.newInstance(item));
+				ft.replace(R.id.flContainer, MessageComposeFragment.newInstance(item));
 				ft.addToBackStack("compose");
 				ft.commit();
 			}

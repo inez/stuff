@@ -14,5 +14,7 @@
     <string name="label_send">Send</string>
     <string name="label_contact">Contact</string>
     <string name="hint_message">"Message about the Item. "</string>
+    <string name="label_login">Login</string>
+    <string name="label_my_items">My Items</string>
     
 </resources>

@@ -27,14 +27,14 @@ public class AboutMeFragment extends Fragment {
         Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_about_me, container, false);
 
-        TextView tvName = (TextView) view.findViewById(R.id.tv_profile_name);
-        TextView tvLocation = (TextView) view.findViewById(R.id.tv_profile_location);
+        TextView tvName = (TextView) view.findViewById(R.id.tvName);
+        TextView tvLocation = (TextView) view.findViewById(R.id.tvLocation);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if ( null != currentUser.get("profile") ) {
             JSONObject userProfile = currentUser.getJSONObject("profile");
             try {
-                ProfilePictureView ppv = (ProfilePictureView) view.findViewById(R.id.profile_picture_view);
+                ProfilePictureView ppv = (ProfilePictureView) view.findViewById(R.id.ivProfile);
                 ppv.setProfileId(userProfile.get("facebookId").toString());
                 
                 tvName.setText(userProfile.getString("name"));

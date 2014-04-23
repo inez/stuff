@@ -24,9 +24,8 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
     private Context mContext;
 
     static class ViewHolder {
-		ParseImageView iv_photo;
-		TextView tv_name;
-		TextView tv_coordinates, tv_distance;
+		ParseImageView ivPhoto;
+		TextView tvName, tvCoordinates, tvDistance;
 	}
 	
 	public HomeFeedAdapter(Context context) {
@@ -51,18 +50,18 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.item_list_home, null);
 			holder = new ViewHolder();
-			holder.iv_photo =  (ParseImageView) v.findViewById(R.id.iv_photo);
-			holder.tv_name = (TextView) v.findViewById(R.id.tv_name);
-			holder.tv_coordinates = (TextView) v.findViewById(R.id.tv_coordinates);
-			holder.tv_distance = (TextView) v.findViewById(R.id.tv_distance);
+			holder.ivPhoto =  (ParseImageView) v.findViewById(R.id.ivPhoto);
+			holder.tvName = (TextView) v.findViewById(R.id.tvName);
+			holder.tvCoordinates = (TextView) v.findViewById(R.id.tvCoordinates);
+			holder.tvDistance = (TextView) v.findViewById(R.id.tvDistance);
 			v.setTag(holder);
 		} else {
 			holder = (ViewHolder) v.getTag(); 
 		}
 
-		holder.iv_photo.setVisibility(View.INVISIBLE);
+		holder.ivPhoto.setVisibility(View.INVISIBLE);
 		ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.displayImage(item.getPhotoFile200().getUrl(), holder.iv_photo, new ImageLoadingListener() {
+		imageLoader.displayImage(item.getPhotoFile200().getUrl(), holder.ivPhoto, new ImageLoadingListener() {
 			
 			@Override
 			public void onLoadingStarted(String arg0, View arg1) {
@@ -74,7 +73,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 			
 			@Override
 			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
-				holder.iv_photo.setVisibility(View.VISIBLE);
+				holder.ivPhoto.setVisibility(View.VISIBLE);
 			}
 
 			@Override
@@ -82,25 +81,25 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 			}
 		}) ;
 
-		holder.tv_name.setText(item.getName());
+		holder.tvName.setText(item.getName());
 
         ParseGeoPoint coord = item.getLocation();
         ParseGeoPoint userLocation = ((MainActivity) mContext).getLastKnownLocation();
 		if ( null != coord && null != userLocation ) {
-			holder.tv_coordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
+			holder.tvCoordinates.setText("(" + coord.getLatitude() + ", " + coord.getLongitude() + ")");
 			double distanceToItem = userLocation.distanceInMilesTo(coord);
 			NumberFormat df = DecimalFormat.getInstance();
 			df.setMinimumFractionDigits(1);
 			df.setMaximumFractionDigits(1);
 			df.setRoundingMode(RoundingMode.UP);
             // TODO: support internationalization
-			holder.tv_distance.setText("Approximately " + df.format(distanceToItem) + " miles");
+			holder.tvDistance.setText("Approximately " + df.format(distanceToItem) + " miles");
 		} else {
 		    // need to clear out the coordinate text if item has no location
 		    // otherwise might print coordinates from a previously-displayed item entry
-			holder.tv_coordinates.setText(null);
+			holder.tvCoordinates.setText(null);
 			// TODO: support internationalization
-			holder.tv_distance.setText("Distance unavailable");
+			holder.tvDistance.setText("Distance unavailable");
 		}
 
 		return v;

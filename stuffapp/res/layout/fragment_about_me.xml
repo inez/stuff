@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
     
 	<com.facebook.widget.ProfilePictureView
-        android:id="@+id/profile_picture_view"
+        android:id="@+id/ivProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -13,20 +13,18 @@
         android:layout_marginBottom="20dp" />
 	
     <TextView
-        android:id="@+id/tv_profile_name"
+        android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_picture_view"
+        android:layout_below="@+id/ivProfile"
         android:layout_centerHorizontal="true"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Name" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/tv_profile_location"
+        android:id="@+id/tvLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/tv_profile_name"
-        android:text="Location" />
+        android:layout_below="@+id/tvName" />
 
 </RelativeLayout>

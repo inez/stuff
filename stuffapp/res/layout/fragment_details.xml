@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
 	<com.parse.ParseImageView
-	    android:id="@+id/iv_photo"
+	    android:id="@+id/ivPhoto"
 	    android:layout_width="400dp"
 	    android:layout_height="360dp"
 	    android:layout_alignParentTop="true"
@@ -13,46 +13,43 @@
 	    android:scaleType="fitCenter" />
 
 	<TextView
-	    android:id="@+id/tv_name"
+	    android:id="@+id/tvName"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/iv_photo"
+	    android:layout_below="@+id/ivPhoto"
 	    android:layout_centerHorizontal="true"
 	    android:layout_marginTop="5dp"
-	    android:text="tv_name"
 	    android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	<TextView
-	    android:id="@+id/tv_desc"
+	    android:id="@+id/tvDescription"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/tv_name"
-	    android:layout_centerHorizontal="true"
-	    android:text="tv_desc" />
+	    android:layout_below="@+id/tvName"
+	    android:layout_centerHorizontal="true" />
 	
     <Button
 	    android:id="@+id/btContact"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_centerHorizontal="true"
-	    android:layout_below="@+id/tv_desc"
-	    android:text="Contact" />
+	    android:layout_below="@+id/tvDescription"
+	    android:text="@string/label_contact" />
 
 	<TextView
-	    android:id="@+id/tv_owner"
+	    android:id="@+id/tvOwner"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_below="@+id/btContact"
 	    android:layout_centerHorizontal="true"
-	    android:text="tv_owner Text"
 	    android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
 	<ImageView
-	    android:id="@+id/iv_message"
+	    android:id="@+id/ivMessage"
 	    android:layout_width="32dp"
 	    android:layout_height="32dp"
-	    android:layout_below="@+id/tv_owner"
+	    android:layout_below="@+id/tvOwner"
 	    android:layout_centerHorizontal="true"
 	    android:layout_marginTop="10dp"
 	    android:src="@drawable/ic_message" />

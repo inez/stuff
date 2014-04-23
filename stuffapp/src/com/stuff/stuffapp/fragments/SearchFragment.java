@@ -31,9 +31,9 @@ public class SearchFragment extends Fragment {
 	private static String TAG = "SearchFragment";
 	
 	private View view;
-	private ListView lv_search;
-	private Button button_search;
-	private EditText et_query;
+	private ListView lvSearch;
+	private Button btSearch;
+	private EditText etQuery;
 	
 	private SearchAdapter adapter;
 	private List<Item> items;
@@ -48,14 +48,14 @@ public class SearchFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_search, container, false);
         
-        lv_search = (ListView) view.findViewById(R.id.lv_search);
-        button_search = (Button) view.findViewById(R.id.button_search);
-        et_query = (EditText) view.findViewById(R.id.et_query);
+        lvSearch = (ListView) view.findViewById(R.id.lvSearch);
+        btSearch = (Button) view.findViewById(R.id.btSearch);
+        etQuery = (EditText) view.findViewById(R.id.etQuery);
         
-        button_search.setOnClickListener(new OnClickListener() {
+        btSearch.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String query = et_query.getText().toString().trim();
+				String query = etQuery.getText().toString().trim();
 				if ( query.length() < 1 ) {
 					Toast.makeText(getActivity(), "Search query must be at least 1 characters", Toast.LENGTH_LONG).show();
 					return;
@@ -80,7 +80,7 @@ public class SearchFragment extends Fragment {
         	adapter = new SearchAdapter(getActivity(), items);
         }
 
-        lv_search.setAdapter(adapter);
+        lvSearch.setAdapter(adapter);
 
 		return view;
     }

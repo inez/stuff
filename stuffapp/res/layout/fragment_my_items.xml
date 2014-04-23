@@ -4,21 +4,21 @@
     android:layout_height="match_parent" >
     
     <TextView
-        android:id="@+id/tv_my_items_label"
+        android:id="@+id/tvMyItemsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
-        android:text="My Items" />
+        android:text="@string/label_my_items" />
 
     <ListView
-        android:id="@+id/lv_my_items"
+        android:id="@+id/lvMyItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tv_my_items_label" />
+        android:layout_below="@+id/tvMyItemsLabel" />
 
 </RelativeLayout>

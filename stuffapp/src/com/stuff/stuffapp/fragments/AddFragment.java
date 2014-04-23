@@ -45,11 +45,11 @@ public class AddFragment extends Fragment {
 	
 	private View view;
 	
-	private Button button_add;
+	private Button btAdd;
 	
-	private EditText et_name;
+	private EditText etName;
 
-	private EditText et_description;
+	private EditText etDescription;
 	
 	private ProgressDialog progressDialog;
 	
@@ -65,7 +65,7 @@ public class AddFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_add, container, false);
 
-        LinearLayout ll_select_picture = (LinearLayout) view.findViewById(R.id.ll_select_picture);
+        LinearLayout ll_select_picture = (LinearLayout) view.findViewById(R.id.llSelectPicture);
         ll_select_picture.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -76,7 +76,7 @@ public class AddFragment extends Fragment {
 			}
 		});
 
-        LinearLayout ll_capture_picture = (LinearLayout) view.findViewById(R.id.ll_capture_picture);
+        LinearLayout ll_capture_picture = (LinearLayout) view.findViewById(R.id.llCapturePicture);
         ll_capture_picture.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -84,19 +84,19 @@ public class AddFragment extends Fragment {
 			}
 		});
 
-        button_add = (Button) view.findViewById(R.id.button_add);
-        et_name = (EditText) view.findViewById(R.id.et_name);
-        et_description = (EditText) view.findViewById(R.id.et_description);
+        btAdd = (Button) view.findViewById(R.id.btAdd);
+        etName = (EditText) view.findViewById(R.id.etName);
+        etDescription = (EditText) view.findViewById(R.id.etDescription);
         
-        button_add.setOnClickListener(new OnClickListener() {
+        btAdd.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if ( et_name.getText().toString().trim().length() == 0 ) {
+				if ( etName.getText().toString().trim().length() == 0 ) {
 					Toast.makeText(getActivity(), "Please provide a name", Toast.LENGTH_LONG).show();
 					return;
 				}
-				if ( et_name.getText().toString().trim().length() < 5 ) {
+				if ( etName.getText().toString().trim().length() < 5 ) {
 					Toast.makeText(getActivity(), "Name must be at least 5 characters", Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -117,8 +117,8 @@ public class AddFragment extends Fragment {
 				final Item item = new Item();
 				item.setACL(acl);				
 				item.setOwner(parseUser);
-				item.setName(et_name.getText().toString());
-				item.setDescription(et_description.getText().toString());
+				item.setName(etName.getText().toString());
+				item.setDescription(etDescription.getText().toString());
 				//item.setLocation(userLocation);
 				item.setLocation(((MainActivity) getActivity()).getLastKnownLocation()); 
 				item.setPhotoFile(new ParseFile(getBitmapAsBytaArray(photo), "photo.jpg"));
@@ -137,7 +137,7 @@ public class AddFragment extends Fragment {
 						
 						// Hide soft keyboard
 				        InputMethodManager mgr = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-				        mgr.hideSoftInputFromWindow(et_name.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
+				        mgr.hideSoftInputFromWindow(etName.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
 
 						((OnItemAddedListener) getActivity()).onItemAdded(item);
 					}
@@ -190,9 +190,9 @@ public class AddFragment extends Fragment {
 						photo = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
 					}
 
-					ImageView iv_preview = (ImageView) view.findViewById(R.id.iv_preview);
-					iv_preview.setImageBitmap(photo);
-					iv_preview.setVisibility(ImageView.VISIBLE);
+					ImageView ivPreview = (ImageView) view.findViewById(R.id.ivPreview);
+					ivPreview.setImageBitmap(photo);
+					ivPreview.setVisibility(ImageView.VISIBLE);
 				} catch (Exception e) {
 				}
             }
@@ -205,7 +205,7 @@ public class AddFragment extends Fragment {
 		
 		// Display soft keyboard
         InputMethodManager mgr = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.showSoftInput(et_name, InputMethodManager.SHOW_IMPLICIT);
+        mgr.showSoftInput(etName, InputMethodManager.SHOW_IMPLICIT);
 	}
 	
 	// TODO: Make it a static helper

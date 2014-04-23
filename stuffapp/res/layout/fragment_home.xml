@@ -12,7 +12,7 @@
 		android:divider="@null"
 		android:fadingEdge="none"
     	android:background="#e2e2e2"
-        android:id="@+id/lv_home"
+        android:id="@+id/lvHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

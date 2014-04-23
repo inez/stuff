@@ -136,19 +136,19 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		int fragmentId = 0;
 
 		switch ( view.getId() ) {
-			case R.id.iv_home:
+			case R.id.ivHome:
 				fragmentId = Ids.HOME;
 				break;
-			case R.id.iv_search:
+			case R.id.ivSearch:
 				fragmentId = Ids.SEARCH;
 				break;
-			case R.id.iv_add:
+			case R.id.ivAdd:
 				fragmentId = Ids.ADD;
 				break;
-			case R.id.iv_message:
+			case R.id.ivMessage:
 				fragmentId = Ids.MESSAGE;
 				break;
-			case R.id.iv_profile:
+			case R.id.ivProfile:
 				fragmentId = Ids.PROFILE;
 				break;
 
@@ -194,19 +194,19 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 
 		switch(fragmentId) {
 			case Ids.HOME:
-				v = findViewById(R.id.iv_home);
+				v = findViewById(R.id.ivHome);
 				break;
 			case Ids.SEARCH:
-				v = findViewById(R.id.iv_search);
+				v = findViewById(R.id.ivSearch);
 				break;
 			case Ids.ADD:
-				v = findViewById(R.id.iv_add);
+				v = findViewById(R.id.ivAdd);
 				break;
 			case Ids.MESSAGE:
-				v = findViewById(R.id.iv_message);
+				v = findViewById(R.id.ivMessage);
 				break;
 			case Ids.PROFILE:
-				v = findViewById(R.id.iv_profile);
+				v = findViewById(R.id.ivProfile);
 				break;
 		}
 
@@ -223,7 +223,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
 		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.fl_container, fragment);
+		ft.replace(R.id.flContainer, fragment);
 		ft.commit();
 
 		currentFragmentId = fragmentId;
@@ -234,7 +234,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		Log.d(TAG, "onItemClicked: " + item.getName());
 		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.fl_container, DetailsFragment.newInstance(item));
+		ft.replace(R.id.flContainer, DetailsFragment.newInstance(item));
 		ft.addToBackStack("details");
 		ft.commit();
 	}
@@ -252,7 +252,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		Log.d(TAG, "onMessageCompose: " + item.getName());
 		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.fl_container, MessageComposeFragment.newInstance(item));
+		ft.replace(R.id.flContainer, MessageComposeFragment.newInstance(item));
 		ft.addToBackStack("messageCompose");
 		ft.commit();
 	}
