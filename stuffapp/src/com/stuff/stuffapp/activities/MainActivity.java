@@ -23,6 +23,7 @@ import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
 import com.stuff.stuffapp.fragments.DetailsFragment;
 import com.stuff.stuffapp.fragments.HomeFragment;
 import com.stuff.stuffapp.fragments.MessageComposeFragment;
+import com.stuff.stuffapp.fragments.MessagesFragment;
 import com.stuff.stuffapp.fragments.SearchFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.fragments.MainFragment;
@@ -182,7 +183,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 					fragment = AddFragment.newInstance();
 					break;
 				case Ids.MESSAGE:
-					fragment = MainFragment.newInstance(String.valueOf(fragmentId));
+					fragment = MessagesFragment.newInstance();
 					break;
 				case Ids.PROFILE:
 					fragment = ProfileFragment.newInstance();
