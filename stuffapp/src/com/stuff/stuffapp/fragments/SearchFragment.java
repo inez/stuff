@@ -15,11 +15,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.adapters.SearchAdapter;
 import com.stuff.stuffapp.models.Item;
 
@@ -57,8 +61,14 @@ public class SearchFragment extends Fragment {
         // initialize map
         if ( null == mapFrag )
             mapFrag = (SupportMapFragment) this.getFragmentManager().findFragmentById(R.id.fragMap);
-        // enabled current location "blue dot"
+        // enable current location "blue dot" 
         mapFrag.getMap().setMyLocationEnabled(true);
+        // center at current location
+        if ( ((MainActivity) this.getActivity()).hasLastKnownLocation() ) {
+            ParseGeoPoint loc = ((MainActivity) this.getActivity()).getLastKnownLocation();
+            LatLng center = new LatLng(loc.getLatitude(), loc.getLongitude());
+            mapFrag.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(center, 10));
+        }
 
         btSearch.setOnClickListener(new OnClickListener() {
 			@Override

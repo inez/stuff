@@ -335,5 +335,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	        return null;
 	}
 
-
+	public boolean hasLastKnownLocation() {
+	    return null != lastKnownLocation;
+	}
 }
