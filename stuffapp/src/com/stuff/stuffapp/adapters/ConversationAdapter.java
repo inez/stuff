@@ -53,7 +53,7 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply> {
 		this.mContext = context;
 	}
 	
-	private static Conversation findConversation(Item item) {
+	public static Conversation findConversation(Item item) {
 		
 		Conversation thisConversation = null;
 		ParseQuery<Conversation> itemQuery = ParseQuery.getQuery(Conversation.class); 

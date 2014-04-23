@@ -5,11 +5,15 @@ import org.json.JSONObject;
 
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SendCallback;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.ConversationAdapter;
+import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
 import com.stuff.stuffapp.models.Item;
 import android.os.Bundle;
@@ -36,8 +40,7 @@ public class ConversationsFragment extends ListFragment {
 	private static final String KEY_ALERT = "alert";
 
 
-	private EditText etCompose = null;
-	private Button btSend = null;
+	private Button btSendMessage = null;
 	private Item mForItem = null;
 	
 	ConversationAdapter adapter;
@@ -74,13 +77,13 @@ public class ConversationsFragment extends ListFragment {
 
 		
 		text = (EditText) view.findViewById(R.id.text);
-		btSend = (Button) view.findViewById(R.id.btSendMessage);
+		btSendMessage = (Button) view.findViewById(R.id.btSendMessage);
 
 		//TODO: Set title on the activity bar. 
 		
 		//Register button handling in fragment. 
 		
-		btSend.setOnClickListener(new OnClickListener() {
+		btSendMessage.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
@@ -112,7 +115,7 @@ public class ConversationsFragment extends ListFragment {
 		query.whereEqualTo(KEY_DEVICE_TYPE, VALUE_ANDROID);		
 		JSONObject data = null;
 		try {
-			data = new JSONObject("{'"+KEY_ALERT+"': '"+etCompose.getText().toString()+"'}");
+			data = new JSONObject("{'"+KEY_ALERT+"': '"+text.getText().toString()+"'}");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,10 +143,50 @@ public class ConversationsFragment extends ListFragment {
 
 	}
 
-	public void sendMessage(View v)
-	{
-      Toast.makeText(getActivity(), "Sending", Toast.LENGTH_LONG).show();
+
+	public void sendMessage(View v) {
+
+		Toast.makeText(getActivity(), "Sending", Toast.LENGTH_LONG)
+				.show();
+
+
+        ConversationReply reply = createReply();
+        
+		reply.saveInBackground(new SaveCallback(){
+
+			@Override
+			public void done(ParseException ex) {
+				if(ex !=null) {
+					ex.printStackTrace();
+				}
+				
+			}
+			
+		});
+				
+		sendMessageAsData();
+		text.setText("");				              				                
 	}
+	
+	private ConversationReply createReply() {
+		
+		Conversation thisConversation = ConversationAdapter.findConversation(mForItem);
+		if(thisConversation == null) {
+			thisConversation = new Conversation();
+			thisConversation.setItem(ParseObject.createWithoutData(Item.class, mForItem.getObjectId()));
+			thisConversation.setUserOne(ParseUser.getCurrentUser());
+			thisConversation.setUserTwo(ParseObject.createWithoutData(ParseUser.class, mForItem.getOwner().getObjectId()));
+			
+		}							
+		//Create a new conversation Reply - 
+		ConversationReply reply = new ConversationReply();
+		reply.setConversation(thisConversation);
+		reply.setText(text.getText().toString());
+		reply.setUser(ParseUser.getCurrentUser());
+		
+		return reply;
+	}
+	
 	
 
 	void addNewConversationReply(ConversationReply m)
