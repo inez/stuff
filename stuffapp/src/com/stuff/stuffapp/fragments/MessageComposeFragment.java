@@ -113,8 +113,8 @@ public class MessageComposeFragment extends Fragment {
 			private Conversation findConversation(Item item) {
 				
 				Conversation thisConversation = null;
-				ParseQuery<Conversation> conversationQuery = ParseQuery.getQuery(Conversation.class); 
-                conversationQuery.whereEqualTo("item",mForItem);
+				ParseQuery<Conversation> itemQuery = ParseQuery.getQuery(Conversation.class); 
+                itemQuery.whereEqualTo("item",mForItem);
                 				                
                 ArrayList<ParseQuery<Conversation>> userQueries = new ArrayList<ParseQuery<Conversation>>();
                 ParseQuery<Conversation> user1Query = new ParseQuery<Conversation>(Conversation.class);
@@ -126,7 +126,7 @@ public class MessageComposeFragment extends Fragment {
                 userQueries.add(user2Query);
                
                 ParseQuery<Conversation> orUserQueries = ParseQuery.or(userQueries);                
-                //conversationQuery.whereMatchesQuery("item", orUserQueries);      
+                orUserQueries.whereMatchesKeyInQuery("item", "item", itemQuery);     
                 try {
 					List<Conversation>conversationList = orUserQueries.find();
 					if(conversationList.isEmpty() == false) {
