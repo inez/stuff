@@ -16,7 +16,10 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
 
+import com.parse.ParseAnalytics;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
+import com.parse.PushService;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.fragments.AddFragment;
 import com.stuff.stuffapp.fragments.AddFragment.OnItemAddedListener;
@@ -28,8 +31,10 @@ import com.stuff.stuffapp.fragments.SearchFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.fragments.MainFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
+import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.helpers.Ids;
 import com.stuff.stuffapp.models.Item;
+
 
 public class MainActivity extends FragmentActivity implements OnItemClickedListener, OnItemAddedListener {
 	private static final String TAG = "MainActivity";
@@ -49,6 +54,9 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		//Track app opened. 
+		ParseAnalytics.trackAppOpened(getIntent());
+		
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new LocationListener() {
             @Override
@@ -86,6 +94,8 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	protected void onResume() {
 	    super.onResume();
 
+		String channelName = ParseUser.getCurrentUser().getUsername();
+		PushService.subscribe(this, channelName, MainActivity.class);
 	    // select the right location provider
 	    // TODO: check for location permissions, handle error case
 	    // TODO: find out about using LocationManager.PASSIVE_PROVIDER instead

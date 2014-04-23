@@ -8,10 +8,13 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
+import com.parse.PushService;
+import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.models.Item;
 import com.stuff.stuffapp.models.Message;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
+
 
 public class StuffApplication extends Application {
 
@@ -36,6 +39,9 @@ public class StuffApplication extends Application {
 				.defaultDisplayImageOptions(options)
 				.build();
 		ImageLoader.getInstance().init(config);
+		
+	    // Specify an Activity to handle all pushes by default.
+		PushService.setDefaultPushCallback(this, MainActivity.class);
 	}
 
 }
