@@ -7,9 +7,9 @@ import com.parse.ParseUser;
 @ParseClassName("Conversation")
 public class Conversation extends ParseObject  {
 
-	private static final String ATTR_USER_ONE = "userOne";
-	private static final String ATTR_USER_TWO = "userTwo";
-	private static final String ATTR_ITEM = "item";
+	public static final String ATTR_USER_ONE = "userOne";
+	public static final String ATTR_USER_TWO = "userTwo";
+	public static final String ATTR_ITEM = "item";
 	
 	public Conversation() {
 		super();
