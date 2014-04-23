@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -34,6 +35,7 @@ public class SearchFragment extends Fragment {
 	private ListView lvSearch;
 	private Button btSearch;
 	private EditText etQuery;
+	private SupportMapFragment mapFrag;
 	
 	private SearchAdapter adapter;
 	private List<Item> items;
@@ -51,7 +53,13 @@ public class SearchFragment extends Fragment {
         lvSearch = (ListView) view.findViewById(R.id.lvSearch);
         btSearch = (Button) view.findViewById(R.id.btSearch);
         etQuery = (EditText) view.findViewById(R.id.etQuery);
-        
+
+        // initialize map
+        if ( null == mapFrag )
+            mapFrag = (SupportMapFragment) this.getFragmentManager().findFragmentById(R.id.fragMap);
+        // enabled current location "blue dot"
+        mapFrag.getMap().setMyLocationEnabled(true);
+
         btSearch.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -73,10 +81,10 @@ public class SearchFragment extends Fragment {
 			}
 		});
         
-        if(items==null) {
+        if ( items == null ) {
         	items = new ArrayList<Item>();
         }
-        if(adapter==null) {
+        if ( adapter == null ) {
         	adapter = new SearchAdapter(getActivity(), items);
         }
 

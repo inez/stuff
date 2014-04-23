@@ -25,11 +25,18 @@
             android:text="Search" />
     </LinearLayout>
 
+    <fragment
+        android:id="@+id/fragMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/ll" />
+    
     <ListView
         android:id="@+id/lvSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ll"
+        android:layout_below="@+id/fragMap"
         android:layout_centerHorizontal="true" >
     </ListView>
 
