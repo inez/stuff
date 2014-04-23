@@ -21,7 +21,7 @@ import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.LayoutInflater; 
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -126,15 +126,16 @@ public class MessageComposeFragment extends Fragment {
                 userQueries.add(user2Query);
                
                 ParseQuery<Conversation> orUserQueries = ParseQuery.or(userQueries);                
-                conversationQuery.whereMatchesQuery("item", orUserQueries);      
+                //conversationQuery.whereMatchesQuery("item", orUserQueries);      
                 try {
-					List<Conversation>conversationList = conversationQuery.find();
+					List<Conversation>conversationList = orUserQueries.find();
 					if(conversationList.isEmpty() == false) {
 						//Iterate through the conversations about this item to find the conversation with the user
 						for(Conversation conversation : conversationList) {
-						
-							if(conversation.getUserOne().getUsername().equals(mForItem.getOwner().getUsername()) || 
-									conversation.getUserTwo().getUsername().equals(mForItem.getOwner().getUsername())){
+							
+							conversation = (Conversation)conversation.fetchIfNeeded();
+							if(conversation.getUserOne().getObjectId().equals(mForItem.getOwner().getObjectId()) || 
+									conversation.getUserTwo().getObjectId().equals(mForItem.getOwner().getObjectId())){
 								
 							 thisConversation = conversation;
 								
