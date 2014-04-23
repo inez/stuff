@@ -12,7 +12,7 @@
     	android:orientation="vertical" >
 
 		<com.parse.ParseImageView
-		    android:scaleType="fitCenter"
+		    android:scaleType="centerCrop"
 			android:id="@+id/ivPhoto"
 			android:layout_width="160dp"
 			android:layout_height="160dp"
