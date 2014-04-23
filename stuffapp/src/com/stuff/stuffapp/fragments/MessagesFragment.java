@@ -1,21 +1,15 @@
 package com.stuff.stuffapp.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
-import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
-import com.stuff.stuffapp.models.Conversation;
+import com.stuff.stuffapp.adapters.ConversationListAdapter;
 
 public class MessagesFragment extends Fragment {
 
@@ -23,7 +17,9 @@ public class MessagesFragment extends Fragment {
 	
 	private View view;
 	
-	private ParseQueryAdapter<Conversation> adapter;
+	private  ConversationListAdapter conversationListAdapter;
+	
+	private ListView lvConversations;
 
 	public static MessagesFragment newInstance() {
 		MessagesFragment fragment = new MessagesFragment();
@@ -34,30 +30,17 @@ public class MessagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_messages, container, false);
-        if(adapter==null) {
-        	createAdapter();
+        
+        if(savedInstanceState == null) {
+        	if(conversationListAdapter == null) {
+        		conversationListAdapter = new ConversationListAdapter(getActivity());
+        	}
+        	lvConversations = (ListView) view.findViewById(R.id.lvConversations);
+        	lvConversations.setAdapter(conversationListAdapter);
         }
+
         return view;
     }
-	
-	private void createAdapter() {
-		adapter = new ParseQueryAdapter<Conversation>(getActivity(), new ParseQueryAdapter.QueryFactory<Conversation>() {
-        	public ParseQuery<Conversation> create() {
-                ParseUser user = ParseUser.getCurrentUser();
-                
-                ParseQuery<Conversation> queryUserOne = new ParseQuery<Conversation>(Conversation.class);
-                queryUserOne.whereEqualTo(Conversation.ATTR_USER_ONE, user);
 
-                ParseQuery<Conversation> queryUserTwo = new ParseQuery<Conversation>(Conversation.class);
-                queryUserTwo.whereEqualTo(Conversation.ATTR_USER_TWO, user);
-                
-                List<ParseQuery<Conversation>> queries = new ArrayList<ParseQuery<Conversation>>();
-                queries.add(queryUserOne);
-                queries.add(queryUserTwo);
-                
-                return ParseQuery.or(queries);
-        	}
-        });
-	}
 
 }
