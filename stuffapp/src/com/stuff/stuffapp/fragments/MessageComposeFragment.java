@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.models.Conversation;
@@ -34,7 +40,13 @@ public class MessageComposeFragment extends Fragment {
 
 	private static final String TAG = "MessageComposeFragment";
 	private static final String KEY_ITEM = "item";
-	private static final String KEY_MESSAGE = "message";
+
+	
+	private static final String  KEY_DEVICE_TYPE = "deviceType";
+		private static final String  VALUE_ANDROID = "android";
+	
+	private static final String KEY_ALERT = "alert";
+
 
 	private EditText etCompose = null;
 	private TextView tvRecepient = null;
@@ -88,6 +100,8 @@ public class MessageComposeFragment extends Fragment {
 					}
 					
 				});
+				
+				sendMessageAsData();
 								              				                
 			}
 			
@@ -114,19 +128,19 @@ public class MessageComposeFragment extends Fragment {
 				
 				Conversation thisConversation = null;
 				ParseQuery<Conversation> itemQuery = ParseQuery.getQuery(Conversation.class); 
-                itemQuery.whereEqualTo("item",mForItem);
+                itemQuery.whereEqualTo(Conversation.ATTR_ITEM,mForItem);
                 				                
                 ArrayList<ParseQuery<Conversation>> userQueries = new ArrayList<ParseQuery<Conversation>>();
                 ParseQuery<Conversation> user1Query = new ParseQuery<Conversation>(Conversation.class);
-                user1Query.whereEqualTo("userOne", ParseUser.getCurrentUser());
+                user1Query.whereEqualTo(Conversation.ATTR_USER_ONE, ParseUser.getCurrentUser());
                 ParseQuery<Conversation> user2Query = new ParseQuery<Conversation>(Conversation.class);
-                user2Query.whereEqualTo("userTwo", ParseUser.getCurrentUser());
+                user2Query.whereEqualTo(Conversation.ATTR_USER_TWO, ParseUser.getCurrentUser());
                 
                 userQueries.add(user1Query);
                 userQueries.add(user2Query);
                
                 ParseQuery<Conversation> orUserQueries = ParseQuery.or(userQueries);                
-                orUserQueries.whereMatchesKeyInQuery("item", "item", itemQuery);     
+                orUserQueries.whereMatchesKeyInQuery(Conversation.ATTR_ITEM, Conversation.ATTR_ITEM, itemQuery);     
                 try {
 					List<Conversation>conversationList = orUserQueries.find();
 					if(conversationList.isEmpty() == false) {
@@ -162,39 +176,45 @@ public class MessageComposeFragment extends Fragment {
 		return view;
 	}
 
+	public void sendMessageAsData()
+	{
+	    ParsePush push = new ParsePush();
+
+	    push.setChannel(mForItem.getOwner().getUsername());
+
+		ParseQuery query = ParseInstallation.getQuery();
+		// Notification for Android users
+		query.whereEqualTo(KEY_DEVICE_TYPE, VALUE_ANDROID);		
+		JSONObject data = null;
+		try {
+			data = new JSONObject("{'"+KEY_ALERT+"': '"+etCompose.getText().toString()+"'}");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		push.setData(data);
+	    push.sendInBackground(new SendCallback() {
+			
+			@Override
+			public void done(ParseException ex) {
+				
+				if(ex != null) {
+					Log.d(TAG,"Error:" + ex);
+					ex.printStackTrace();
+				}
+				Log.d(TAG,"Push notification sent");
+				
+			}
+		});
+	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
 	}
 
-	private ParseUser getLoggedInUser() {
 
-		ParseUser user = ParseUser.getCurrentUser();
-		Log.d(TAG, "Current User is :" + user);
-		return user;
-	}
-
-	private void saveMessage(Message message) {
-		final HashMap<String, String> map = new HashMap<String, String>();
-
-		map.put("fromUserId", message.getFromUser().getObjectId());
-		map.put("toUserId", message.getToUser().getObjectId());
-		map.put("item", message.getItem().getObjectId());
-		map.put("text", message.getText());
-		try {
-			com.parse.ParseCloud.callFunction("saveMessage", map);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		/*
-		 * ParseCloud.callFunctionInBackground("sendMessage", map, new
-		 * FunctionCallback<Object>() { public void done(Object object,
-		 * ParseException e) { if (e == null) { Log.d("DEBUG","Success " +
-		 * object.toString()); } else { Log.d("DEBUG","Error " + e); } } });
-		 */
-
-	}
 
 }
