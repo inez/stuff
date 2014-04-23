@@ -72,6 +72,12 @@ public class MessageComposeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inf, ViewGroup parent,
 			Bundle savedInstanceState) {
 
+		return myCreateView1(inf, parent, savedInstanceState);
+		
+	}
+	
+	private View myCreateView1(LayoutInflater inf, ViewGroup parent,
+			Bundle savedInstanceState) {
 		View view = inf.inflate(R.layout.fragment_message_compose, parent,
 				false);
 		etCompose = (EditText) view.findViewById(R.id.etCompose);

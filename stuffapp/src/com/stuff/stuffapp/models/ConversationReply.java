@@ -10,7 +10,28 @@ public class ConversationReply extends ParseObject {
 	public static final String ATTR_CONVERSATION = "conversation";
 	public static final String ATTR_TEXT = "text";
 	public static final String ATTR_USER = "user";
+	public static final String ATTR_STATUS_MESSAGE ="statusMessage";
 
+	private boolean isStatusMessage = false;
+	public boolean isStatusConversationReply;
+	
+	public ConversationReply() {
+		super();
+	}
+	
+	public ConversationReply(String messageText, boolean isStatusMessage) {
+		super();
+		
+		setText(messageText);
+		this.isStatusMessage = false;
+	}
+	
+	public ConversationReply(boolean status, String messageText) {
+		super();
+		setText(messageText);
+		this.isStatusMessage = status;
+	}
+	
 	public Conversation getConversation() {
 		return (Conversation) getParseObject(ATTR_CONVERSATION);
 	}
@@ -33,6 +54,16 @@ public class ConversationReply extends ParseObject {
 	
 	public ParseUser getUser() {
 		return getParseUser(ATTR_USER);
+	}
+
+	public boolean isStatusMessage() {
+		// TODO Auto-generated method stub
+		return isStatusMessage;
+	}
+
+	public boolean isMine() {
+
+		return getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId());
 	}
 
 }
