@@ -2,12 +2,18 @@ package com.stuff.stuffapp.fragments;
 
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.MessageListAdapter;
+import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
+import com.stuff.stuffapp.models.Item;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 public class MessageListFragment extends Fragment {
 	

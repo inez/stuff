@@ -6,10 +6,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.ConversationListAdapter;
+import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
+import com.stuff.stuffapp.models.Conversation;
+import com.stuff.stuffapp.models.Item;
 
 public class MessagesFragment extends Fragment {
 
@@ -39,6 +44,14 @@ public class MessagesFragment extends Fragment {
         	lvConversations.setAdapter(conversationListAdapter);
         }
 
+        ListView lvConversations = (ListView) view.findViewById(R.id.lvConversations);
+        lvConversations.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Conversation conversation = (Conversation) arg0.getItemAtPosition(arg2);
+				((OnItemClickedListener) getActivity()).onMessageCompose(conversation.getItem());
+			}
+		});
         return view;
     }
 
