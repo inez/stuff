@@ -165,7 +165,9 @@ public class ConversationsFragment extends ListFragment {
 		});
 				
 		sendMessageAsData();
-		text.setText("");				              				                
+		text.setText("");	
+		//Add for local display
+		adapter.loadObjects();
 	}
 	
 	private ConversationReply createReply() {
