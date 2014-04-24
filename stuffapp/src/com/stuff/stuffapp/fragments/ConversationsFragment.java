@@ -185,6 +185,8 @@ public class ConversationsFragment extends ListFragment {
 		reply.setConversation(thisConversation);
 		reply.setText(text.getText().toString());
 		reply.setUser(ParseUser.getCurrentUser());
+
+		thisConversation.setRecentReply(reply);
 		
 		return reply;
 	}

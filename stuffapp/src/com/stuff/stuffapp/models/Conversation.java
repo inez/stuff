@@ -10,7 +10,8 @@ public class Conversation extends ParseObject  {
 	public static final String ATTR_USER_ONE = "userOne";
 	public static final String ATTR_USER_TWO = "userTwo";
 	public static final String ATTR_ITEM = "item";
-	
+	public static final String ATTR_RECENT_REPLY = "recentReply";
+
 	public Conversation() {
 		super();
 	}
@@ -39,5 +40,12 @@ public class Conversation extends ParseObject  {
 	public void setItem(Item item) {
 		put(ATTR_ITEM, item);
 	}
+	
+	public ConversationReply getRecentReply() {
+		return (ConversationReply) getParseObject(ATTR_RECENT_REPLY);
+	}
 
+	public void setRecentReply(ConversationReply conversationReply) {
+		put(ATTR_RECENT_REPLY, conversationReply);
+	}
 }

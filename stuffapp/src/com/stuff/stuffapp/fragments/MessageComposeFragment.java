@@ -127,6 +127,8 @@ public class MessageComposeFragment extends Fragment {
 				reply.setText(etCompose.getText().toString());
 				reply.setUser(ParseUser.getCurrentUser());
 				
+				thisConversation.setRecentReply(reply);
+
 				return reply;
 			}
 			
