@@ -48,6 +48,7 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
                 query.include(Conversation.ATTR_USER_ONE);
                 query.include(Conversation.ATTR_USER_TWO);
                 query.include(Conversation.ATTR_ITEM);
+                query.include(Conversation.ATTR_RECENT_REPLY);
                 query.setCachePolicy(CachePolicy.CACHE_THEN_NETWORK);
                 return query;
         	}
@@ -68,20 +69,12 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 			holder = (ViewHolder) v.getTag(); 
 		}
 
-		holder.tvText.setText("");
-		ParseQuery<ConversationReply> query = new ParseQuery<ConversationReply>(ConversationReply.class);
-		query.whereEqualTo(ConversationReply.ATTR_CONVERSATION, conversation);
-		query.orderByDescending("createdAt");
-		query.setLimit(1);
-		query.setCachePolicy(CachePolicy.CACHE_THEN_NETWORK);
-		query.findInBackground(new FindCallback<ConversationReply>() {
-			@Override
-			public void done(List<ConversationReply> arg0, ParseException arg1) {
-				if(arg0 != null && arg0.size() == 1) {
-					holder.tvText.setText(arg0.get(0).getText());
-				}
-			}
-		});
+		ConversationReply recentReply = conversation.getRecentReply();
+		if(recentReply != null) {
+			holder.tvText.setText(recentReply.getText());
+		} else {
+			holder.tvText.setText("");
+		}
 
 		ParseUser otherUser;
 		if(conversation.getUserOne().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
