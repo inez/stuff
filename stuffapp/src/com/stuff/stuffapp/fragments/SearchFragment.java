@@ -134,7 +134,28 @@ public class SearchFragment extends Fragment {
 
         lvSearch.setAdapter(adapter);
 
-		return view;
+        // begin temporary
+        OnClickListener arrowListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( R.id.btnArrowIndicatorLeft == v.getId() ) {
+                    Toast.makeText(getActivity(), "Tap left", Toast.LENGTH_SHORT).show();
+                }
+                else if ( R.id.btnArrowIndicatorRight == v.getId() ) {
+                    Toast.makeText(getActivity(), "Tap right", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), "Unrecognized arrow", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        Button btnArrowLeft = (Button) view.findViewById(R.id.btnArrowIndicatorLeft);
+        btnArrowLeft.setOnClickListener(arrowListener);
+        Button btnArrowRight = (Button) view.findViewById(R.id.btnArrowIndicatorRight);
+        btnArrowRight.setOnClickListener(arrowListener);
+        // end temporary
+
+        return view;
     }
 
 	@Override
