@@ -4,6 +4,95 @@
     android:layout_height="match_parent" >
 
     <LinearLayout
+        android:id="@+id/llSearchBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/etQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10" />
+
+        <Button
+            android:id="@+id/btSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Search" />
+    </LinearLayout>
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+	    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+	    android:id="@+id/searchSlidingLayout"
+        android:layout_below="@+id/llSearchBar"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:gravity="bottom"
+	    sothree:panelHeight="68dp"
+	    sothree:shadowHeight="4dp">
+
+        <RelativeLayout
+            android:id="@+id/rlSearchMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    	    <FrameLayout
+    	        android:id="@+id/flMap"
+    	        android:layout_width="match_parent"
+    	        android:layout_height="match_parent"
+    	        android:layout_alignParentLeft="true" />
+
+            <Button
+                android:id="@+id/btnArrowIndicatorLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:onClick="onArrowClick"
+                android:text="&lt;&lt;" />
+            <Button
+                android:id="@+id/btnArrowIndicatorRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:onClick="onArrowClick"
+                android:text="&gt;&gt;" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/llSlider"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvSlider"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="#cccccc"
+                android:gravity="center"
+                android:text="Touch and slide me!" />
+    
+            <ListView
+                android:id="@+id/lvSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+<!-- 
+    <LinearLayout
         android:id="@+id/ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,7 +130,6 @@
         android:layout_centerHorizontal="true" >
     </ListView>
 
-    <!-- testing overlay layout for swipe indicators -->
     <Button
         android:id="@+id/btnArrowIndicatorLeft"
         android:layout_width="wrap_content"
@@ -58,5 +146,6 @@
         android:layout_centerVertical="true"
         android:onClick="onArrowClick"
         android:text="&gt;&gt;" />
+-->
 
 </RelativeLayout>
