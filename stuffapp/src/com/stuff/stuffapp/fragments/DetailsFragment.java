@@ -1,16 +1,16 @@
 package com.stuff.stuffapp.fragments;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,8 +19,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.activities.MainActivity;
-import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
-import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.models.Item;
 
 public class DetailsFragment extends Fragment {
@@ -80,6 +78,27 @@ public class DetailsFragment extends Fragment {
 		//
 		TextView tvTime = (TextView) view.findViewById(R.id.tvTime);
 		tvTime.setText((new PrettyTime()).format(item.getCreatedAt()));
+		
+		//
+		// tvDescription
+		//
+		TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+		String description = item.getDescription();
+		if(description.trim().length() == 0) {
+			description = "<i>No description</i>";
+		}
+		tvDescription.setText(Html.fromHtml(description));
+		
+		//
+		// ivProfilePicture
+		//
+		ImageView ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
+		JSONObject userProfile = item.getOwner().getJSONObject("profile");
+        try {
+    		imageLoader.displayImage("http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal", ivProfilePicture);
+    		Log.d(TAG, "http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal");
+        } catch (JSONException e) {
+        }
 
 		return view;
 	}
