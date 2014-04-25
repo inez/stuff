@@ -50,15 +50,20 @@ public class DetailsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: " + item.getName());
         view = inflater.inflate(R.layout.fragment_details, container, false);
-        
-        ParseImageView ivItemPicture = (ParseImageView) view.findViewById(R.id.ivItemPicture);
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(item.getPhotoFile().getUrl(), ivItemPicture);
-        
+
+        //
+        // tvName
+        //
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         tvName.setText(item.getName());
         
-        
+        //
+        // ivItemPicture
+        //
+        ParseImageView ivItemPicture = (ParseImageView) view.findViewById(R.id.ivItemPicture);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(item.getPhotoFile().getUrl(), ivItemPicture);
+
 		//
 		// tvDistance
 		//
@@ -76,7 +81,7 @@ public class DetailsFragment extends Fragment {
 		TextView tvTime = (TextView) view.findViewById(R.id.tvTime);
 		tvTime.setText((new PrettyTime()).format(item.getCreatedAt()));
 
-        return view;
+		return view;
 	}
 
 }
