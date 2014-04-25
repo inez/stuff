@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +25,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.adapters.SearchAdapter;
@@ -112,6 +114,7 @@ public class SearchFragment extends Fragment {
 					Toast.makeText(getActivity(), "Search query must be at least 1 characters", Toast.LENGTH_LONG).show();
 					return;
 				}
+				Log.d(TAG, "Searching for items");
 				getSearchResults(query, new FindCallback<Item>() {
 					@Override
 					public void done(List<Item> arg0, ParseException arg1) {
@@ -134,7 +137,33 @@ public class SearchFragment extends Fragment {
 
         lvSearch.setAdapter(adapter);
 
-		return view;
+        // begin temporary
+        OnClickListener arrowListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( R.id.btnArrowIndicatorLeft == v.getId() ) {
+                    Toast.makeText(getActivity(), "Tap left", Toast.LENGTH_SHORT).show();
+                }
+                else if ( R.id.btnArrowIndicatorRight == v.getId() ) {
+                    Toast.makeText(getActivity(), "Tap right", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), "Unrecognized arrow", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        Button btnArrowLeft = (Button) view.findViewById(R.id.btnArrowIndicatorLeft);
+        btnArrowLeft.setOnClickListener(arrowListener);
+        Button btnArrowRight = (Button) view.findViewById(R.id.btnArrowIndicatorRight);
+        btnArrowRight.setOnClickListener(arrowListener);
+        // end temporary
+
+        // sliding panel stuff
+        final SlidingUpPanelLayout slidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.searchSlidingLayout);
+        final TextView slidingHeader = (TextView) view.findViewById(R.id.tvSlider);
+        slidingLayout.setDragView(slidingHeader);
+        
+        return view;
     }
 
 	@Override
