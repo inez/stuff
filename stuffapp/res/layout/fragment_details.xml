@@ -3,55 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-	<com.parse.ParseImageView
-	    android:id="@+id/ivPhoto"
-	    android:layout_width="400dp"
-	    android:layout_height="360dp"
-	    android:layout_alignParentTop="true"
-	    android:layout_centerHorizontal="true"
-	    android:layout_marginTop="10dp"
-	    android:scaleType="fitCenter" />
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="tvName" />
+    
+    <com.parse.ParseImageView
+        android:id="@+id/ivItemPicture"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/tvName"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:textColor="#777777"
+        android:id="@+id/tvDistance"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:text="tvDistance" />
 
 	<TextView
-	    android:id="@+id/tvName"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/ivPhoto"
-	    android:layout_centerHorizontal="true"
-	    android:layout_marginTop="5dp"
-	    android:textAppearance="?android:attr/textAppearanceLarge" />
-	
-	<TextView
-	    android:id="@+id/tvDescription"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/tvName"
-	    android:layout_centerHorizontal="true" />
-	
-    <Button
-	    android:id="@+id/btContact"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_centerHorizontal="true"
-	    android:layout_below="@+id/tvDescription"
-	    android:text="@string/label_contact" />
-
-	<TextView
-	    android:id="@+id/tvOwner"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/btContact"
-	    android:layout_centerHorizontal="true"
-	    android:textAppearance="?android:attr/textAppearanceMedium" />
-
+	    android:textColor="#777777"
+        android:id="@+id/tvTime"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="34dp"
+        android:text="tvTime" />
 
 	<ImageView
-	    android:id="@+id/ivMessage"
-	    android:layout_width="32dp"
-	    android:layout_height="32dp"
-	    android:layout_below="@+id/tvOwner"
-	    android:layout_centerHorizontal="true"
-	    android:layout_marginTop="10dp"
-	    android:src="@drawable/ic_message" />
-
+	    android:id="@+id/imageView1"
+	    android:layout_width="24dp"
+	    android:layout_height="24dp"
+	    android:layout_marginRight="5dp"
+	    android:layout_marginBottom="7dp"
+	    android:layout_alignBottom="@+id/tvTime"
+	    android:layout_toLeftOf="@+id/tvDistance"
+	    android:src="@drawable/marker_icon_2" />
+    
 </RelativeLayout>

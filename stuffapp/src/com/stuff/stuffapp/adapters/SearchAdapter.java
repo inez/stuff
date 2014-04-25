@@ -34,6 +34,8 @@ public class SearchAdapter extends ArrayAdapter<Item> {
 	
 	@Override
 	public View getView(int position, View v, ViewGroup parent) {
+		return v;
+		/*
 		final ViewHolder holder;
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.item_list_home, null);
@@ -93,5 +95,6 @@ public class SearchAdapter extends ArrayAdapter<Item> {
 		}
 
 		return v;
+		*/
 	}
 }
