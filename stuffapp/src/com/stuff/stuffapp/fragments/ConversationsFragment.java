@@ -117,7 +117,14 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	    push.setChannel(item.getOwner().getUsername());
+		ParseUser user = null;
+		try {
+			user = (ParseUser)item.getOwner().fetchIfNeeded();
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    push.setChannel(user.getUsername());
 
 		ParseQuery query = ParseInstallation.getQuery();
 		// Notification for Android users
