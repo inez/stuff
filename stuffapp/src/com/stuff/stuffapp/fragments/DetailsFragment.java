@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.stuff.stuffapp.R;
@@ -93,11 +94,16 @@ public class DetailsFragment extends Fragment {
 		// ivProfilePicture
 		//
 		ImageView ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
-		JSONObject userProfile = item.getOwner().getJSONObject("profile");
+		JSONObject userProfile;
         try {
+            userProfile = item.getOwner().fetchIfNeeded().getJSONObject("profile");
     		imageLoader.displayImage("http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal", ivProfilePicture);
     		Log.d(TAG, "http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal");
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
+        }
+        catch (ParseException e1) {
+            e1.printStackTrace();
         }
 
 		return view;
