@@ -64,17 +64,13 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 			holder.ivProfile = (ParseImageView) v.findViewById(R.id.ivProfile);
 			holder.ivPhoto = (ParseImageView) v.findViewById(R.id.ivPhoto);
 			holder.tvText = (TextView) v.findViewById(R.id.tvText);
+			holder.tvName = (TextView) v.findViewById(R.id.tvName);
 			v.setTag(holder);
 		} else {
 			holder = (ViewHolder) v.getTag(); 
 		}
-
-		ConversationReply recentReply = conversation.getRecentReply();
-		if(recentReply != null) {
-			holder.tvText.setText(recentReply.getText());
-		} else {
-			holder.tvText.setText("");
-		}
+		
+		ImageLoader imageLoader = ImageLoader.getInstance();
 
 		ParseUser otherUser;
 		if(conversation.getUserOne().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
@@ -82,25 +78,49 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 		} else {
 			otherUser = conversation.getUserOne();
 		}
-
-		ImageLoader imageLoader = ImageLoader.getInstance();
-
-		JSONObject userProfile = otherUser.getJSONObject("profile");
-        try {
-    		imageLoader.displayImage("http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=square", holder.ivProfile);
-    		Log.d(TAG, "http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=square");
-        } catch (JSONException e) {
-            Log.e(TAG, "Error parsing saved user data.");
-        }
+		
+		JSONObject profileData = otherUser.getJSONObject("profile");
+		
+		//
+		// ivPhoto
+		//
 		imageLoader.displayImage(conversation.getItem().getPhotoFile100().getUrl(), holder.ivPhoto);
 		
+		//
+		// ivProfile
+		//
+		try {
+    		imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=square", holder.ivProfile);
+        } catch (JSONException e) {
+        	e.printStackTrace();
+        }
+		
+		//
+		// tvText
+		//
+		ConversationReply recentReply = conversation.getRecentReply();
+		if(recentReply != null) {
+			holder.tvText.setText(recentReply.getText());
+		} else {
+			holder.tvText.setText("");
+		}
+		
+		//
+		// tvName
+		//
+		try {
+			holder.tvName.setText(profileData.get("name").toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
 		return v;
 	}
 	
     static class ViewHolder {
-    	ParseImageView ivProfile;
+		ParseImageView ivProfile;
     	ParseImageView ivPhoto;
-		TextView tvText;
+		TextView tvText, tvName;
 	}
 
 }
