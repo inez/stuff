@@ -59,29 +59,6 @@
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop" />
-<!-- 
-    <com.stuff.stuffapp.RoundedImageView
-        android:id="@+id/ivProfilePicture"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/ivItemPicture"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:scaleType="centerCrop"
-        app:corner_radius="75dip" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivProfilePicture"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/ivProfilePicture"
-        android:text="Inez Korczyński"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
- -->
 
     <TextView
         android:id="@+id/tvDescription"
@@ -90,17 +67,36 @@
         android:layout_below="@+id/ivItemPicture"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
-        android:textColor="#777777"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="tvDescription"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#777777" />
 
-	<com.stuff.stuffapp.RoundedImageView
-        android:id="@+id/ivProfilePicture"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentLeft="true"
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tvDescription"
-        android:layout_marginLeft="20dp"
-        android:scaleType="centerCrop"
-        app:corner_radius="75dip" />
-    
+        android:layout_centerHorizontal="true" >
+
+        <com.stuff.stuffapp.RoundedImageView
+        	android:id="@+id/ivProfilePicture"
+	        android:layout_width="75dp"
+	        android:layout_height="75dp"
+	        app:corner_radius="75dip" 
+	        android:scaleType="centerCrop"
+	        android:layout_marginLeft="20dp" />
+
+        <TextView
+            android:id="@+id/tvNameAndLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ivProfilePicture"
+            android:layout_marginLeft="20dp"
+            android:text="tvNameAndLocation"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#777777" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.stuff.stuffapp.R;
@@ -89,12 +88,37 @@ public class DetailsFragment extends Fragment {
 			description = "<i>No description</i>";
 		}
 		tvDescription.setText(Html.fromHtml(description));
-		
+
+		JSONObject profileData = item.getOwner().getJSONObject("profile");
+
 		//
 		// ivProfilePicture
 		//
 		ImageView ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
-		JSONObject profileData = item.getOwner().getJSONObject("profile");
+		try {
+			imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=normal", ivProfilePicture);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		//
+		// tvNameAndLocation
+		//
+		TextView tvNameAndLocation = (TextView) view.findViewById(R.id.tvNameAndLocation);
+		String name = null, location = null;
+
+		try {
+			name = profileData.get("name").toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		try {
+			location = profileData.get("location").toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		tvNameAndLocation.setText(name + (location != null ? "\n" + location : ""));
 
 		return view;
 	}
