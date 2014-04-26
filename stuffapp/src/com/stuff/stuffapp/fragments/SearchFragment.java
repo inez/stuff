@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
@@ -35,25 +36,26 @@ import com.stuff.stuffapp.models.Item;
 
 public class SearchFragment extends Fragment {
 
-	public interface OnItemClickedListener {
+    public interface OnItemClickedListener {
         public void onItemClicked(Item item);
     }
-	
-	private static String TAG = "SearchFragment";
-	
-	private View view;
-	private ListView lvSearch;
-	private Button btSearch;
-	private EditText etQuery;
-	private SupportMapFragment mapFrag;
-	
-	private SearchAdapter adapter;
-	private List<Item> items;
 
-	private SearchPagerAdapter mPagerAdapter;
-	ViewPager mPager;
+    private static String TAG = "SearchFragment";
 
-	// begin bug fix for map within fragment
+    private View view;
+    private ListView lvSearch;
+    private Button btSearch;
+    private EditText etQuery;
+    private SupportMapFragment mapFrag;
+    private GoogleMap mMap;
+	
+    private SearchAdapter adapter;
+    private List<Item> items;
+
+    private SearchPagerAdapter mPagerAdapter;
+    ViewPager mPager;
+
+    // begin bug fix for map within fragment
     // http://stackoverflow.com/questions/14929907/causing-a-java-illegalstateexception-error-no-activity-only-when-navigating-to
     // https://code.google.com/p/android/issues/detail?id=42601
     private static final Field sChildFragmentManagerField;
@@ -82,50 +84,50 @@ public class SearchFragment extends Fragment {
     }
     // end bug fix
 
-	public static SearchFragment newInstance() {
-		SearchFragment fragment = new SearchFragment();
-		return fragment;
-	}
+    public static SearchFragment newInstance() {
+        SearchFragment fragment = new SearchFragment();
+        return fragment;
+    }
 
-	@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "onCreateView");
+        Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_search, container, false);
         
         lvSearch = (ListView) view.findViewById(R.id.lvSearch);
         btSearch = (Button) view.findViewById(R.id.btSearch);
         etQuery = (EditText) view.findViewById(R.id.etQuery);
-
+        
         btSearch.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String query = etQuery.getText().toString().trim();
-				if ( query.length() < 1 ) {
-					Toast.makeText(getActivity(), "Search query must be at least 1 characters", Toast.LENGTH_LONG).show();
-					return;
-				}
-				Log.d(TAG, "Searching for items");
-				getSearchResults(query, new FindCallback<Item>() {
-					@Override
-					public void done(List<Item> objects, ParseException e) {
-						if(objects != null) {
-							Log.d(TAG, "Got " + objects.size() + " results");
-							adapter.clear();
-							adapter.addAll(objects);
-							// view pager
-							mPagerAdapter = new SearchPagerAdapter(SearchFragment.this.getChildFragmentManager(), objects);
-							mPager.setAdapter(mPagerAdapter);
-						}
-					}
-				});
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                String query = etQuery.getText().toString().trim();
+                if ( query.length() < 1 ) {
+                    Toast.makeText(getActivity(), "Search query must be at least 1 characters", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Log.d(TAG, "Searching for items");
+                getSearchResults(query, new FindCallback<Item>() {
+                    @Override
+                    public void done(List<Item> objects, ParseException e) {
+                        if(objects != null) {
+                            Log.d(TAG, "Got " + objects.size() + " results");
+                            adapter.clear();
+                            adapter.addAll(objects);
+                            // view pager
+                            mPagerAdapter = new SearchPagerAdapter(SearchFragment.this.getChildFragmentManager(), objects);
+                            mPager.setAdapter(mPagerAdapter);
+                        }
+                    }
+                });
+            }
+        });
         
         if ( items == null ) {
-        	items = new ArrayList<Item>();
+            items = new ArrayList<Item>();
         }
         if ( adapter == null ) {
-        	adapter = new SearchAdapter(getActivity(), items);
+            adapter = new SearchAdapter(getActivity(), items);
         }
 
         lvSearch.setAdapter(adapter);
@@ -164,41 +166,41 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-	    super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
 
-	    // dynamically create map fragment
-        FragmentManager fm = this.getChildFragmentManager();
-        /* ---- temporarily disable maps ----
-        mapFrag = (SupportMapFragment) fm.findFragmentById(R.id.flMap);
+        // dynamically create map fragment
         if ( null == mapFrag ) {
             Log.i(TAG, "Re-creating map fragment");
             mapFrag = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.flMap, mapFrag).commit();
+
+            // NOTE: SupportMapFragment is initialized in onCreateView, but its map
+            // is not available until later in the life-cycle. For now, we wait
+            // until onResume to get or manipulate the map object.
+            // Technically, the map is ready inside SupportMapFragment.onCreateView
+            // and Stack Overflow suggests sub-classing SupportMapFragment to call
+            // a made-up callback (e.g., onMapReady()) to the Search fragment in
+            // the sub-class's onCreateView.
         }
-        */
-        // NOTE: SupportMapFragment is initialized in onCreateView, but its map
-        // is not available until later in the life-cycle. For now, we wait
-        // until onResume.
-        // The map is safely available inside SupportMapFragment.onCreateView
-        // and Stack Overflow suggests sub-classing SupportMapFragment to
-        // call a made-up callback (e.g., onMapReady()) to the Search fragment
-        // in the sub-class's onCreateView.
-	}
+        FragmentManager fm = this.getChildFragmentManager();
+        fm.beginTransaction().replace(R.id.flMap, mapFrag).commit();
+    }
 
-	@Override
-	public void onResume() {
-	    super.onResume();
-	    setUpMap();
-	}
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+        setUpMapIfNeeded();
+    }
 
-	private void getSearchResults(String query, FindCallback<Item> callback) {
-		ParseQuery<Item> query1 = new ParseQuery<Item>(Item.class);
-		query1.whereContains("searchable", query.toLowerCase());
-		query1.include("owner");
-		query1.findInBackground(callback);
-		/*
+    private void getSearchResults(String query, FindCallback<Item> callback) {
+        ParseQuery<Item> query1 = new ParseQuery<Item>(Item.class);
+        query1.whereContains("searchable", query.toLowerCase());
+        query1.include("owner");
+        query1.findInBackground(callback);
+        /*
         ParseQuery<Item> query1 = new ParseQuery<Item>(Item.class);
         query1.whereContains("name", query);
 
@@ -211,42 +213,46 @@ public class SearchFragment extends Fragment {
 
         ParseQuery.or(queries).findInBackground(callback);
         */
-	}
+    }
 
-	private void setUpMap() {
-        if ( null != mapFrag && null != mapFrag.getMap() ) {
-            // enable current location "blue dot" 
-            mapFrag.getMap().setMyLocationEnabled(true);
-            // center at current location
-            if ( ((MainActivity) this.getActivity()).hasLastKnownLocation() ) {
-                ParseGeoPoint loc = ((MainActivity) this.getActivity()).getLastKnownLocation();
-                LatLng center = new LatLng(loc.getLatitude(), loc.getLongitude());
-                mapFrag.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15));
-            }
+    private void setUpMapIfNeeded() {
+        if ( null == mMap ) {
+            mMap = mapFrag.getMap();
+            assert mMap != null;
+            setUpMap();
         }
-        else {
-            Toast.makeText(getActivity(), "Uh oh, could not get map", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "map is null in onResume");
+    }
+
+    private void setUpMap() {
+        Log.i(TAG, "Setting up map");
+
+        // enable current location "blue dot" 
+        mMap.setMyLocationEnabled(true);
+        // center at current location
+        if ( ((MainActivity) this.getActivity()).hasLastKnownLocation() ) {
+            ParseGeoPoint loc = ((MainActivity) this.getActivity()).getLastKnownLocation();
+            LatLng center = new LatLng(loc.getLatitude(), loc.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15));
         }
-	}
+    }
 
-	public static class SearchPagerAdapter extends FragmentStatePagerAdapter {
-	    private List<Item> mSearchResults;
+    public static class SearchPagerAdapter extends FragmentStatePagerAdapter {
+        private List<Item> mSearchResults;
 
-	    public SearchPagerAdapter(FragmentManager fm, List<Item> searchResults) {
-	        super(fm);
-	        this.mSearchResults = searchResults;
-	    }
+        public SearchPagerAdapter(FragmentManager fm, List<Item> searchResults) {
+            super(fm);
+            this.mSearchResults = searchResults;
+        }
 
-	    @Override
-	    public int getCount() {
-	        return mSearchResults.size();
-	    }
+        @Override
+        public int getCount() {
+            return mSearchResults.size();
+        }
 
-	    @Override
-	    public Fragment getItem(int position) {
-	        // TODO: optimize this to cache fragments
-	        return DetailsFragment.newInstance(mSearchResults.get(position));
-	    }
-	}
+        @Override
+        public Fragment getItem(int position) {
+            // TODO: optimize this to cache fragments
+            return DetailsFragment.newInstance(mSearchResults.get(position));
+        }
+    }
 }
