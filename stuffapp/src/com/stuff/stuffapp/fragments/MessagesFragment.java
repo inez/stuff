@@ -49,7 +49,7 @@ public class MessagesFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Conversation conversation = (Conversation) arg0.getItemAtPosition(arg2);
-				((OnItemClickedListener) getActivity()).onMessageCompose(conversation.getItem());
+				((OnItemClickedListener) getActivity()).onMessageCompose(conversation);
 			}
 		});
         return view;

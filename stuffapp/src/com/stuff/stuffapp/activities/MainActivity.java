@@ -31,6 +31,7 @@ import com.stuff.stuffapp.fragments.SearchFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.fragments.ProfileFragment;
 import com.stuff.stuffapp.helpers.Ids;
+import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.Item;
 
 
@@ -256,8 +257,8 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	}
 	
 	@Override
-	public void onMessageCompose(Item item) {
-		Log.d(TAG, "onMessageCompose: " + item.getName());
+	public void onMessageCompose(Conversation conversation) {
+		Log.d(TAG, "onMessageCompose: " + conversation);
 		
 //		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //		ft.replace(R.id.flContainer, MessageComposeFragment.newInstance(item));
@@ -265,7 +266,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 //		ft.commit();
 		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, ConversationsFragment.newInstance(item));
+		ft.replace(R.id.flContainer, ConversationsFragment.newInstance(conversation));
 		ft.addToBackStack("messageCompose");
 		ft.commit();		
 		 

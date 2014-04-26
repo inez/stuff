@@ -1,12 +1,18 @@
 package com.stuff.stuffapp.models;
 
+import java.io.Serializable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 @ParseClassName("Conversation")
-public class Conversation extends ParseObject  {
+public class Conversation extends ParseObject implements Serializable  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8930877670482943104L;
 	public static final String ATTR_USER_ONE = "userOne";
 	public static final String ATTR_USER_TWO = "userTwo";
 	public static final String ATTR_ITEM = "item";

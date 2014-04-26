@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.HomeFeedAdapter;
+import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.Item;
 
 public class HomeFragment extends Fragment {
@@ -21,7 +22,7 @@ public class HomeFragment extends Fragment {
 	//TODO: SJ Clean this up. 
 	public interface OnItemClickedListener {
         public void onItemClicked(Item item);
-        public void onMessageCompose(Item item);
+        public void onMessageCompose(Conversation conversation);
     }
 	
 	private static String TAG = "HomeFragment";
