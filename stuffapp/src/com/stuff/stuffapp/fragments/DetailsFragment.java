@@ -124,12 +124,14 @@ public class DetailsFragment extends Fragment implements ConversationListener {
 		try {
 			name = profileData.get("name").toString();
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.d(TAG, "no name");
+			//e.printStackTrace();
 		}
 		try {
 			location = profileData.get("location").toString();
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.d(TAG, "no location");
+			//e.printStackTrace();
 		}
 
 		tvNameAndLocation.setText(name + (location != null ? "\n" + location : ""));
