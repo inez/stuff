@@ -4,19 +4,13 @@
     android:layout_height="match_parent" >
 
     <ListView
-		android:scrollbarStyle="outsideOverlay"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="8dp"
-    	android:dividerHeight="8dp"
-		android:divider="@null"
-		android:fadingEdge="none"
-    	android:background="#e2e2e2"
         android:id="@+id/lvHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:divider="@null"
+        android:dividerHeight="0dp" >
     </ListView>
 
 </RelativeLayout>

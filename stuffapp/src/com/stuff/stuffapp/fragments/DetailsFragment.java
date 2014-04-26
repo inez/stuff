@@ -1,46 +1,33 @@
 package com.stuff.stuffapp.fragments;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.ocpsoft.prettytime.PrettyTime;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
-import android.widget.Button;
-import android.widget.Toast;
-
 import android.widget.ImageView;
-
 import android.widget.TextView;
 
-
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
-import com.parse.FindCallback;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
-import com.stuff.stuffapp.adapters.ConversationAdapter;
-import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
-import com.stuff.stuffapp.helpers.ConversationListener;
-import com.stuff.stuffapp.helpers.Helper;
-import com.stuff.stuffapp.models.Conversation;
+import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.models.Item;
 
-public class DetailsFragment extends Fragment implements ConversationListener{
+public class DetailsFragment extends Fragment {
 
 	private static String TAG = "DetailsFragment";
 
 	private View view;
-	
+
 	private Item item;
-	
-	private Conversation conversation = null;
 
 	public static DetailsFragment newInstance(Item item) {
 		DetailsFragment fragment = new DetailsFragment();
@@ -49,94 +36,71 @@ public class DetailsFragment extends Fragment implements ConversationListener{
 		fragment.setArguments(bundle);
 		return fragment;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		item = (Item) args.getSerializable("item");
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: " + item.getName());
         view = inflater.inflate(R.layout.fragment_details, container, false);
 
-        ParseImageView ivPhoto = (ParseImageView) view.findViewById(R.id.ivPhoto);
-        ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.displayImage(item.getPhotoFile().getUrl(), ivPhoto);
-
+        //
+        // tvName
+        //
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         tvName.setText(item.getName());
-
-        TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
-        tvDescription.setText(item.getDescription());
-
-        TextView tvOwner = (TextView) view.findViewById(R.id.tvOwner);
-        tvOwner.setText(Helper.getUserName(item.getOwner()));
         
-        Button button = (Button)view.findViewById(R.id.btContact);
-       
-        button.setOnClickListener(new OnClickListener(){
+        //
+        // ivItemPicture
+        //
+        ParseImageView ivItemPicture = (ParseImageView) view.findViewById(R.id.ivItemPicture);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(item.getPhotoFile().getUrl(), ivItemPicture);
 
-			@Override
-			public void onClick(View v) {
-				
-				if (conversation == null) {
-					//We dont have any conversation about this item between these people. create one. 
+		//
+		// tvDistance
+		//
+		ParseGeoPoint itemLocation = item.getLocation();
+		ParseGeoPoint userLocation = ((MainActivity) getActivity()).getLastKnownLocation();
+        TextView tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+		if (itemLocation != null && userLocation != null) {
+			double distanceToItem = userLocation.distanceInMilesTo(itemLocation);
+			tvDistance.setText(String.format("%.1f miles", distanceToItem));
+		}
 
-					conversation = new Conversation();
-					conversation.setItem(ParseObject.createWithoutData(Item.class, item.getObjectId()));
-					conversation.setUserOne(ParseUser.getCurrentUser());
-					conversation.setUserTwo(ParseObject.createWithoutData(ParseUser.class, item.getOwner().getObjectId()));
-					conversation.saveInBackground(new SaveCallback() {
-						
-						@Override
-						public void done(ParseException ex) {
-							
-							if(ex != null) {
-								Log.d(TAG, "Error saving conversation. ex :" + ex);
-								ex.printStackTrace();
-							}
-							
-						}
-					});
-							
-					
-	
-				}
-				
-				((OnItemClickedListener) getActivity()).onMessageCompose(conversation);
-			}
-        	
-        });
-        ImageView ivMessage = (ImageView) view.findViewById(R.id.ivMessage);
-        ivMessage.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-				ft.replace(R.id.flContainer, MessageComposeFragment.newInstance(item));
-				ft.addToBackStack("compose");
-				ft.commit();
-			}
-		});
+		//
+		// tvTime
+		//
+		TextView tvTime = (TextView) view.findViewById(R.id.tvTime);
+		tvTime.setText((new PrettyTime()).format(item.getCreatedAt()));
 
-        //Start the find conversation query
-        Helper.findConversation(item,this);
-        return view;
+		//
+		// tvDescription
+		//
+		TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+		String description = item.getDescription();
+		if(description.trim().length() == 0) {
+			description = "<i>No description</i>";
+		}
+		tvDescription.setText(Html.fromHtml(description));
+
+		//
+		// ivProfilePicture
+		//
+		ImageView ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
+		JSONObject userProfile = item.getOwner().getJSONObject("profile");
+        try {
+    		imageLoader.displayImage("http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal", ivProfilePicture);
+    		Log.d(TAG, "http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal");
+        } catch (JSONException e) {
+        }
+
+		return view;
 	}
 
-	@Override
-	public void conversationAvailable(Conversation conversation) {
-	
-		this.conversation = conversation;
-		
-		Toast.makeText(getActivity(), "Found Conversation:" + conversation, Toast.LENGTH_LONG).show();
-		
-	}
-
-	
-	
 }
-
-

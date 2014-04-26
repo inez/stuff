@@ -10,7 +10,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.stuff.stuffapp.adapters.ConversationListAdapter;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.Item;
 
