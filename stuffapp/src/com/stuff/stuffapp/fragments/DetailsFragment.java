@@ -10,9 +10,12 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseGeoPoint;
@@ -120,6 +123,17 @@ public class DetailsFragment extends Fragment {
 		}
 
 		tvNameAndLocation.setText(name + (location != null ? "\n" + location : ""));
+
+		//
+		// btContactOwner
+		//
+		Button btContactOwner = (Button) view.findViewById(R.id.btContactOwner);
+		btContactOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Contact owner clicked", Toast.LENGTH_LONG).show();
+			}
+		});
 
 		return view;
 	}
