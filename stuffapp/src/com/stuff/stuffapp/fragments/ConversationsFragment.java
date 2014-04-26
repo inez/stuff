@@ -13,6 +13,8 @@ import com.parse.SaveCallback;
 import com.parse.SendCallback;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.ConversationAdapter;
+import com.stuff.stuffapp.helpers.ConversationListener;
+import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
 import com.stuff.stuffapp.models.Item;
@@ -28,10 +30,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class ConversationsFragment extends ListFragment {
+public class ConversationsFragment extends ListFragment implements ConversationListener {
 
 	private static final String TAG = "MessageComposeFragment";
-	private static final String KEY_ITEM = "item";
+	private static final String KEY_CONVERSATION = "conversation";
 
 	
 	private static final String  KEY_DEVICE_TYPE = "deviceType";
@@ -41,16 +43,16 @@ public class ConversationsFragment extends ListFragment {
 
 
 	private Button btSendMessage = null;
-	private Item mForItem = null;
+	private Conversation conversation = null;
 	
 	ConversationAdapter adapter;
 	EditText text;	
 	static String sender;
 
-	public static ConversationsFragment newInstance(Item item) {
+	public static ConversationsFragment newInstance(Conversation conversation) {
 		ConversationsFragment fragment = new ConversationsFragment();
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(KEY_ITEM, item);
+		bundle.putSerializable(KEY_CONVERSATION, conversation);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
@@ -59,7 +61,7 @@ public class ConversationsFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
-		mForItem = (Item) args.getSerializable(KEY_ITEM);
+		conversation =  (Conversation)args.getSerializable(KEY_CONVERSATION);
 	}
 
 	@Override
@@ -98,7 +100,7 @@ public class ConversationsFragment extends ListFragment {
 		});
 		
 	
-		adapter = new ConversationAdapter(getActivity(),mForItem);
+		adapter = new ConversationAdapter(getActivity(),conversation);
 		setListAdapter(adapter);	
 
 		return view;
@@ -108,7 +110,14 @@ public class ConversationsFragment extends ListFragment {
 	{
 	    ParsePush push = new ParsePush();
 
-	    push.setChannel(mForItem.getOwner().getUsername());
+	    Item item = null;
+		try {
+			item = (Item)conversation.getItem().fetchIfNeeded();
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    push.setChannel(item.getOwner().getUsername());
 
 		ParseQuery query = ParseInstallation.getQuery();
 		// Notification for Android users
@@ -172,14 +181,9 @@ public class ConversationsFragment extends ListFragment {
 	
 	private ConversationReply createReply() {
 		
-		Conversation thisConversation = ConversationAdapter.findConversation(mForItem);
-		if(thisConversation == null) {
-			thisConversation = new Conversation();
-			thisConversation.setItem(ParseObject.createWithoutData(Item.class, mForItem.getObjectId()));
-			thisConversation.setUserOne(ParseUser.getCurrentUser());
-			thisConversation.setUserTwo(ParseObject.createWithoutData(ParseUser.class, mForItem.getOwner().getObjectId()));
-			
-		}							
+		//Conversation thisConversation = Helper.findConversation(mForItem,this);
+		Conversation thisConversation = conversation;
+						
 		//Create a new conversation Reply - 
 		ConversationReply reply = new ConversationReply();
 		reply.setConversation(thisConversation);
@@ -196,6 +200,12 @@ public class ConversationsFragment extends ListFragment {
 	void addNewConversationReply(ConversationReply m)
 	{
 
+	}
+
+	@Override
+	public void conversationAvailable(Conversation conversation) {
+		
+		
 	}
 
 

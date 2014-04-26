@@ -3,6 +3,7 @@ package com.stuff.stuffapp.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -13,6 +14,8 @@ import com.stuff.stuffapp.R.color;
 import com.stuff.stuffapp.R.drawable;
 import com.stuff.stuffapp.R.id;
 import com.stuff.stuffapp.R.layout;
+import com.stuff.stuffapp.helpers.ConversationListener;
+import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
 import com.stuff.stuffapp.models.Item;
@@ -23,17 +26,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public class ConversationAdapter extends ParseQueryAdapter<ConversationReply> {
+public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
 	private Context mContext;
-
-	public ConversationAdapter(Context context, final Item item) {
+    private Conversation conversation;
+	public ConversationAdapter(Context context, final Conversation c) {
 		super(context, new ParseQueryAdapter.QueryFactory<ConversationReply>() {
         	public ParseQuery<ConversationReply> create() {
-                Conversation conversation = findConversation(item);
+               Conversation conversation = c;
                 
                 ParseQuery<ConversationReply> query = null;
                 //This should never be null?
@@ -53,51 +57,6 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply> {
 		this.mContext = context;
 	}
 	
-	public static Conversation findConversation(Item item) {
-		
-		Conversation thisConversation = null;
-		ParseQuery<Conversation> itemQuery = ParseQuery.getQuery(Conversation.class); 
-        itemQuery.whereEqualTo(Conversation.ATTR_ITEM,item);
-        				                
-        ArrayList<ParseQuery<Conversation>> userQueries = new ArrayList<ParseQuery<Conversation>>();
-        ParseQuery<Conversation> user1Query = new ParseQuery<Conversation>(Conversation.class);
-        user1Query.whereEqualTo(Conversation.ATTR_USER_ONE, ParseUser.getCurrentUser());
-        ParseQuery<Conversation> user2Query = new ParseQuery<Conversation>(Conversation.class);
-        user2Query.whereEqualTo(Conversation.ATTR_USER_TWO, ParseUser.getCurrentUser());
-        
-        userQueries.add(user1Query);
-        userQueries.add(user2Query);
-       
-        ParseQuery<Conversation> orUserQueries = ParseQuery.or(userQueries);                
-        orUserQueries.whereMatchesKeyInQuery(Conversation.ATTR_ITEM, Conversation.ATTR_ITEM, itemQuery);     
-        try {
-			List<Conversation>conversationList = orUserQueries.find();
-			if(conversationList.isEmpty() == false) {
-				//Iterate through the conversations about this item to find the conversation with the user
-				for(Conversation conversation : conversationList) {
-					
-					conversation = (Conversation)conversation.fetchIfNeeded();
-					if(conversation.getUserOne().getObjectId().equals(item.getOwner().getObjectId()) || 
-							conversation.getUserTwo().getObjectId().equals(item.getOwner().getObjectId())){
-						
-					 thisConversation = conversation;
-						
-					}
-
-				}
-				
-			}
-
-			
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        return thisConversation;
-        
-	}		
 
 	@Override
 	public View getItemView(ConversationReply message, View convertView, ViewGroup parent) {
@@ -146,6 +105,9 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply> {
 	{
 		TextView message;
 	}
+	
+
 
 
 }
+
