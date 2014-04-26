@@ -1,60 +1,31 @@
 package com.stuff.stuffapp.fragments;
 
-import java.lang.reflect.Field;
-
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
-import com.viewpagerindicator.TabPageIndicator;
+import com.stuff.stuffapp.SquareImageView;
+import com.stuff.stuffapp.models.Item;
 
 public class ProfileFragment extends Fragment {
+
 	private static final String TAG = "ProfileFragment";
 
-	// begin bug fix for ViewPager within fragment
-	// http://stackoverflow.com/questions/14929907/causing-a-java-illegalstateexception-error-no-activity-only-when-navigating-to
-	// https://code.google.com/p/android/issues/detail?id=42601
-	private static final Field sChildFragmentManagerField;
-	static {
-        Field f = null;
-        try {
-            f = Fragment.class.getDeclaredField("mChildFragmentManager");
-            f.setAccessible(true);
-        }
-        catch (NoSuchFieldException e) {
-            Log.e(TAG, "Error getting mChildFragmentManager field", e);
-        }
-        sChildFragmentManagerField = f;
-    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        if (sChildFragmentManagerField != null) {
-            try {
-                sChildFragmentManagerField.set(this, null);
-            } catch (Exception e) {
-                Log.e(TAG, "Error setting mChildFragmentManager field", e);
-            }
-        }
-    }
-    // end bug fix
-
 	private View view;
-    private ViewPager viewPager;
-	private ProfilePagerAdapter pagerAdapter;
-
-	// temporary
-	private AboutMeFragment firstProfileFrag;
-	private MyItemsFragment secondProfileFrag;
+	
+	private ProfileAdapter profileAdapter;
+	
+	private GridView gvItems;
 
 	public static ProfileFragment newInstance() {
 		ProfileFragment fragment = new ProfileFragment();
@@ -62,72 +33,58 @@ public class ProfileFragment extends Fragment {
 	}
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
+		view = inflater.inflate(R.layout.fragment_profile, container, false);
+		gvItems = (GridView) view.findViewById(R.id.gvItems);
 
-        // create view pager (but don't bind adapter until activity is available)
-        viewPager = (ViewPager) view.findViewById(R.id.profile_view_pager);
+		if(savedInstanceState == null) {
+        	if(profileAdapter == null) {
+        		profileAdapter = new ProfileAdapter(getActivity());
+        	}
+        	gvItems.setAdapter(profileAdapter);
+		}
 
-        pagerAdapter = new ProfilePagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(pagerAdapter);
-
-        // bind the title indicator to the view pager
-        TabPageIndicator tabPageIndicator = (TabPageIndicator) view.findViewById(R.id.profile_titles);
-        tabPageIndicator.setViewPager(viewPager);
-//        tabPageIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//            }
-//            
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//            
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-
-        // temporary
-        if ( firstProfileFrag==null ) firstProfileFrag = new AboutMeFragment();
-        if ( secondProfileFrag==null ) secondProfileFrag = new MyItemsFragment();
-
-        return view;
-    }
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-	    super.onActivityCreated(savedInstanceState);
+		return view;
 	}
 
-	/**
-	 * Internal adapter class for ViewPager 
-	 */
-	public class ProfilePagerAdapter extends FragmentPagerAdapter {
-	    private final String[] TITLES = new String[] { "About Me", "My Items" };
-
-	    public ProfilePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if ( position == 0 )
-                return firstProfileFrag;
-            else if ( position == 1 )
-                return secondProfileFrag;
-            else return firstProfileFrag;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TITLES[position].toUpperCase();
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
+	static class ViewHolder {
+		SquareImageView sivItem;
 	}
+
+	public class ProfileAdapter extends ParseQueryAdapter<Item> {
+
+
+		public ProfileAdapter(Context context) {
+	        super(context, new ParseQueryAdapter.QueryFactory<Item>() {
+	            @Override
+	            public ParseQuery<Item> create() {
+	                ParseQuery<Item> query = new ParseQuery<Item>(Item.class);
+	                query.whereEqualTo("owner", ParseUser.getCurrentUser());
+	                query.orderByAscending("createdAt");
+	                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+	                return query;
+	            }
+	        });
+	    }
+
+	    @Override
+	    public View getItemView(Item item, View v, ViewGroup parent) {
+			ViewHolder holder;
+			if (v == null) {
+				v = View.inflate(getContext(), R.layout.item_grid_profile, null);
+				holder = new ViewHolder();
+				holder.sivItem = (SquareImageView) v.findViewById(R.id.sivItem);
+				v.setTag(holder);
+			} else {
+				holder = (ViewHolder) v.getTag();
+			}
+
+			ImageLoader imageLoader = ImageLoader.getInstance();
+	        imageLoader.displayImage(item.getPhotoFile200().getUrl(), holder.sivItem);
+
+	    	return v;
+	    }
+	}
+
 }
