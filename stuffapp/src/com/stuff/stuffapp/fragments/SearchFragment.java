@@ -196,6 +196,7 @@ public class SearchFragment extends Fragment {
 	private void getSearchResults(String query, FindCallback<Item> callback) {
 		ParseQuery<Item> query1 = new ParseQuery<Item>(Item.class);
 		query1.whereContains("searchable", query.toLowerCase());
+		query1.include("owner");
 		query1.findInBackground(callback);
 		/*
         ParseQuery<Item> query1 = new ParseQuery<Item>(Item.class);

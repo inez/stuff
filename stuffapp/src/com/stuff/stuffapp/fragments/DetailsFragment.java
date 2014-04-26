@@ -94,17 +94,7 @@ public class DetailsFragment extends Fragment {
 		// ivProfilePicture
 		//
 		ImageView ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
-		JSONObject userProfile;
-        try {
-            userProfile = item.getOwner().fetchIfNeeded().getJSONObject("profile");
-    		imageLoader.displayImage("http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal", ivProfilePicture);
-    		Log.d(TAG, "http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal");
-        }
-        catch (JSONException e) {
-        }
-        catch (ParseException e1) {
-            e1.printStackTrace();
-        }
+		JSONObject profileData = item.getOwner().getJSONObject("profile");
 
 		return view;
 	}
