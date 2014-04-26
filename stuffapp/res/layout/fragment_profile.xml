@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp" >
+
+        <com.stuff.stuffapp.RoundedImageView
+            android:id="@+id/ivProfilePicture"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerCrop"
+            app:corner_radius="75dip" />
+
+        <TextView
+            android:id="@+id/tvNameAndLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/ivProfilePicture"
+            android:text="tvNameAndLocation"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#777777" />
+    </RelativeLayout>
 
     <GridView
         android:id="@+id/gvItems"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
         android:numColumns="2" >
     </GridView>

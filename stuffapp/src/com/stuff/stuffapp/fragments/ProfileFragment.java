@@ -1,5 +1,8 @@
 package com.stuff.stuffapp.fragments;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseQuery;
@@ -44,7 +49,39 @@ public class ProfileFragment extends Fragment {
         	}
         	gvItems.setAdapter(profileAdapter);
 		}
+		
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		JSONObject profileData = ParseUser.getCurrentUser().getJSONObject("profile");
 
+		//
+		// ivProfilePicture
+		//
+		ImageView ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
+		try {
+			imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=normal", ivProfilePicture);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		//
+		// tvNameAndLocation
+		//
+		TextView tvNameAndLocation = (TextView) view.findViewById(R.id.tvNameAndLocation);
+		String name = null, location = null;
+
+		try {
+			name = profileData.get("name").toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		try {
+			location = profileData.get("location").toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		tvNameAndLocation.setText(name + (location != null ? "\n" + location : ""));
+		
 		return view;
 	}
 
