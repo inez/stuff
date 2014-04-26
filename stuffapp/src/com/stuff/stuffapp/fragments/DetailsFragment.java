@@ -10,18 +10,29 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.activities.MainActivity;
+import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
+import com.stuff.stuffapp.helpers.ConversationListener;
+import com.stuff.stuffapp.helpers.Helper;
+import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.Item;
 
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends Fragment implements ConversationListener {
 
 	private static String TAG = "DetailsFragment";
 
@@ -29,6 +40,8 @@ public class DetailsFragment extends Fragment {
 
 	private Item item;
 
+	private Conversation conversation = null;
+	
 	public static DetailsFragment newInstance(Item item) {
 		DetailsFragment fragment = new DetailsFragment();
 		Bundle bundle = new Bundle();
@@ -121,7 +134,55 @@ public class DetailsFragment extends Fragment {
 
 		tvNameAndLocation.setText(name + (location != null ? "\n" + location : ""));
 
+		//
+		// btContactOwner
+		//
+		Button btContactOwner = (Button) view.findViewById(R.id.btContactOwner);
+		btContactOwner.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Contact owner clicked", Toast.LENGTH_LONG).show();
+				
+				if (conversation == null) {
+					//We dont have any conversation about this item between these people. create one. 
+
+					conversation = new Conversation();
+					conversation.setItem(ParseObject.createWithoutData(Item.class, item.getObjectId()));
+					conversation.setUserOne(ParseUser.getCurrentUser());
+					conversation.setUserTwo(ParseObject.createWithoutData(ParseUser.class, item.getOwner().getObjectId()));
+					conversation.saveInBackground(new SaveCallback() {
+						
+						@Override
+						public void done(ParseException ex) {
+							
+							if(ex != null) {
+								Log.d(TAG, "Error saving conversation. ex :" + ex);
+								ex.printStackTrace();
+							}
+							
+						}
+					});
+							
+					
+	
+				}
+				
+				((OnItemClickedListener) getActivity()).onMessageCompose(conversation);
+			}
+        	
+        });
+
+        //Start the find conversation query
+        Helper.findConversation(item,this);
+
 		return view;
+	}
+
+	@Override
+	public void conversationAvailable(Conversation conversation) {
+		
+		this.conversation = conversation;
+		
 	}
 
 }
