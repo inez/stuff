@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -48,6 +49,7 @@ public class SearchFragment extends Fragment {
     private EditText etQuery;
     private SupportMapFragment mapFrag;
     private GoogleMap mMap;
+    private CameraPosition mSavedCameraPosition;
 	
     private SearchAdapter adapter;
     private List<Item> items;
@@ -72,6 +74,7 @@ public class SearchFragment extends Fragment {
     }
     @Override
     public void onDetach() {
+        Log.i(TAG, "onDetach");
         super.onDetach();
 
         if (sChildFragmentManagerField != null) {
@@ -91,7 +94,7 @@ public class SearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        Log.i(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_search, container, false);
         
         lvSearch = (ListView) view.findViewById(R.id.lvSearch);
@@ -168,12 +171,12 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated");
+        Log.i(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
         // dynamically create map fragment
         if ( null == mapFrag ) {
-            Log.i(TAG, "Re-creating map fragment");
+            Log.d(TAG, "Re-creating map fragment");
             mapFrag = SupportMapFragment.newInstance();
 
             // NOTE: SupportMapFragment is initialized in onCreateView, but its map
@@ -190,9 +193,25 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
+        Log.i(TAG, "onResume");
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.i(TAG, "onDestroyView");
+        super.onDestroyView();
+
+        // save map state
+        if ( null != mMap )
+            mSavedCameraPosition = mMap.getCameraPosition();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy");
+        super.onDestroy();
     }
 
     private void getSearchResults(String query, FindCallback<Item> callback) {
@@ -221,10 +240,16 @@ public class SearchFragment extends Fragment {
             assert mMap != null;
             setUpMap();
         }
+        else if ( mMap != mapFrag.getMap() && null != mSavedCameraPosition ) {
+            Log.d(TAG, "Restoring map");
+            mMap = mapFrag.getMap();
+            mMap.setMyLocationEnabled(true);
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mSavedCameraPosition));
+        }
     }
 
     private void setUpMap() {
-        Log.i(TAG, "Setting up map");
+        Log.d(TAG, "Setting up map");
 
         // enable current location "blue dot" 
         mMap.setMyLocationEnabled(true);
