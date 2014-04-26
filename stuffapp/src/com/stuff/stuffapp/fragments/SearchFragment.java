@@ -7,6 +7,8 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,8 +49,11 @@ public class SearchFragment extends Fragment {
 	
 	private SearchAdapter adapter;
 	private List<Item> items;
-	
-    // begin bug fix for map within fragment
+
+	private SearchPagerAdapter mPagerAdapter;
+	ViewPager mPager;
+
+	// begin bug fix for map within fragment
     // http://stackoverflow.com/questions/14929907/causing-a-java-illegalstateexception-error-no-activity-only-when-navigating-to
     // https://code.google.com/p/android/issues/detail?id=42601
     private static final Field sChildFragmentManagerField;
@@ -91,21 +96,6 @@ public class SearchFragment extends Fragment {
         btSearch = (Button) view.findViewById(R.id.btSearch);
         etQuery = (EditText) view.findViewById(R.id.etQuery);
 
-        // dynamically create map fragment
-        FragmentManager fm = this.getChildFragmentManager();
-        mapFrag = (SupportMapFragment) fm.findFragmentById(R.id.flMap);
-        if ( null == mapFrag ) {
-            mapFrag = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.flMap, mapFrag).commit();
-        }
-        // NOTE: SupportMapFragment is initialized in onCreateView, but its map
-        // is not available until later in the life-cycle. For now, we wait
-        // until onResume.
-        // The map is safely available inside SupportMapFragment.onCreateView
-        // and Stack Overflow suggests sub-classing SupportMapFragment to
-        // call a made-up callback (e.g., onMapReady()) to the Search fragment
-        // in the sub-class's onCreateView.
-        
         btSearch.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -117,11 +107,14 @@ public class SearchFragment extends Fragment {
 				Log.d(TAG, "Searching for items");
 				getSearchResults(query, new FindCallback<Item>() {
 					@Override
-					public void done(List<Item> arg0, ParseException arg1) {
-						if(arg0 != null) {
-							Log.d(TAG, "Got results");
+					public void done(List<Item> objects, ParseException e) {
+						if(objects != null) {
+							Log.d(TAG, "Got " + objects.size() + " results");
 							adapter.clear();
-							adapter.addAll(arg0);
+							adapter.addAll(objects);
+							// view pager
+							mPagerAdapter = new SearchPagerAdapter(SearchFragment.this.getChildFragmentManager(), objects);
+							mPager.setAdapter(mPagerAdapter);
 						}
 					}
 				});
@@ -136,6 +129,11 @@ public class SearchFragment extends Fragment {
         }
 
         lvSearch.setAdapter(adapter);
+
+        // search results view pager
+        if ( null == mPagerAdapter ) mPagerAdapter = new SearchPagerAdapter(this.getChildFragmentManager(), new ArrayList<Item>());
+        mPager = (ViewPager) view.findViewById(R.id.vpSearchResults);
+        mPager.setAdapter(mPagerAdapter);
 
         // begin temporary
         OnClickListener arrowListener = new OnClickListener() {
@@ -169,6 +167,24 @@ public class SearchFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 	    super.onActivityCreated(savedInstanceState);
+
+	    // dynamically create map fragment
+        FragmentManager fm = this.getChildFragmentManager();
+        /* ---- temporarily disable maps ----
+        mapFrag = (SupportMapFragment) fm.findFragmentById(R.id.flMap);
+        if ( null == mapFrag ) {
+            Log.i(TAG, "Re-creating map fragment");
+            mapFrag = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.flMap, mapFrag).commit();
+        }
+        */
+        // NOTE: SupportMapFragment is initialized in onCreateView, but its map
+        // is not available until later in the life-cycle. For now, we wait
+        // until onResume.
+        // The map is safely available inside SupportMapFragment.onCreateView
+        // and Stack Overflow suggests sub-classing SupportMapFragment to
+        // call a made-up callback (e.g., onMapReady()) to the Search fragment
+        // in the sub-class's onCreateView.
 	}
 
 	@Override
@@ -180,6 +196,7 @@ public class SearchFragment extends Fragment {
 	private void getSearchResults(String query, FindCallback<Item> callback) {
 		ParseQuery<Item> query1 = new ParseQuery<Item>(Item.class);
 		query1.whereContains("searchable", query.toLowerCase());
+		query1.include("owner");
 		query1.findInBackground(callback);
 		/*
         ParseQuery<Item> query1 = new ParseQuery<Item>(Item.class);
@@ -211,5 +228,25 @@ public class SearchFragment extends Fragment {
             Toast.makeText(getActivity(), "Uh oh, could not get map", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "map is null in onResume");
         }
+	}
+
+	public static class SearchPagerAdapter extends FragmentStatePagerAdapter {
+	    private List<Item> mSearchResults;
+
+	    public SearchPagerAdapter(FragmentManager fm, List<Item> searchResults) {
+	        super(fm);
+	        this.mSearchResults = searchResults;
+	    }
+
+	    @Override
+	    public int getCount() {
+	        return mSearchResults.size();
+	    }
+
+	    @Override
+	    public Fragment getItem(int position) {
+	        // TODO: optimize this to cache fragments
+	        return DetailsFragment.newInstance(mSearchResults.get(position));
+	    }
 	}
 }

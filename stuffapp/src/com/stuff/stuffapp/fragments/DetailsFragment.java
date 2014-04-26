@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.stuff.stuffapp.R;
@@ -26,7 +27,7 @@ public class DetailsFragment extends Fragment {
 	private static String TAG = "DetailsFragment";
 
 	private View view;
-
+	
 	private Item item;
 
 	public static DetailsFragment newInstance(Item item) {
@@ -36,14 +37,14 @@ public class DetailsFragment extends Fragment {
 		fragment.setArguments(bundle);
 		return fragment;
 	}
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		item = (Item) args.getSerializable("item");
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: " + item.getName());
@@ -72,13 +73,13 @@ public class DetailsFragment extends Fragment {
 			double distanceToItem = userLocation.distanceInMilesTo(itemLocation);
 			tvDistance.setText(String.format("%.1f miles", distanceToItem));
 		}
-
+		
 		//
 		// tvTime
 		//
 		TextView tvTime = (TextView) view.findViewById(R.id.tvTime);
 		tvTime.setText((new PrettyTime()).format(item.getCreatedAt()));
-
+		
 		//
 		// tvDescription
 		//
@@ -88,17 +89,12 @@ public class DetailsFragment extends Fragment {
 			description = "<i>No description</i>";
 		}
 		tvDescription.setText(Html.fromHtml(description));
-
+		
 		//
 		// ivProfilePicture
 		//
 		ImageView ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
-		JSONObject userProfile = item.getOwner().getJSONObject("profile");
-        try {
-    		imageLoader.displayImage("http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal", ivProfilePicture);
-    		Log.d(TAG, "http://graph.facebook.com/" + userProfile.get("facebookId").toString() + "/picture?type=normal");
-        } catch (JSONException e) {
-        }
+		JSONObject profileData = item.getOwner().getJSONObject("profile");
 
 		return view;
 	}
