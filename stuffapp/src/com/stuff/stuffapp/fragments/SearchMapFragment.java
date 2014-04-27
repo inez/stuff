@@ -14,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -103,13 +105,22 @@ public class SearchMapFragment extends Fragment {
 			marker.remove();
 		}
 		markers.clear();
+		
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
 		for(Item item : results) {
 			if ( item.getLocation() != null ) {
-				markers.add(
-						mapFragment.getMap().addMarker(new MarkerOptions().position(new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(item.getName()))
-				);
+				Marker marker = mapFragment.getMap().addMarker(new MarkerOptions().position(new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(item.getName()));
+				markers.add(marker);
+				builder.include(marker.getPosition());
 			}
+		}
+		
+		if ( markers.size() > 0) {
+			LatLngBounds bounds = builder.build();
+			int padding = 75; // offset from edges of the map in pixels
+			CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+			mapFragment.getMap().animateCamera(cu);
 		}
 
 		Log.d(TAG, "displayResults, size: " + results.size());
