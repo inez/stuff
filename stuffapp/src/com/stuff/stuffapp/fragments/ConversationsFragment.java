@@ -40,6 +40,8 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		private static final String  VALUE_ANDROID = "android";
 	
 	private static final String KEY_ALERT = "alert";
+	private static final String KEY_CONVERSATION_ID ="conversation_id";
+	
 
 
 	private Button btSendMessage = null;
@@ -131,7 +133,7 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		query.whereEqualTo(KEY_DEVICE_TYPE, VALUE_ANDROID);		
 		JSONObject data = null;
 		try {
-			data = new JSONObject("{'"+KEY_ALERT+"': '"+text.getText().toString()+"'}");
+			data = new JSONObject("{'"+KEY_ALERT+"': '"+text.getText().toString()+"','"+KEY_CONVERSATION_ID+"':'"+conversation.getObjectId()+"'}");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

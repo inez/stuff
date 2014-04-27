@@ -1,6 +1,10 @@
 package com.stuff.stuffapp.activities;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -15,6 +19,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
 import com.parse.ParseGeoPoint;
@@ -52,6 +57,18 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		String conversationId = null;
+		String parseNotificationData = getIntent().getStringExtra("com.parse.Data");
+        
+		if(parseNotificationData != null) {
+			try {
+				JSONObject parseNotificationJson = new JSONObject(parseNotificationData);
+				 conversationId = parseNotificationJson.getString("conversation_id");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 		//Track app opened. 
 		ParseAnalytics.trackAppOpened(getIntent());
@@ -82,10 +99,18 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 
         if (savedInstanceState == null) {
         	fragments = new SparseArray<Fragment>();
-			displayFragment(Ids.HOME);
+        	if(conversationId != null) {
+        		
+        		displayFragment(Ids.MESSAGE);//We could display the conversations fragment. For now just displaying message fragment. 
+        	} else {
+        		
+        		displayFragment(Ids.HOME);
+        	}
+			
         }
 	}
-
+	
+   
 	/**
 	 * Register location listener when the activity comes online
 	 */
@@ -95,6 +120,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 
 		String channelName = ParseUser.getCurrentUser().getUsername();
 		PushService.subscribe(this, channelName, MainActivity.class);
+
 	    // select the right location provider
 	    // TODO: check for location permissions, handle error case
 	    // TODO: find out about using LocationManager.PASSIVE_PROVIDER instead
