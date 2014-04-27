@@ -725,7 +725,10 @@ public class SlidingUpPanelLayout extends ViewGroup {
         }
 
         final boolean interceptForDrag = mDragHelper.shouldInterceptTouchEvent(ev);
-
+        
+        // TODO: Find a better way to implement this functionality (without hardcoding it here)
+        interceptTap = false;
+        
         return interceptForDrag || interceptTap;
     }
 
@@ -968,7 +971,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
         int y = mIsSlidingUp
                 ? (int) (topBound + slideOffset * mSlideRange)
                 : (int) (topBound - slideOffset * mSlideRange);
-
         if (mDragHelper.smoothSlideViewTo(mSlideableView, mSlideableView.getLeft(), y)) {
             setAllChildrenVisible();
             ViewCompat.postInvalidateOnAnimation(this);

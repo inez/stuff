@@ -56,6 +56,10 @@ public class SearchFragment extends Fragment {
 
 	// END BUG FIX
 
+	private SearchListFragment searchListFragment;
+
+	private SearchMapFragment searchMapFragment;
+
 	private View view;
 
 	private SearchView svQuery;
@@ -82,25 +86,22 @@ public class SearchFragment extends Fragment {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				Log.d(TAG, "Search for: " + query);
-				FindCallback<Item> callback = new FindCallback<Item>() {
-				    @Override
-				    public void done(List<Item> objects, ParseException e) {
-				        if ( null == e ) {
-				            // objects is the list of search results, null if no results found
-				            if ( null == objects )
-				                Log.d(TAG, "No search results");
-				            else
-				                Log.d(TAG, "Returned " + objects.size() + " results");
-				            // TODO: store search results so that maps and list view can use them
-				        }
-				    };
-				};
-		        ParseQuery<Item> searchQuery = new ParseQuery<Item>(Item.class)
-		                .whereContains("searchable", query.toLowerCase())
-		                .whereNear("location", ((MainActivity) SearchFragment.this.getActivity()).getLastKnownLocation());
-		        searchQuery.include("owner");
-		        searchQuery.findInBackground(callback);
 
+				ParseQuery<Item> searchQuery = new ParseQuery<Item>(Item.class).whereContains("searchable",
+						query.trim().toLowerCase()).whereNear("location",
+						((MainActivity) SearchFragment.this.getActivity()).getLastKnownLocation());
+				searchQuery.include("owner");
+				searchQuery.findInBackground(new FindCallback<Item>() {
+					@Override
+					public void done(List<Item> objects, ParseException arg1) {
+						if (objects != null) {
+							Log.d(TAG, "Got " + objects.size() + " results");
+							if ( searchListFragment != null ) {
+								searchListFragment.displayResults(objects);
+							}
+						}
+					}
+				});
 				return true;
 			}
 
@@ -126,9 +127,6 @@ public class SearchFragment extends Fragment {
 
 		return view;
 	}
-
-	SearchListFragment searchListFragment;
-	SearchMapFragment searchMapFragment;
 
 	private class ResultFragmentsPagerAdapter extends FragmentPagerAdapter {
 

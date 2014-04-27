@@ -5,15 +5,16 @@ import java.lang.reflect.Field;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.adapters.HomeFeedAdapter;
 
 public class SearchMapFragment extends Fragment {
 
@@ -68,8 +69,28 @@ public class SearchMapFragment extends Fragment {
 			fragment = SupportMapFragment.newInstance();
 			fm.beginTransaction().replace(R.id.flMap, fragment).commit();
 		}
+		
+		ViewPager vpResults = (ViewPager) view.findViewById(R.id.vpResults);
+		ResultFragmentsPagerAdapter adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
+		vpResults.setAdapter(adapter);
 
 		return view;
 	}
 	
+	private class ResultFragmentsPagerAdapter extends FragmentPagerAdapter {
+
+		public ResultFragmentsPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return ProfileFragment.newInstance();
+		}
+
+		@Override
+		public int getCount() {
+			return 3;
+		}
+	}
 }

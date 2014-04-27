@@ -10,6 +10,14 @@
 		android:iconifiedByDefault="false" >
 	</SearchView>
 
+    <View
+        android:id="@+id/shadow"
+		android:layout_width="fill_parent"
+		android:layout_height="4dp"
+        android:background="@drawable/below_shadow"
+        android:layout_below="@+id/svQuery" >
+    </View>
+
     <com.stuff.stuffapp.CustomViewPager
         android:id="@+id/vpResultFragments"
         android:layout_width="match_parent"
