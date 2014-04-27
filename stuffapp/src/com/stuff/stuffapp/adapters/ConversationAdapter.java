@@ -1,34 +1,24 @@
 package com.stuff.stuffapp.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.parse.FindCallback;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
-import com.parse.ParseQuery.CachePolicy;
 import com.stuff.stuffapp.R;
-import com.stuff.stuffapp.R.color;
-import com.stuff.stuffapp.R.drawable;
-import com.stuff.stuffapp.R.id;
-import com.stuff.stuffapp.R.layout;
-import com.stuff.stuffapp.helpers.ConversationListener;
-import com.stuff.stuffapp.helpers.Helper;
+import com.stuff.stuffapp.RoundedImageView;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
-import com.stuff.stuffapp.models.Item;
-
 import android.content.Context;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
@@ -37,14 +27,13 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
 	public ConversationAdapter(Context context, final Conversation c) {
 		super(context, new ParseQueryAdapter.QueryFactory<ConversationReply>() {
         	public ParseQuery<ConversationReply> create() {
-               Conversation conversation = c;
                 
                 ParseQuery<ConversationReply> query = null;
                 //This should never be null?
-                if(conversation != null) {
+                if(c != null) {
                 	
                 	query = new ParseQuery<ConversationReply>(ConversationReply.class);
-                	query.whereEqualTo(ConversationReply.ATTR_CONVERSATION, conversation);
+                	query.whereEqualTo(ConversationReply.ATTR_CONVERSATION, c);
                 	
                 } else  {
                 	//something is broken handle this case. 
@@ -55,6 +44,7 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
         	}
         });
 		this.mContext = context;
+		this.conversation = c;
 	}
 	
 
@@ -67,6 +57,7 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.message_row, parent, false);
 			holder.message = (TextView) convertView.findViewById(R.id.message_text);
+			holder.rivMessageProfilePicture = (RoundedImageView)convertView.findViewById(R.id.rivMessageProfilePicture);
 			convertView.setTag(holder);
 		}
 		else
@@ -74,36 +65,59 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
 		
 		holder.message.setText(message.getText());
 		
-		LayoutParams lp = (LayoutParams) holder.message.getLayoutParams();
+		LayoutParams lpMessage = (LayoutParams)holder.message.getLayoutParams();
+		LayoutParams lpRoundedImageView = (LayoutParams)holder.rivMessageProfilePicture.getLayoutParams();
 		//check if it is a status message then remove background, and change text color.
 		if(message.isStatusMessage())
 		{
 			holder.message.setBackgroundDrawable(null);
-			lp.gravity = Gravity.LEFT;
+			
+			lpMessage.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 			holder.message.setTextColor(R.color.textFieldColor);
 		}
 		else
-		{		
-			//Check whether message is mine to show green background and align to right
+		{	
+
+			ImageLoader imageLoader = ImageLoader.getInstance();
+			ParseUser user = null;
+			try {
+				user = message.getUser().fetchIfNeeded();
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			JSONObject profileData = user.getJSONObject("profile");
+
+			try {
+				imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=normal", holder.rivMessageProfilePicture);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			//Check whether message is mine to show my profile picture and align to right
 			if(message.isMine())
 			{
-				//holder.message.setBackgroundResource(R.drawable.speech_bubble_green);
-				lp.gravity = Gravity.RIGHT;
+
+				lpRoundedImageView.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				lpMessage.addRule(RelativeLayout.LEFT_OF,R.id.rivMessageProfilePicture);
 			}
-			//If not mine then it is from sender to show orange background and align to left
+			//If not mine then it is from sender to show their profile picture and align to left
 			else
 			{
-				//holder.message.setBackgroundResource(R.drawable.speech_bubble_orange);
-				lp.gravity = Gravity.LEFT;
+
+				lpRoundedImageView.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				lpMessage.addRule(RelativeLayout.RIGHT_OF,R.id.rivMessageProfilePicture);
 			}
-			holder.message.setLayoutParams(lp);
+			holder.message.setLayoutParams(lpMessage);
 			holder.message.setTextColor(R.color.textColor);	
 		}
+		convertView.refreshDrawableState();
 		return convertView;
 	}
 	private static class ViewHolder
 	{
 		TextView message;
+		RoundedImageView rivMessageProfilePicture;
+		
 	}
 	
 

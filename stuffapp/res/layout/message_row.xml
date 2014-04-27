@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/com.stuff.stuffapp">
 
 
     <TextView
@@ -22,4 +21,13 @@
         android:shadowDy="1"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</LinearLayout>
+    <com.stuff.stuffapp.RoundedImageView
+        android:id="@+id/rivMessageProfilePicture"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/above_shadow"
+        app:corner_radius="48dip" />
+
+</RelativeLayout>
