@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,7 +119,7 @@ public class SearchMapFragment extends Fragment {
 		
 		if ( markers.size() > 0) {
 			LatLngBounds bounds = builder.build();
-			int padding = 75; // offset from edges of the map in pixels
+			int padding = 150; // offset from edges of the map in pixels
 			CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 			mapFragment.getMap().animateCamera(cu);
 		}
@@ -130,6 +131,21 @@ public class SearchMapFragment extends Fragment {
 		adapter.notifyDataSetChanged();
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
 		vpResults.setAdapter(adapter);
+		vpResults.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int arg0) {
+				Log.d(TAG, "onPageSelected: " + String.valueOf(arg0));
+				markers.get(arg0).showInfoWindow();
+				CameraUpdate cu = CameraUpdateFactory.newLatLng(markers.get(arg0).getPosition());
+				mapFragment.getMap().animateCamera(cu);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {}
+		});
 
 		searchSlidingLayout.collapsePane();
 	}
