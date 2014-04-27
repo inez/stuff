@@ -32,21 +32,15 @@ import android.widget.Toast;
 
 public class ConversationsFragment extends ListFragment implements ConversationListener {
 
-	private static final String TAG = "MessageComposeFragment";
-	private static final String KEY_CONVERSATION = "conversation";
-
-	
+	private static final String TAG = "ConversationsFragment";
+	private static final String KEY_CONVERSATION = "conversation";	
 	private static final String  KEY_DEVICE_TYPE = "deviceType";
 		private static final String  VALUE_ANDROID = "android";
-	
 	private static final String KEY_ALERT = "alert";
 	private static final String KEY_CONVERSATION_ID ="conversation_id";
 	
-
-
 	private Button btSendMessage = null;
 	private Conversation conversation = null;
-	
 	ConversationAdapter adapter;
 	EditText text;	
 	static String sender;

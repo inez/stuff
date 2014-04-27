@@ -22,7 +22,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.PushService;
 import com.stuff.stuffapp.R;
@@ -100,8 +102,15 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
         if (savedInstanceState == null) {
         	fragments = new SparseArray<Fragment>();
         	if(conversationId != null) {
-        		
-        		displayFragment(Ids.MESSAGE);//We could display the conversations fragment. For now just displaying message fragment. 
+        		ParseQuery<Conversation> query = new ParseQuery<Conversation>(Conversation.class);
+        		Conversation conversation = null;
+        		try {
+					conversation = query.get(conversationId);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		displayFragment(Ids.CONVERSATIONS,conversation);//We could display the conversations fragment. For now just displaying message fragment. 
         	} else {
         		
         		displayFragment(Ids.HOME);
@@ -201,6 +210,9 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	private View current;
 	
 	private void displayFragment(int fragmentId) {
+		displayFragment(fragmentId,null);
+	}
+	private void displayFragment(int fragmentId,Conversation conversation) {
 		Log.d(TAG, "displayFragment: " + String.valueOf(fragmentId));
 
 		Fragment fragment = fragments.get(fragmentId);
@@ -222,6 +234,10 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 					break;
 				case Ids.PROFILE:
 					fragment = ProfileFragment.newInstance();
+					break;
+				case Ids.CONVERSATIONS:
+					//Load the conversation based on the query. 
+					fragment = ConversationsFragment.newInstance(conversation);
 					break;
 			}
 			fragments.append(fragmentId, fragment);
