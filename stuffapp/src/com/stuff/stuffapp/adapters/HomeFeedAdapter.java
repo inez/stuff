@@ -15,6 +15,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.models.Item;
