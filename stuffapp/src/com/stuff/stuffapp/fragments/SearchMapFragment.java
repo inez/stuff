@@ -1,6 +1,7 @@
 package com.stuff.stuffapp.fragments;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -13,7 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.models.Item;
@@ -59,11 +64,15 @@ public class SearchMapFragment extends Fragment {
 	private SlidingUpPanelLayout searchSlidingLayout;
 
 	private List<Item> results;
+	
+	private ViewPager vpResults;
 
 	public static SearchMapFragment newInstance() {
 		SearchMapFragment fragment = new SearchMapFragment();
 		return fragment;
 	}
+
+	private SupportMapFragment mapFragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,24 +82,45 @@ public class SearchMapFragment extends Fragment {
 		searchSlidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.searchSlidingLayout);
 		
 		FragmentManager fm = getChildFragmentManager();
-		SupportMapFragment fragment = (SupportMapFragment) fm.findFragmentById(R.id.flMap);
-		if (fragment == null) {
-			fragment = SupportMapFragment.newInstance();
-			fm.beginTransaction().replace(R.id.flMap, fragment).commit();
+		mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.flMap);
+		if (mapFragment == null) {
+			mapFragment = SupportMapFragment.newInstance();
+			fm.beginTransaction().replace(R.id.flMap, mapFragment).commit();
+			
 		}
 		
-		ViewPager vpResults = (ViewPager) view.findViewById(R.id.vpResults);
+		vpResults = (ViewPager) view.findViewById(R.id.vpResults);
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
 		vpResults.setAdapter(adapter);
 
 		return view;
 	}
+	
+	private List<Marker> markers = new ArrayList<Marker>();
 
 	public void displayResults(List<Item> results) {
+		for(Marker marker : markers) {
+			marker.remove();
+		}
+		markers.clear();
+
+		for(Item item : results) {
+			if ( item.getLocation() != null ) {
+				markers.add(
+						mapFragment.getMap().addMarker(new MarkerOptions().position(new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(item.getName()))
+				);
+			}
+		}
+
 		Log.d(TAG, "displayResults, size: " + results.size());
 		this.results = results;
-		searchSlidingLayout.collapsePane();
+
+		vpResults = (ViewPager) view.findViewById(R.id.vpResults);
 		adapter.notifyDataSetChanged();
+		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
+		vpResults.setAdapter(adapter);
+
+		searchSlidingLayout.collapsePane();
 	}
 	
 	private class ResultFragmentsPagerAdapter extends FragmentPagerAdapter {
