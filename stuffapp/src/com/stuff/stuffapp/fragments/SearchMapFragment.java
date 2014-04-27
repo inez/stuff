@@ -1,6 +1,7 @@
 package com.stuff.stuffapp.fragments;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.HomeFeedAdapter;
+import com.stuff.stuffapp.models.Item;
 
 public class SearchMapFragment extends Fragment {
 
@@ -51,6 +53,8 @@ public class SearchMapFragment extends Fragment {
 	// END BUG FIX
 	
 	private View view;
+	
+	private ResultFragmentsPagerAdapter adapter;
 
 	public static SearchMapFragment newInstance() {
 		SearchMapFragment fragment = new SearchMapFragment();
@@ -71,12 +75,22 @@ public class SearchMapFragment extends Fragment {
 		}
 		
 		ViewPager vpResults = (ViewPager) view.findViewById(R.id.vpResults);
-		ResultFragmentsPagerAdapter adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
+		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
 		vpResults.setAdapter(adapter);
 
 		return view;
 	}
+
+	public void displayResults(List<Item> results) {
+		Log.d(TAG, "displayResults, size: " + results.size());
+		this.results = results;
+		adapter.notifyDataSetChanged();
+	}
 	
+	private List<Item> results;
+	
+	
+
 	private class ResultFragmentsPagerAdapter extends FragmentPagerAdapter {
 
 		public ResultFragmentsPagerAdapter(FragmentManager fm) {
@@ -85,12 +99,13 @@ public class SearchMapFragment extends Fragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			return ProfileFragment.newInstance();
+			return DetailsFragment.newInstance(results.get(position));
 		}
 
 		@Override
 		public int getCount() {
-			return 3;
+			
+			return results == null ? 0 : results.size();
 		}
 	}
 }

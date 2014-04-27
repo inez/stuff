@@ -99,6 +99,9 @@ public class SearchFragment extends Fragment {
 							if ( searchListFragment != null ) {
 								searchListFragment.displayResults(objects);
 							}
+							if ( searchMapFragment != null ) {
+								searchMapFragment.displayResults(objects);
+							}
 						}
 					}
 				});
