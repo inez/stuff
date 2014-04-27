@@ -1,6 +1,7 @@
 package com.stuff.stuffapp.fragments;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,13 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.stuff.stuffapp.CustomViewPager;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.activities.MainActivity;
+import com.stuff.stuffapp.models.Item;
 
 public class SearchFragment extends Fragment {
 
@@ -76,7 +82,26 @@ public class SearchFragment extends Fragment {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				Log.d(TAG, "Search for: " + query);
-				return false;
+				FindCallback<Item> callback = new FindCallback<Item>() {
+				    @Override
+				    public void done(List<Item> objects, ParseException e) {
+				        if ( null == e ) {
+				            // objects is the list of search results, null if no results found
+				            if ( null == objects )
+				                Log.d(TAG, "No search results");
+				            else
+				                Log.d(TAG, "Returned " + objects.size() + " results");
+				            // TODO: store search results so that maps and list view can use them
+				        }
+				    };
+				};
+		        ParseQuery<Item> searchQuery = new ParseQuery<Item>(Item.class)
+		                .whereContains("searchable", query.toLowerCase())
+		                .whereNear("location", ((MainActivity) SearchFragment.this.getActivity()).getLastKnownLocation());
+		        searchQuery.include("owner");
+		        searchQuery.findInBackground(callback);
+
+				return true;
 			}
 
 			@Override
