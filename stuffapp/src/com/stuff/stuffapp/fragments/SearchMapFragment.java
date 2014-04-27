@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.SupportMapFragment;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.stuff.stuffapp.R;
-import com.stuff.stuffapp.adapters.HomeFeedAdapter;
 import com.stuff.stuffapp.models.Item;
 
 public class SearchMapFragment extends Fragment {
@@ -55,6 +55,10 @@ public class SearchMapFragment extends Fragment {
 	private View view;
 	
 	private ResultFragmentsPagerAdapter adapter;
+	
+	private SlidingUpPanelLayout searchSlidingLayout;
+
+	private List<Item> results;
 
 	public static SearchMapFragment newInstance() {
 		SearchMapFragment fragment = new SearchMapFragment();
@@ -66,6 +70,7 @@ public class SearchMapFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
 
 		view = inflater.inflate(R.layout.fragment_map_search, container, false);
+		searchSlidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.searchSlidingLayout);
 		
 		FragmentManager fm = getChildFragmentManager();
 		SupportMapFragment fragment = (SupportMapFragment) fm.findFragmentById(R.id.flMap);
@@ -84,13 +89,10 @@ public class SearchMapFragment extends Fragment {
 	public void displayResults(List<Item> results) {
 		Log.d(TAG, "displayResults, size: " + results.size());
 		this.results = results;
+		searchSlidingLayout.collapsePane();
 		adapter.notifyDataSetChanged();
 	}
 	
-	private List<Item> results;
-	
-	
-
 	private class ResultFragmentsPagerAdapter extends FragmentPagerAdapter {
 
 		public ResultFragmentsPagerAdapter(FragmentManager fm) {
@@ -99,13 +101,14 @@ public class SearchMapFragment extends Fragment {
 
 		@Override
 		public Fragment getItem(int position) {
+			// TODO: Perhaps DetailsFragment could be cached locally with item id as a cache key
 			return DetailsFragment.newInstance(results.get(position));
 		}
 
 		@Override
 		public int getCount() {
-			
 			return results == null ? 0 : results.size();
 		}
+
 	}
 }
