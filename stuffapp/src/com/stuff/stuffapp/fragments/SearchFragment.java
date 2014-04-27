@@ -93,7 +93,7 @@ public class SearchFragment extends Fragment {
 				searchQuery.include("owner");
 				searchQuery.findInBackground(new FindCallback<Item>() {
 					@Override
-					public void done(List<Item> objects, ParseException arg1) {
+					public void done(List<Item> objects, ParseException e) {
 						if (objects != null) {
 							Log.d(TAG, "Got " + objects.size() + " results");
 							if ( searchListFragment != null ) {
@@ -102,6 +102,9 @@ public class SearchFragment extends Fragment {
 							if ( searchMapFragment != null ) {
 								searchMapFragment.displayResults(objects);
 							}
+						}
+						else {
+						    Log.d(TAG, "No results found, possible ParseException");
 						}
 					}
 				});
