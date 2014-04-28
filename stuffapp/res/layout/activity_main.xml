@@ -10,6 +10,12 @@
         android:layout_height="fill_parent"
         android:layout_above="@+id/llMenu" >
     </FrameLayout>
+    
+    <View
+        android:background="@drawable/above_shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"
+        android:layout_above="@+id/llMenu" />
 
     <LinearLayout
         android:id="@+id/llMenu"
@@ -17,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#f7f7f7"
+        android:background="#ffffff"
         android:padding="5dp" >
 
         <ImageView
