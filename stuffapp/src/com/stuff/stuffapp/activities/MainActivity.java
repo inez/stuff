@@ -277,7 +277,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		if ( fragmentId == Ids.ADD ) {
 			v.setImageResource(R.drawable.ic_add_active);
 			ab.setLogo(R.drawable.ic_launcher);
-			ab.setTitle("Add");
+			ab.setTitle("Add stuff");
 		} else {
 			v.setImageResource(R.drawable.ic_add);
 		}
