@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
+	<View
+        android:background="@drawable/below_shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentTop="true" />
+        
     <FrameLayout
         android:id="@+id/flContainer"
         android:layout_width="fill_parent"
