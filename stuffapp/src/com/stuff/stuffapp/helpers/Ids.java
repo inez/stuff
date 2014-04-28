@@ -9,4 +9,5 @@ public class Ids {
 	public final static int CONVERSATIONS = 6;
 	
 	public final static int ACTION_GET_CONTENT = 101;
+	public static final int ACTION_CAPTURE_IMAGE = 102;
 }

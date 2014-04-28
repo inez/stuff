@@ -1,6 +1,7 @@
 package com.stuff.stuffapp.fragments;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -8,9 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -37,11 +40,13 @@ import com.stuff.stuffapp.models.Item;
 
 public class AddFragment extends Fragment {
 	
+	private static String TAG = "AddFragment";
+	private static String CAPTURED_IMAGE_NAME="stuff_capture.jpg";
+
+	
 	public interface OnItemAddedListener {
         public void onItemAdded(Item item);
     }
-
-	private static String TAG = "AddFragment";
 	
 	private View view;
 	
@@ -80,7 +85,12 @@ public class AddFragment extends Fragment {
         ll_capture_picture.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "Not supported yet", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getActivity(), "Not supported yet", Toast.LENGTH_SHORT).show();
+				// create Intent to take a picture and return control to the calling application
+			    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			    intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(CAPTURED_IMAGE_NAME)); // set the image file name
+			    // Start the image capture intent to take photo
+			    startActivityForResult(intent, Ids.ACTION_CAPTURE_IMAGE);
 			}
 		});
 
@@ -172,12 +182,39 @@ public class AddFragment extends Fragment {
         return view;
     }
 	
+	
+	// Returns the Uri for a photo stored on disk given the fileName
+	public Uri getPhotoFileUri(String fileName) {
+	    // Get safe storage directory for photos
+	    File mediaStorageDir = new File(
+	        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), TAG);
+
+	    // Create the storage directory if it does not exist
+	    if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+	        Log.d(TAG, "failed to create directory");
+	    }
+
+	    // Return the file target for the photo based on filename
+	    return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
+	}
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
+        	Uri selectedImageUri = null;
             if (requestCode == Ids.ACTION_GET_CONTENT) {
-                Uri selectedImageUri = data.getData();
+                 selectedImageUri = data.getData();
+                
+            }
+            else if(requestCode ==Ids.ACTION_CAPTURE_IMAGE) {
+            	selectedImageUri = getPhotoFileUri(CAPTURED_IMAGE_NAME);
 
-                try {
+    	       } else { // Result was a failure
+    	    	   Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+
+
+            }
+            if(selectedImageUri != null) {
+            	
+            	try {
 					photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
 					photo = Bitmap.createScaledBitmap(photo, 600, 600 * photo.getHeight() / photo.getWidth(), false);
 
@@ -195,8 +232,10 @@ public class AddFragment extends Fragment {
 					ivPreview.setVisibility(ImageView.VISIBLE);
 				} catch (Exception e) {
 				}
+            	
             }
         }
+
     }
 
 	@Override
