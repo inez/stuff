@@ -143,7 +143,7 @@ public class DetailsFragment extends Fragment implements ConversationListener {
 		btContactOwner.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "Contact owner clicked", Toast.LENGTH_LONG).show();
+				//Toast.makeText(getActivity(), "Contact owner clicked", Toast.LENGTH_LONG).show();
 				
 				if (conversation == null) {
 					//We dont have any conversation about this item between these people. create one. 

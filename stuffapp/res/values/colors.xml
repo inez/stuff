@@ -6,8 +6,8 @@
 	<color name="textShadow">#FFF</color>
 	<color name="listViewBg">#DADFEE</color>
 
-	<color name="sendLightColor">#8897BF</color>
-	<color name="sendMeduimColor">#5D6CA5</color>
+	<color name="sendLightColor">#00b0ff</color>
+	<color name="sendMeduimColor">#00b0ff</color>
 	<color name="sendDarkColor">#515F9F</color>
 
 	<color name="barDarkColor">#CECECE</color>

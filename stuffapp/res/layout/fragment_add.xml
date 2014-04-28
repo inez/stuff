@@ -93,14 +93,21 @@
             android:inputType="textMultiLine"
             android:lines="4" />
 
+        
         <Button
             android:id="@+id/btAdd"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_margin="5sp"
+            android:background="@drawable/send_button"
             android:layout_below="@+id/etDescription"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:text="@string/add_item" />
+            android:paddingBottom="5sp"
+            android:paddingLeft="15sp"
+            android:paddingRight="15sp"
+            android:paddingTop="5sp"
+            android:text="@string/add_item"
+            android:textColor="#FFF" />
     </RelativeLayout>
 
 </ScrollView>
