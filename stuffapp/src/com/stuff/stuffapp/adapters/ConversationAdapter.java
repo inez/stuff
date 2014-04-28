@@ -1,5 +1,8 @@
 package com.stuff.stuffapp.adapters;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +16,8 @@ import com.stuff.stuffapp.RoundedImageView;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +29,8 @@ import android.widget.TextView;
 public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
 	private Context mContext;
     private Conversation conversation;
+    private Map<String,Bitmap> userImageMap;
+    
 	public ConversationAdapter(Context context, final Conversation c) {
 		super(context, new ParseQueryAdapter.QueryFactory<ConversationReply>() {
         	public ParseQuery<ConversationReply> create() {
@@ -45,6 +52,7 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
         });
 		this.mContext = context;
 		this.conversation = c;
+		userImageMap = new HashMap<String,Bitmap>();
 	}
 	
 
@@ -77,23 +85,8 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
 		}
 		else
 		{	
-
-			ImageLoader imageLoader = ImageLoader.getInstance();
-			ParseUser user = null;
-			try {
-				user = message.getUser().fetchIfNeeded();
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			JSONObject profileData = user.getJSONObject("profile");
-
-			try {
-				imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=normal", holder.rivMessageProfilePicture);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			//Check whether message is mine to show my profile picture and align to right
+			loadProfileImage(message,holder);
+						//Check whether message is mine to show my profile picture and align to right
 			if(message.isMine())
 			{
 
@@ -112,6 +105,41 @@ public class ConversationAdapter extends ParseQueryAdapter<ConversationReply>  {
 		}
 		convertView.refreshDrawableState();
 		return convertView;
+	}
+	
+	private void loadProfileImage(ConversationReply message, ViewHolder holder) {
+
+		
+		
+		ParseUser user = null;
+		try {
+			user = message.getUser().fetchIfNeeded();
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if(userImageMap.get(user.getObjectId()) == null) {
+			
+			ImageLoader imageLoader = ImageLoader.getInstance();
+			JSONObject profileData = user.getJSONObject("profile");
+
+			try {
+				
+				
+				//imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=normal", holder.rivMessageProfilePicture);
+				Bitmap bitmap = imageLoader.loadImageSync("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=normal");
+				userImageMap.put(user.getObjectId(), bitmap);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			
+		}
+		holder.rivMessageProfilePicture.setImageBitmap(userImageMap.get(user.getObjectId()));
+		
+
+		
 	}
 	private static class ViewHolder
 	{
