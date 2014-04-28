@@ -109,7 +109,7 @@ public class SearchMapFragment extends Fragment {
 		
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		for(Item item : results) {
+		for (Item item : results) {
 			if ( item.getLocation() != null ) {
 				Marker marker = mapFragment.getMap().addMarker(new MarkerOptions().position(new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(item.getName()));
 				markers.add(marker);
@@ -117,7 +117,7 @@ public class SearchMapFragment extends Fragment {
 			}
 		}
 		
-		if ( markers.size() > 0) {
+		if ( markers.size() > 0 ) {
 			LatLngBounds bounds = builder.build();
 			int padding = 150; // offset from edges of the map in pixels
 			CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
@@ -133,18 +133,18 @@ public class SearchMapFragment extends Fragment {
 		vpResults.setAdapter(adapter);
 		vpResults.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
-			public void onPageSelected(int arg0) {
-				Log.d(TAG, "onPageSelected: " + String.valueOf(arg0));
-				markers.get(arg0).showInfoWindow();
-				CameraUpdate cu = CameraUpdateFactory.newLatLng(markers.get(arg0).getPosition());
+			public void onPageSelected(int position) {
+				Log.d(TAG, "onPageSelected: " + String.valueOf(position));
+				markers.get(position).showInfoWindow();
+				CameraUpdate cu = CameraUpdateFactory.newLatLng(markers.get(position).getPosition());
 				mapFragment.getMap().animateCamera(cu);
 			}
 			
 			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {}
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 			
 			@Override
-			public void onPageScrollStateChanged(int arg0) {}
+			public void onPageScrollStateChanged(int state) {}
 		});
 
 		searchSlidingLayout.collapsePane();
