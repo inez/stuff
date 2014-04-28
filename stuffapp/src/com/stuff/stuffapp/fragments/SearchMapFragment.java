@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -19,10 +21,13 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.GetDataCallback;
+import com.parse.ParseException;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.models.Item;
@@ -103,7 +108,7 @@ public class SearchMapFragment extends Fragment {
 	private List<Marker> markers = new ArrayList<Marker>();
 
 	public void displayResults(List<Item> results) {
-		for(Marker marker : markers) {
+		for (Marker marker : markers) {
 			marker.remove();
 		}
 		markers.clear();
@@ -112,7 +117,10 @@ public class SearchMapFragment extends Fragment {
 
 		for (Item item : results) {
 			if ( item.getLocation() != null ) {
+			    // instantiate marker with default icon
 				Marker marker = mapFragment.getMap().addMarker(new MarkerOptions().position(new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(item.getName()));
+				// asynchronously load the item's thumbnail image and set icon when loaded
+				item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
 				markers.add(marker);
 				builder.include(marker.getPosition());
 			}
@@ -178,5 +186,22 @@ public class SearchMapFragment extends Fragment {
 		    // do nothing
 		    return null;
 		}
+	}
+
+	private class MarkerGetDataCallback extends GetDataCallback {
+	    private Marker mMarker;
+
+	    public MarkerGetDataCallback(Marker m) {
+	        super();
+	        mMarker = m;
+	    }
+
+        @Override
+        public void done(byte[] data, ParseException e) {
+            Bitmap thumbnail = BitmapFactory.decodeByteArray(data, 0, data.length);
+            if ( null != mMarker ) {
+                mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(thumbnail));
+            }
+        }	    
 	}
 }

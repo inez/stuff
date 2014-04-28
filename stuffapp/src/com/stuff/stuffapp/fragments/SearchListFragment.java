@@ -21,8 +21,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseImageView;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.RoundedImageView;
 import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.models.Item;
 
@@ -66,7 +66,7 @@ public class SearchListFragment extends Fragment {
 	}
 
 	static class ViewHolder {
-		ParseImageView ivItemPicture;
+		RoundedImageView ivItemPicture;
 		TextView tvName, tvDistanceAndTime;
 	}
 
@@ -81,7 +81,7 @@ public class SearchListFragment extends Fragment {
 			if (v == null) {
 				v = View.inflate(getContext(), R.layout.item_list_home, null);
 				holder = new ViewHolder();
-				holder.ivItemPicture = (ParseImageView) v.findViewById(R.id.ivItemPicture);
+				holder.ivItemPicture = (RoundedImageView) v.findViewById(R.id.ivItemPicture);
 				holder.tvName = (TextView) v.findViewById(R.id.tvName);
 				holder.tvDistanceAndTime = (TextView) v.findViewById(R.id.tvDistanceAndTime);
 				v.setTag(holder);
