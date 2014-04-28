@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -124,13 +125,13 @@ public class SearchMapFragment extends Fragment {
 			mapFragment.getMap().animateCamera(cu);
 		}
 
-		Log.d(TAG, "displayResults, size: " + results.size());
 		this.results = results;
 
 		vpResults = (ViewPager) view.findViewById(R.id.vpResults);
-		adapter.notifyDataSetChanged();
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
+		Log.d(TAG, "Created new pager adapter");
 		vpResults.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 		vpResults.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
@@ -149,9 +150,12 @@ public class SearchMapFragment extends Fragment {
 
 		searchSlidingLayout.collapsePane();
 	}
-	
-	private class ResultFragmentsPagerAdapter extends FragmentPagerAdapter {
 
+	// extends FragmentStatePagerAdapter instead of FragmentPagerAdapter to refresh
+	// item detail page when conducting new search
+	// This causes app crash due to bug in support library: https://code.google.com/p/android/issues/detail?id=37484
+	// TODO: monitor when temporary work-around is no longer needed
+	private class ResultFragmentsPagerAdapter extends FragmentStatePagerAdapter {
 		public ResultFragmentsPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
@@ -167,5 +171,12 @@ public class SearchMapFragment extends Fragment {
 			return results == null ? 0 : results.size();
 		}
 
+		// temporary workaround -- this is probably not the right solution
+		// http://stackoverflow.com/questions/11097091/android-app-crashing-after-a-while-using-fragments-and-viewpager
+		@Override
+		public Parcelable saveState() {
+		    // do nothing
+		    return null;
+		}
 	}
 }
