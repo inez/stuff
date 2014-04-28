@@ -3,6 +3,7 @@ package com.stuff.stuffapp.activities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -120,6 +121,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			}
 
 		}
+
 	}
 
 	/**
@@ -244,11 +246,14 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			fragments.append(fragmentId, fragment);
 		}
 		
+		ActionBar ab = getActionBar();
 		ImageView v;
 		
 		v = (ImageView ) findViewById(R.id.ivHome);
 		if ( fragmentId == Ids.HOME ) {
 			v.setImageResource(R.drawable.ic_home_active);
+			ab.setLogo(R.drawable.stuff);
+			ab.setTitle("");;
 		} else {
 			v.setImageResource(R.drawable.ic_home);
 		}
@@ -256,6 +261,8 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		v = (ImageView ) findViewById(R.id.ivSearch);
 		if ( fragmentId == Ids.SEARCH ) {
 			v.setImageResource(R.drawable.ic_search_active);
+			ab.setLogo(R.drawable.ic_launcher);
+			ab.setTitle("Search");
 		} else {
 			v.setImageResource(R.drawable.ic_search);
 		}
@@ -263,6 +270,8 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		v = (ImageView ) findViewById(R.id.ivAdd);
 		if ( fragmentId == Ids.ADD ) {
 			v.setImageResource(R.drawable.ic_add_active);
+			ab.setLogo(R.drawable.ic_launcher);
+			ab.setTitle("Add");
 		} else {
 			v.setImageResource(R.drawable.ic_add);
 		}
@@ -270,6 +279,8 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		v = (ImageView ) findViewById(R.id.ivMessage);
 		if ( fragmentId == Ids.MESSAGE ) {
 			v.setImageResource(R.drawable.ic_message_active);
+			ab.setLogo(R.drawable.ic_launcher);
+			ab.setTitle("Messages");
 		} else {
 			v.setImageResource(R.drawable.ic_message);
 		}
@@ -277,9 +288,13 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		v = (ImageView ) findViewById(R.id.ivProfile);
 		if ( fragmentId == Ids.PROFILE ) {
 			v.setImageResource(R.drawable.ic_profile_active);
+			ab.setLogo(R.drawable.ic_launcher);
+			ab.setTitle("Profile");
 		} else {
 			v.setImageResource(R.drawable.ic_profile);
 		}
+		
+		
 
 		FragmentManager fm = getSupportFragmentManager();
 		fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

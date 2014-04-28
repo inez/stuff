@@ -24,5 +24,6 @@
     
     <style name="StuffActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
 		<item name="android:background">#ffffff</item>
+		<item name="android:icon">@drawable/stuff</item>
     </style>
 </resources>
