@@ -199,26 +199,26 @@ public class AddFragment extends Fragment {
 	}
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-        	Uri selectedImageUri = null;
+        	Uri imageUri = null;
             if (requestCode == Ids.ACTION_GET_CONTENT) {
-                 selectedImageUri = data.getData();
+                 imageUri = data.getData();
                 
             }
             else if(requestCode ==Ids.ACTION_CAPTURE_IMAGE) {
-            	selectedImageUri = getPhotoFileUri(CAPTURED_IMAGE_NAME);
+            	imageUri = getPhotoFileUri(CAPTURED_IMAGE_NAME);
 
     	       } else { // Result was a failure
     	    	   Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
 
 
             }
-            if(selectedImageUri != null) {
+            if(imageUri != null) {
             	
             	try {
-					photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
+					photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
 					photo = Bitmap.createScaledBitmap(photo, 600, 600 * photo.getHeight() / photo.getWidth(), false);
 
-					Cursor cursor = getActivity().getContentResolver().query(selectedImageUri, new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
+					Cursor cursor = getActivity().getContentResolver().query(imageUri, new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
 					if (cursor.getCount() == 1) {
 						cursor.moveToFirst();
 						int orientation =  cursor.getInt(0);
