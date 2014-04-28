@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
-        app:corner_radius="10dip" />
+        app:corner_radius="@dimen/feed_item_radius" />
 
     <RelativeLayout
         android:layout_width="match_parent"

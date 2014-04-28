@@ -11,11 +11,11 @@
         android:layout_centerHorizontal="true"
         android:clipToPadding="false"
         android:divider="@null"
-        android:dividerHeight="16dp"
+        android:dividerHeight="@dimen/feed_item_padding"
         android:fadingEdge="none"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
+        android:paddingLeft="@dimen/feed_item_padding"
+        android:paddingRight="@dimen/feed_item_padding"
+        android:paddingTop="@dimen/feed_item_padding"
         android:scrollbarStyle="outsideOverlay" >
     </ListView>
 
