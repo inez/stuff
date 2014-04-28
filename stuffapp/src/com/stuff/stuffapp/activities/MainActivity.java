@@ -4,7 +4,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;
+import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,9 +19,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -174,16 +178,32 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		locationManager.removeUpdates(locationListener);
 		Log.d(TAG, "Turned off location updates");
 	}
+	
+	private MenuItem itemSearch;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		
-		 SearchView searchView = (SearchView) menu.findItem(R.id.itemSearch).getActionView();
-		 //searchView.setBackground(R.drawable.		 
-	       
-		
+		itemSearch = (MenuItem) menu.findItem(R.id.itemSearch);
+		SearchView searchView = (SearchView) itemSearch.getActionView();
+		searchView.setIconifiedByDefault(false);
+		Point p = new Point();
+        getWindowManager().getDefaultDisplay().getSize(p);
+        LayoutParams params = new LayoutParams(p.x, LayoutParams.MATCH_PARENT);
+        searchView.setLayoutParams(params);
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				Log.d(TAG, "SearchView: " + query);
+				return false;
+			}
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				return false;
+			}
+		});
 		return true;
 	}
 
@@ -251,9 +271,14 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			}
 			fragments.append(fragmentId, fragment);
 		}
-		
+				
 		ActionBar ab = getActionBar();
 		ImageView v;
+
+		if(itemSearch != null) {
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			ab.setDisplayShowHomeEnabled(true);
+		}
 		
 		v = (ImageView ) findViewById(R.id.ivHome);
 		if ( fragmentId == Ids.HOME ) {
@@ -267,8 +292,10 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		v = (ImageView ) findViewById(R.id.ivSearch);
 		if ( fragmentId == Ids.SEARCH ) {
 			v.setImageResource(R.drawable.ic_search_active);
-			ab.setLogo(R.drawable.ic_launcher);
-			ab.setTitle("Search");
+			if(itemSearch != null) {
+				itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				ab.setDisplayShowHomeEnabled(false);
+			}
 		} else {
 			v.setImageResource(R.drawable.ic_search);
 		}
