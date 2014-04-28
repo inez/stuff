@@ -120,7 +120,7 @@ public class SearchMapFragment extends Fragment {
 			    // instantiate marker with default icon
 				Marker marker = mapFragment.getMap().addMarker(new MarkerOptions().position(new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(item.getName()));
 				// asynchronously load the item's thumbnail image and set icon when loaded
-				//item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
+				item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
 				markers.add(marker);
 				builder.include(marker.getPosition());
 			}
