@@ -9,8 +9,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:clipToPadding="false"
         android:divider="@null"
-        android:dividerHeight="0dp" >
+        android:dividerHeight="@dimen/feed_item_padding"
+        android:fadingEdge="none"
+        android:paddingLeft="@dimen/feed_item_padding"
+        android:paddingRight="@dimen/feed_item_padding"
+        android:paddingTop="@dimen/feed_item_padding"
+        android:scrollbarStyle="outsideOverlay" >
     </ListView>
 
 </RelativeLayout>

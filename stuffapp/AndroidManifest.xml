@@ -9,15 +9,15 @@
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/app_id" />
 
-  	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.CAMERA" />
-	<!-- the following two are needed for Maps API -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-	
-	<!-- Permissions needed for Notifications -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- the following two are needed for Maps API -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <!-- Permissions needed for Notifications -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -34,12 +34,13 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.stuff.stuffapp.permission.C2D_MESSAGE" />
-	
+
     <!-- END Permissions needed for Notifications -->
 
-
-	<uses-feature android:name="android.hardware.camera" />
-	<uses-feature android:name="android.hardware.location.gps" android:required="true" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -51,20 +52,21 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAIylYm0Smtse1CfbzH-TPrroCy9rEtqgo" />
 
-		<meta-data android:name="com.google.android.gms.version"
-		    android:value="@integer/google_play_services_version" />
-	    <meta-data
-	    	android:name="com.google.android.maps.v2.API_KEY"
-	     	android:value="AIzaSyAIylYm0Smtse1CfbzH-TPrroCy9rEtqgo" />
-
-		<activity
+        <activity
             android:name="com.stuff.stuffapp.activities.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -73,16 +75,15 @@
             android:theme="@style/NoActionBar" />
         <activity
             android:name="com.stuff.stuffapp.activities.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/NoActionBar" />
-            <!--android:windowSoftInputMode="adjustNothing"-->
-            <service android:name="com.parse.PushService" />
-        
+            android:label="@string/title_activity_main" />
+        <!-- android:windowSoftInputMode="adjustNothing" -->
+        <service android:name="com.parse.PushService" />
+
         <activity
-            android:label="@string/app_name"
-            android:name="com.stuff.stuffapp.MessageActivity" >
+            android:name="com.stuff.stuffapp.MessageActivity"
+            android:label="@string/app_name" >
         </activity>
-            
+
         <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -104,6 +105,6 @@
                 <category android:name="com.stuff.stuffapp" />
             </intent-filter>
         </receiver>
-	</application>
+    </application>
 
 </manifest>

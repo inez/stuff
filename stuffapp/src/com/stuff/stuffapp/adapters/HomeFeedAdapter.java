@@ -12,18 +12,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
-import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
+import com.stuff.stuffapp.RoundedImageView;
 import com.stuff.stuffapp.activities.MainActivity;
 import com.stuff.stuffapp.models.Item;
 
 public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 
 	static class ViewHolder {
-		ParseImageView ivItemPicture;
+		RoundedImageView ivItemPicture;
 		TextView tvName, tvDistanceAndTime;
 	}
 
@@ -49,7 +48,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.item_list_home, null);
 			holder = new ViewHolder();
-			holder.ivItemPicture = (ParseImageView) v.findViewById(R.id.ivItemPicture);
+			holder.ivItemPicture = (RoundedImageView) v.findViewById(R.id.ivItemPicture);
 			holder.tvName = (TextView) v.findViewById(R.id.tvName);
 			holder.tvDistanceAndTime = (TextView) v.findViewById(R.id.tvDistanceAndTime);
 			v.setTag(holder);
@@ -65,27 +64,9 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		//
 		// ivItemPicture
 		//
-		holder.ivItemPicture.setVisibility(View.INVISIBLE);
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		// TODO: Use proper size image
-		imageLoader.displayImage(item.getPhotoFile().getUrl(), holder.ivItemPicture, new ImageLoadingListener() {
-			@Override
-			public void onLoadingCancelled(String arg0, View arg1) {
-			}
-
-			@Override
-			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
-				arg1.setVisibility(View.VISIBLE);
-			}
-
-			@Override
-			public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-			}
-
-			@Override
-			public void onLoadingStarted(String arg0, View arg1) {
-			}
-		});
+		imageLoader.displayImage(item.getPhotoFile().getUrl(), holder.ivItemPicture);
 
 		//
 		// tvDistanceAndTime

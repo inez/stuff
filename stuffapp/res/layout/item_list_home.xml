@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/RelativeLayout1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center" >
 
-    <com.parse.ParseImageView
+    <com.stuff.stuffapp.RoundedImageView
         android:id="@+id/ivItemPicture"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
-        android:visibility="invisible" />
+        app:corner_radius="@dimen/feed_item_radius" />
 
     <RelativeLayout
         android:layout_width="match_parent"
