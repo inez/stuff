@@ -61,7 +61,7 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.item_list_conversations, null);
 			holder = new ViewHolder();
-			holder.ivProfile = (ParseImageView) v.findViewById(R.id.ivProfile);
+			holder.ivProfilePicture = (ParseImageView) v.findViewById(R.id.ivProfilePicture);
 			holder.ivPhoto = (ParseImageView) v.findViewById(R.id.ivPhoto);
 			holder.tvText = (TextView) v.findViewById(R.id.tvText);
 			holder.tvName = (TextView) v.findViewById(R.id.tvName);
@@ -90,7 +90,7 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 		// ivProfile
 		//
 		try {
-    		imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=square", holder.ivProfile);
+    		imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=square", holder.ivProfilePicture);
         } catch (JSONException e) {
         	e.printStackTrace();
         }
@@ -118,7 +118,7 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 	}
 	
     static class ViewHolder {
-		ParseImageView ivProfile;
+		ParseImageView ivProfilePicture;
     	ParseImageView ivPhoto;
 		TextView tvText, tvName;
 	}
