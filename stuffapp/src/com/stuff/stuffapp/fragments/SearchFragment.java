@@ -64,8 +64,6 @@ public class SearchFragment extends Fragment {
 
 	private View view;
 
-	private SearchView svQuery;
-
 	private CustomViewPager vpResultFragments;
 
 	private ResultFragmentsPagerAdapter adapter;
@@ -74,55 +72,35 @@ public class SearchFragment extends Fragment {
 		SearchFragment fragment = new SearchFragment();
 		return fragment;
 	}
+	
+	public void search(String query) {
+		ParseQuery<Item> searchQuery = new ParseQuery<Item>(Item.class).whereContains("searchable",
+				query.trim().toLowerCase()).whereNear("location",
+				((MainActivity) SearchFragment.this.getActivity()).getLastKnownLocation());
+		searchQuery.include("owner");
+		searchQuery.findInBackground(new FindCallback<Item>() {
+			@Override
+			public void done(List<Item> objects, ParseException e) {
+				if (objects != null) {
+					Log.d(TAG, "Got " + objects.size() + " results");
+					if ( searchListFragment != null ) {
+						searchListFragment.displayResults(objects);
+					}
+					if ( searchMapFragment != null ) {
+						searchMapFragment.displayResults(objects);
+					}
+				}
+				else {
+				    Log.d(TAG, "No results found, possible ParseException");
+				}
+			}
+		});
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
 		view = inflater.inflate(R.layout.fragment_search, container, false);
-
-		//
-		// svQuery
-		//
-		svQuery = (SearchView) view.findViewById(R.id.svQuery);
-		svQuery.setOnQueryTextListener(new OnQueryTextListener() {
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				Log.d(TAG, "Search for: " + query);
-
-				// Hide soft keyboard
-		        InputMethodManager mgr = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		        mgr.hideSoftInputFromWindow(svQuery.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
-		        svQuery.clearFocus();
-
-				ParseQuery<Item> searchQuery = new ParseQuery<Item>(Item.class).whereContains("searchable",
-						query.trim().toLowerCase()).whereNear("location",
-						((MainActivity) SearchFragment.this.getActivity()).getLastKnownLocation());
-				searchQuery.include("owner");
-				searchQuery.findInBackground(new FindCallback<Item>() {
-					@Override
-					public void done(List<Item> objects, ParseException e) {
-						if (objects != null) {
-							Log.d(TAG, "Got " + objects.size() + " results");
-							if ( searchListFragment != null ) {
-								searchListFragment.displayResults(objects);
-							}
-							if ( searchMapFragment != null ) {
-								searchMapFragment.displayResults(objects);
-							}
-						}
-						else {
-						    Log.d(TAG, "No results found, possible ParseException");
-						}
-					}
-				});
-				return true;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				return false;
-			}
-		});
 
 		//
 		// vpResultFragments

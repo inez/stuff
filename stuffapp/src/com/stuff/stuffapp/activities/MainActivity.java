@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		getMenuInflater().inflate(R.menu.main, menu);
 		
 		itemSearch = (MenuItem) menu.findItem(R.id.itemSearch);
-		SearchView searchView = (SearchView) itemSearch.getActionView();
+		final SearchView searchView = (SearchView) itemSearch.getActionView();
 		searchView.setIconifiedByDefault(false);
 		Point p = new Point();
         getWindowManager().getDefaultDisplay().getSize(p);
@@ -197,6 +197,9 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				Log.d(TAG, "SearchView: " + query);
+				SearchFragment searchFragment = (SearchFragment) fragments.get(Ids.SEARCH);
+				searchFragment.search(query);;
+				searchView.clearFocus();
 				return false;
 			}
 			@Override

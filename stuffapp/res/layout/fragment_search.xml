@@ -3,26 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <SearchView
-		android:id="@+id/svQuery"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:iconifiedByDefault="false" >
-	</SearchView>
-
-    <View
-        android:id="@+id/shadow"
-		android:layout_width="fill_parent"
-		android:layout_height="4dp"
-        android:background="@drawable/below_shadow"
-        android:layout_below="@+id/svQuery" >
-    </View>
-
     <com.stuff.stuffapp.CustomViewPager
         android:id="@+id/vpResultFragments"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/svQuery" >
+        android:layout_height="match_parent" >
     </com.stuff.stuffapp.CustomViewPager>
 
 </RelativeLayout>
