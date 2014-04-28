@@ -32,6 +32,12 @@
             android:textColor="#777777" />
     </RelativeLayout>
 
+    <View
+        android:background="@drawable/below_shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"
+        android:layout_below="@+id/relativeLayout1" />
+    
     <GridView
         android:id="@+id/gvItems"
         android:layout_width="match_parent"
