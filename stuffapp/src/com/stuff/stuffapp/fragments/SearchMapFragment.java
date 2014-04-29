@@ -2,7 +2,9 @@ package com.stuff.stuffapp.fragments;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,9 +19,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -36,6 +41,14 @@ import com.stuff.stuffapp.models.Item;
 public class SearchMapFragment extends Fragment {
 
 	private static String TAG = "SearchMapFragment";
+
+	// for Google Maps info window
+	private LayoutInflater mInflater;
+	private Map<Item, Bitmap> mThumbnails; 
+
+    // for map info window
+    private Item pendingItem;
+    private Marker markerShowingInfoWindow;
 
 	// BEGIN BUG FIX for fragment within fragment
 	// http://stackoverflow.com/questions/14929907/causing-a-java-illegalstateexception-error-no-activity-only-when-navigating-to
@@ -88,6 +101,9 @@ public class SearchMapFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
 
+		mInflater = inflater;
+		if ( null == mThumbnails ) mThumbnails = new HashMap<Item, Bitmap>();
+
 		view = inflater.inflate(R.layout.fragment_map_search, container, false);
 		searchSlidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.searchSlidingLayout);
 
@@ -103,6 +119,17 @@ public class SearchMapFragment extends Fragment {
 		vpResults.setAdapter(adapter);
 
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+	    Log.d(TAG, "onResume");
+	    super.onResume();
+
+	    GoogleMap map = mapFragment.getMap();
+	    if ( null != map ) {
+	        map.setInfoWindowAdapter(new ItemInfoAdapter(mInflater));
+	    }
 	}
 
 	private void hideSlidingPanel() {
@@ -124,9 +151,28 @@ public class SearchMapFragment extends Fragment {
 
 		// Put only results with location defined into current results
 		currentResults = new ArrayList<Item>();
-		for (Item item : results) {
+		for (final Item item : results) {
 			if (item.getLocation() != null) {
 				currentResults.add(item);
+				// asynchronously load thumbnail images and cache them
+				// TODO: clear hashmap intelligently to avoid large memory footprint
+				if ( !mThumbnails.containsKey(item) ) {
+				    item.getPhotoFile100().getDataInBackground(new GetDataCallback() {
+                        @Override
+                        public void done(byte[] data, ParseException e) {
+                            if ( null != data ) {
+                                mThumbnails.put(item, BitmapFactory.decodeByteArray(data, 0, data.length));
+                                // refresh marker's info window if it waited for image to load
+                                if ( null != pendingItem && item == pendingItem ) {
+                                    Log.d(TAG, "Refreshing marker for pending item");
+                                    pendingItem = null;
+                                    if ( null != markerShowingInfoWindow && markerShowingInfoWindow.isInfoWindowShown() )
+                                        markerShowingInfoWindow.showInfoWindow();
+                                }
+                            }
+                        }
+                    });
+				}
 			}
 		}
 
@@ -149,8 +195,8 @@ public class SearchMapFragment extends Fragment {
 							item.getName()));
 
 			// asynchronously load the item's thumbnail image and set icon when
-			// loaded
-			item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
+			// loaded -- temporarily disabled
+			//item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
 
 			markers.add(marker);
 			boundsBuilder.include(marker.getPosition());
@@ -185,8 +231,8 @@ public class SearchMapFragment extends Fragment {
 
 		mapFragment.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
 			@Override
-			public boolean onMarkerClick(Marker arg0) {
-				vpResults.setCurrentItem(markers.indexOf(arg0));
+			public boolean onMarkerClick(Marker marker) {
+				vpResults.setCurrentItem(markers.indexOf(marker));
 				return false;
 			}
 		});
@@ -226,8 +272,43 @@ public class SearchMapFragment extends Fragment {
 		}
 	}
 
+	private class ItemInfoAdapter implements InfoWindowAdapter {
+	    LayoutInflater inflater;
+	    
+	    ItemInfoAdapter(LayoutInflater inflater) {
+	        this.inflater = inflater;
+	    }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            Log.d(TAG, "ItemInfoAdapter.getInfoContents");
+            markerShowingInfoWindow = marker;
+
+            Item item = currentResults.get(vpResults.getCurrentItem());
+
+            View infoWindow = inflater.inflate(R.layout.item_info_window, null);
+
+            if ( mThumbnails.containsKey(item) ) {
+                ImageView ivItem = (ImageView) infoWindow.findViewById(R.id.ivInfoWindowItem);
+                ivItem.setImageBitmap(mThumbnails.get(item));
+            }
+            else {
+                Log.w(TAG, "Thumbnail not available");
+                pendingItem = item;
+            }
+            
+            return infoWindow;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+	}
+
+	/* currently unused */
 	private class MarkerGetDataCallback extends GetDataCallback {
-		private Marker mMarker;
+		protected Marker mMarker;
 
 		public MarkerGetDataCallback(Marker m) {
 			super();
