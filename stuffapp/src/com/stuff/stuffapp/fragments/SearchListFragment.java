@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -24,6 +26,7 @@ import com.parse.ParseGeoPoint;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.RoundedImageView;
 import com.stuff.stuffapp.activities.MainActivity;
+import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
 import com.stuff.stuffapp.models.Item;
 
 public class SearchListFragment extends Fragment {
@@ -54,6 +57,13 @@ public class SearchListFragment extends Fragment {
 			}
 			ListView lvHome = (ListView) view.findViewById(R.id.lvHome);
 			lvHome.setAdapter(searchListAdapter);
+    		lvHome.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+					Item item = (Item) arg0.getItemAtPosition(arg2);
+					((OnItemClickedListener) getActivity()).onItemClicked(item);
+				}
+			});
 		}
 
 		return view;
