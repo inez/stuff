@@ -63,7 +63,8 @@
             android:name="com.stuff.stuffapp.activities.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/NoActionBar" >
+            android:theme="@style/NoActionBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,10 +73,12 @@
         </activity>
         <activity
             android:name="com.facebook.LoginActivity"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.stuff.stuffapp.activities.MainActivity"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" />
         <!-- android:windowSoftInputMode="adjustNothing" -->
         <service android:name="com.parse.PushService" />
 
