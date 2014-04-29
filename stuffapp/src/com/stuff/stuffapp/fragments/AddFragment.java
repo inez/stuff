@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -107,12 +108,20 @@ public class AddFragment extends Fragment {
       //SJ: This needs to change, should not have reference to Activity in a fragment!
         ParseGeoPoint geoPoint = ((MainActivity) getActivity()).getLastKnownLocation();
         
+        String staticMapURL = "http://maps.googleapis.com/maps/api/staticmap?center=" +
+        		geoPoint.getLatitude() +
+        		"," +
+        		geoPoint.getLongitude() +
+                "&zoom=14&size=400x400&sensor=false&markers=color:blue%7Clabel:S%7C" +
+        		geoPoint.getLatitude() +
+        		"," +
+        		geoPoint.getLongitude();
         
-        new DownloadImageTask((ImageView) view.findViewById(R.id.ivStaticMap))
-        .execute("http://maps.googleapis.com/maps/api/staticmap?center="
-        +geoPoint.getLatitude()+","+geoPoint.getLongitude()+
-        "&zoom=8&size=400x400&sensor=false&markers=color:blue%7Clabel:S%7C"+geoPoint.getLatitude()+","+geoPoint.getLongitude());
-        
+        Log.d(TAG, "staticMapURL: " + staticMapURL);
+
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.displayImage(staticMapURL,  (ImageView) view.findViewById(R.id.ivStaticMap));
+
         btAdd.setOnClickListener(new OnClickListener() {
 
 			@Override
