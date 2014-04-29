@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -72,7 +73,7 @@ public class SearchMapFragment extends Fragment {
 
 	private SlidingUpPanelLayout searchSlidingLayout;
 
-	private List<Item> results;
+	private List<Item> currentResults;
 
 	private ViewPager vpResults;
 
@@ -95,7 +96,6 @@ public class SearchMapFragment extends Fragment {
 		if (mapFragment == null) {
 			mapFragment = SupportMapFragment.newInstance();
 			fm.beginTransaction().replace(R.id.flMap, mapFragment).commit();
-
 		}
 
 		vpResults = (ViewPager) view.findViewById(R.id.vpResults);
@@ -120,46 +120,55 @@ public class SearchMapFragment extends Fragment {
 	private List<Marker> markers = new ArrayList<Marker>();
 
 	public void displayResults(List<Item> results) {
+		searchSlidingLayout.collapsePane();
+
+		// Put only results with location defined into current results
+		currentResults = new ArrayList<Item>();
+		for (Item item : results) {
+			if (item.getLocation() != null) {
+				currentResults.add(item);
+			}
+		}
+
+		// Remove all currently displayed markers
 		for (Marker marker : markers) {
 			marker.remove();
 		}
 		markers.clear();
 
-		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-		for (Item item : results) {
-			if (item.getLocation() != null) {
-				// instantiate marker with default icon
-				Marker marker = mapFragment.getMap().addMarker(
-						new MarkerOptions().position(
-								new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(
-								item.getName()));
-				// asynchronously load the item's thumbnail image and set icon
-				// when loaded
-				item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
-				markers.add(marker);
-				builder.include(marker.getPosition());
-			}
+		if (currentResults.size() == 0) {
+			Log.d(TAG, "Do somethings for no results");
 		}
 
-		if (markers.size() > 0) {
-			LatLngBounds bounds = builder.build();
-			int padding = 150; // offset from edges of the map in pixels
-			CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-			mapFragment.getMap().animateCamera(cu);
+		// Create new markers and bounds
+		LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+		for (Item item : currentResults) {
+			Marker marker = mapFragment.getMap().addMarker(
+					new MarkerOptions().position(
+							new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(
+							item.getName()));
+
+			// asynchronously load the item's thumbnail image and set icon when
+			// loaded
+			item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
+
+			markers.add(marker);
+			boundsBuilder.include(marker.getPosition());
 		}
 
-		this.results = results;
+		int padding = 250; // offset from edges of the map in pixels
+		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), padding);
+		mapFragment.getMap().animateCamera(cu);
 
 		vpResults = (ViewPager) view.findViewById(R.id.vpResults);
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
-		Log.d(TAG, "Created new pager adapter");
 		vpResults.setAdapter(adapter);
+
 		adapter.notifyDataSetChanged();
+
 		vpResults.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				Log.d(TAG, "onPageSelected: " + String.valueOf(position));
 				markers.get(position).showInfoWindow();
 				CameraUpdate cu = CameraUpdateFactory.newLatLng(markers.get(position).getPosition());
 				mapFragment.getMap().animateCamera(cu);
@@ -174,7 +183,15 @@ public class SearchMapFragment extends Fragment {
 			}
 		});
 
-		searchSlidingLayout.collapsePane();
+		mapFragment.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
+			@Override
+			public boolean onMarkerClick(Marker arg0) {
+				vpResults.setCurrentItem(markers.indexOf(arg0));
+				return false;
+			}
+		});
+
+		markers.get(vpResults.getCurrentItem()).showInfoWindow();
 	}
 
 	// extends FragmentStatePagerAdapter instead of FragmentPagerAdapter to
@@ -192,12 +209,12 @@ public class SearchMapFragment extends Fragment {
 		public Fragment getItem(int position) {
 			// TODO: Perhaps DetailsFragment could be cached locally with item
 			// id as a cache key
-			return DetailsFragment.newInstance(results.get(position));
+			return DetailsFragment.newInstance(currentResults.get(position));
 		}
 
 		@Override
 		public int getCount() {
-			return results == null ? 0 : results.size();
+			return currentResults == null ? 0 : currentResults.size();
 		}
 
 		// temporary workaround -- this is probably not the right solution
