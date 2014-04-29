@@ -48,7 +48,13 @@ public class ConversationAdapter extends BaseAdapter{
          	//something is broken handle this case. 
          }
          
-         query.findInBackground(new FindCallbackImpl(this));
+         //query.findInBackground(new FindCallbackImpl(this));
+         try {
+			conversationReplies = query.find();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
                               		
 	}
 	
@@ -127,8 +133,11 @@ public class ConversationAdapter extends BaseAdapter{
 	
 	
 public void addConversationReply (ConversationReply reply) {
-	this.conversationReplies.add(reply);
-	this.notifyDataSetChanged();
+	if(conversationReplies != null) {
+		this.conversationReplies.add(reply);
+		this.notifyDataSetChanged();
+	}
+
 }
 	
 private void loadProfileImage(ConversationReply message, ViewHolder holder) {
@@ -159,7 +168,7 @@ private void loadProfileImage(ConversationReply message, ViewHolder holder) {
 			
 		}
 		holder.rivMessageProfilePicture.setImageBitmap(userImageMap.get(user.getObjectId()));
-		
+		 
 
 		
 	}
