@@ -21,6 +21,7 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -291,13 +292,15 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		} else {
 			v.setImageResource(R.drawable.ic_home);
 		}
-		
+
 		v = (ImageView ) findViewById(R.id.ivSearch);
 		if ( fragmentId == Ids.SEARCH ) {
 			v.setImageResource(R.drawable.ic_search_active);
 			if(itemSearch != null) {
 				itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				ab.setDisplayShowHomeEnabled(false);
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
 			}
 		} else {
 			v.setImageResource(R.drawable.ic_search);
