@@ -102,10 +102,10 @@
          <ImageView
             android:id="@+id/ivStaticMap" 
             android:layout_width="256dp"
-            android:layout_height="256dp"
+            android:layout_height="180dp"
             android:layout_below="@+id/etDescription"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_picture" />
+            android:src="@drawable/card_background_white" />
     </RelativeLayout>
     
 </ScrollView>
