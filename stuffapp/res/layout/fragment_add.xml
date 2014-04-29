@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+  <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" >
+        
     <RelativeLayout
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
 		android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content" >
 
         <EditText
             android:id="@+id/etName"
@@ -93,21 +98,28 @@
             android:inputType="textMultiLine"
             android:lines="4" />
 
-        
-        <Button
-            android:id="@+id/btAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_margin="5sp"
-            android:background="@drawable/send_button"
+
+         <ImageView
+            android:id="@+id/ivStaticMap" 
+            android:layout_width="256dp"
+            android:layout_height="256dp"
             android:layout_below="@+id/etDescription"
             android:layout_centerHorizontal="true"
-            android:paddingBottom="5sp"
-            android:paddingLeft="15sp"
-            android:paddingRight="15sp"
-            android:paddingTop="5sp"
-            android:text="@string/add_item"
-            android:textColor="#FFF" />
+            android:src="@drawable/ic_picture" />
     </RelativeLayout>
-
+    
 </ScrollView>
+
+
+    <Button
+         android:id="@+id/btAdd"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentBottom="true"
+         android:background="#dd00b5fc"
+         android:text="@string/add_item"
+         android:textColor="#ffffff"
+         android:textStyle="bold" />
+    
+    </RelativeLayout>

@@ -2,6 +2,7 @@ package com.stuff.stuffapp.fragments;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.stuff.stuffapp.R;
@@ -59,6 +62,8 @@ public class AddFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	
 	private Bitmap photo;
+	
+	private ImageView ivStaticMap;
 
 	public static AddFragment newInstance() {
 		AddFragment fragment = new AddFragment();
@@ -97,6 +102,16 @@ public class AddFragment extends Fragment {
         btAdd = (Button) view.findViewById(R.id.btAdd);
         etName = (EditText) view.findViewById(R.id.etName);
         etDescription = (EditText) view.findViewById(R.id.etDescription);
+        ivStaticMap = (ImageView) view.findViewById(R.id.ivStaticMap);
+        
+      //SJ: This needs to change, should not have reference to Activity in a fragment!
+        ParseGeoPoint geoPoint = ((MainActivity) getActivity()).getLastKnownLocation();
+        
+        
+        new DownloadImageTask((ImageView) view.findViewById(R.id.ivStaticMap))
+        .execute("http://maps.googleapis.com/maps/api/staticmap?center="
+        +geoPoint.getLatitude()+","+geoPoint.getLongitude()+
+        "&zoom=8&size=400x400&sensor=false&markers=color:blue%7Clabel:S%7C"+geoPoint.getLatitude()+","+geoPoint.getLongitude());
         
         btAdd.setOnClickListener(new OnClickListener() {
 
@@ -129,7 +144,8 @@ public class AddFragment extends Fragment {
 				item.setOwner(parseUser);
 				item.setName(etName.getText().toString());
 				item.setDescription(etDescription.getText().toString());
-				//item.setLocation(userLocation);
+				//item.setLocation(userLocation);				
+				//SJ: This needs to change, should not have reference to Activity in a fragment!
 				item.setLocation(((MainActivity) getActivity()).getLastKnownLocation()); 
 				item.setPhotoFile(new ParseFile(getBitmapAsBytaArray(photo), "photo.jpg"));
 
@@ -271,4 +287,30 @@ public class AddFragment extends Fragment {
 	
 
 
+
+}
+
+class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    ImageView ivImage;
+
+    public DownloadImageTask(ImageView ivImage) {
+        this.ivImage = ivImage;
+    }
+
+    protected Bitmap doInBackground(String... urls) {
+        String urldisplay = urls[0];
+        Bitmap bitmap = null;
+        try {
+            InputStream in = new java.net.URL(urldisplay).openStream();
+            bitmap = BitmapFactory.decodeStream(in);
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    protected void onPostExecute(Bitmap result) {
+        ivImage.setImageBitmap(result);
+    }
 }

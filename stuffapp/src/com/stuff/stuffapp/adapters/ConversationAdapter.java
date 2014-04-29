@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,7 +21,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.RoundedImageView;
@@ -50,20 +48,11 @@ public class ConversationAdapter extends BaseAdapter{
          	//something is broken handle this case. 
          }
          
-//         try {
-//			conversationReplies = query.find();
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} 
-
          query.findInBackground(new FindCallbackImpl(this));
-                              
-		
+                              		
 	}
 	
 	
-   
 	@Override
 	public int getCount() {
 
