@@ -23,7 +23,7 @@ public class CustomViewPager extends ViewPager {
 	@Override
 	protected boolean canScroll(final View v, final boolean checkV, final int dx, final int x, final int y) {
 		// TODO: Not sure if this code is needed anymore
-		if ( y > getHeight() / 2 - 32 && y < getHeight() / 2 + 32 && x > 0 && x < 144 ) {
+		if ( y > getHeight() / 2 - 40 && y < getHeight() / 2 + 40 && x > 0 && x < 200 ) {
     		return false;
     	}
 		return super.canScroll(v, checkV, dx, x, y);

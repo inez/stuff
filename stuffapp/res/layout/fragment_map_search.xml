@@ -34,8 +34,8 @@
 
     <ImageView
         android:id="@+id/ivHandle"
-        android:layout_width="36dp"
-        android:layout_height="72dp"
+        android:layout_width="20dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_handle" />
