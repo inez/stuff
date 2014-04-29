@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
-import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -14,10 +13,8 @@ import com.parse.SendCallback;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.ConversationAdapter;
 import com.stuff.stuffapp.helpers.ConversationListener;
-import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
-import com.stuff.stuffapp.models.Item;
 import android.os.Bundle;
 
 import android.support.v4.app.ListFragment;
@@ -28,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class ConversationsFragment extends ListFragment implements ConversationListener {
 
@@ -38,7 +34,7 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		private static final String  VALUE_ANDROID = "android";
 	private static final String KEY_ALERT = "alert";
 	private static final String KEY_CONVERSATION_ID ="conversation_id";
-	
+	 
 	private Button btSendMessage = null;
 	private Conversation conversation = null;
 	ConversationAdapter adapter;
@@ -64,33 +60,19 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 	public View onCreateView(LayoutInflater inf, ViewGroup parent,
 			Bundle savedInstanceState) {
 
-		return myCreateView1(inf, parent, savedInstanceState);
-		
-	}
-	
-	private View myCreateView1(LayoutInflater inf, ViewGroup parent,
-			Bundle savedInstanceState) {
 		View view = inf.inflate(R.layout.converesation, parent,
 				false);
 
 		
 		text = (EditText) view.findViewById(R.id.text);
 		btSendMessage = (Button) view.findViewById(R.id.btSendMessage);
-
-		//TODO: Set title on the activity bar. 
-		
-		//Register button handling in fragment. 
-		
+		//TODO: Set title on the activity bar. 		
+		//Register button handling in fragment. 		
 		btSendMessage.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-				Toast.makeText(getActivity(), "Sending", Toast.LENGTH_LONG)
-						.show();
-
-				sendMessage(v);
-
-                
+				sendMessage(v);              
 								              				                
 			}
 		});
@@ -100,19 +82,13 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		setListAdapter(adapter);	
 
 		return view;
+		
 	}
+
 
 	public void sendMessageAsData()
 	{
 	    ParsePush push = new ParsePush();
-
-	    Item item = null;
-		try {
-			item = (Item)conversation.getItem().fetchIfNeeded();
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		
 		ParseUser userOne = null;
 		ParseUser userTwo = null;
@@ -165,13 +141,9 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		super.onActivityCreated(savedInstanceState);
 
 	}
-
+ 
 
 	public void sendMessage(View v) {
-
-		Toast.makeText(getActivity(), "Sending", Toast.LENGTH_LONG)
-				.show();
-
 
         ConversationReply reply = createReply();
         
@@ -189,8 +161,8 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 				
 		sendMessageAsData();
 		text.setText("");	
-		//Add for local display
-		adapter.loadObjects();
+		adapter.addConversationReply(reply);
+		
 	}
 	
 	private ConversationReply createReply() {
@@ -209,8 +181,6 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		return reply;
 	}
 	
-	
-
 	void addNewConversationReply(ConversationReply m)
 	{
 
