@@ -65,15 +65,15 @@ public class SearchMapFragment extends Fragment {
 	}
 
 	// END BUG FIX
-	
+
 	private View view;
-	
+
 	private ResultFragmentsPagerAdapter adapter;
-	
+
 	private SlidingUpPanelLayout searchSlidingLayout;
 
 	private List<Item> results;
-	
+
 	private ViewPager vpResults;
 
 	public static SearchMapFragment newInstance() {
@@ -89,22 +89,34 @@ public class SearchMapFragment extends Fragment {
 
 		view = inflater.inflate(R.layout.fragment_map_search, container, false);
 		searchSlidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.searchSlidingLayout);
-		
+
 		FragmentManager fm = getChildFragmentManager();
 		mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.flMap);
 		if (mapFragment == null) {
 			mapFragment = SupportMapFragment.newInstance();
 			fm.beginTransaction().replace(R.id.flMap, mapFragment).commit();
-			
+
 		}
-		
+
 		vpResults = (ViewPager) view.findViewById(R.id.vpResults);
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
 		vpResults.setAdapter(adapter);
 
 		return view;
 	}
-	
+
+	private void hideSlidingPanel() {
+		if (searchSlidingLayout != null) {
+			searchSlidingLayout.getChildAt(1).setVisibility(View.GONE);
+		}
+	}
+
+	private void showSlidingPanel() {
+		if (searchSlidingLayout != null) {
+			searchSlidingLayout.getChildAt(1).setVisibility(View.VISIBLE);
+		}
+	}
+
 	private List<Marker> markers = new ArrayList<Marker>();
 
 	public void displayResults(List<Item> results) {
@@ -112,21 +124,25 @@ public class SearchMapFragment extends Fragment {
 			marker.remove();
 		}
 		markers.clear();
-		
+
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
 		for (Item item : results) {
-			if ( item.getLocation() != null ) {
-			    // instantiate marker with default icon
-				Marker marker = mapFragment.getMap().addMarker(new MarkerOptions().position(new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(item.getName()));
-				// asynchronously load the item's thumbnail image and set icon when loaded
+			if (item.getLocation() != null) {
+				// instantiate marker with default icon
+				Marker marker = mapFragment.getMap().addMarker(
+						new MarkerOptions().position(
+								new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(
+								item.getName()));
+				// asynchronously load the item's thumbnail image and set icon
+				// when loaded
 				item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
 				markers.add(marker);
 				builder.include(marker.getPosition());
 			}
 		}
-		
-		if ( markers.size() > 0 ) {
+
+		if (markers.size() > 0) {
 			LatLngBounds bounds = builder.build();
 			int padding = 150; // offset from edges of the map in pixels
 			CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
@@ -139,7 +155,7 @@ public class SearchMapFragment extends Fragment {
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
 		Log.d(TAG, "Created new pager adapter");
 		vpResults.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+		adapter.notifyDataSetChanged();
 		vpResults.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
@@ -148,20 +164,24 @@ public class SearchMapFragment extends Fragment {
 				CameraUpdate cu = CameraUpdateFactory.newLatLng(markers.get(position).getPosition());
 				mapFragment.getMap().animateCamera(cu);
 			}
-			
+
 			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-			
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			}
+
 			@Override
-			public void onPageScrollStateChanged(int state) {}
+			public void onPageScrollStateChanged(int state) {
+			}
 		});
 
 		searchSlidingLayout.collapsePane();
 	}
 
-	// extends FragmentStatePagerAdapter instead of FragmentPagerAdapter to refresh
+	// extends FragmentStatePagerAdapter instead of FragmentPagerAdapter to
+	// refresh
 	// item detail page when conducting new search
-	// This causes app crash due to bug in support library: https://code.google.com/p/android/issues/detail?id=37484
+	// This causes app crash due to bug in support library:
+	// https://code.google.com/p/android/issues/detail?id=37484
 	// TODO: monitor when temporary work-around is no longer needed
 	private class ResultFragmentsPagerAdapter extends FragmentStatePagerAdapter {
 		public ResultFragmentsPagerAdapter(FragmentManager fm) {
@@ -170,7 +190,8 @@ public class SearchMapFragment extends Fragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			// TODO: Perhaps DetailsFragment could be cached locally with item id as a cache key
+			// TODO: Perhaps DetailsFragment could be cached locally with item
+			// id as a cache key
 			return DetailsFragment.newInstance(results.get(position));
 		}
 
@@ -183,25 +204,25 @@ public class SearchMapFragment extends Fragment {
 		// http://stackoverflow.com/questions/11097091/android-app-crashing-after-a-while-using-fragments-and-viewpager
 		@Override
 		public Parcelable saveState() {
-		    // do nothing
-		    return null;
+			// do nothing
+			return null;
 		}
 	}
 
 	private class MarkerGetDataCallback extends GetDataCallback {
-	    private Marker mMarker;
+		private Marker mMarker;
 
-	    public MarkerGetDataCallback(Marker m) {
-	        super();
-	        mMarker = m;
-	    }
+		public MarkerGetDataCallback(Marker m) {
+			super();
+			mMarker = m;
+		}
 
-        @Override
-        public void done(byte[] data, ParseException e) {
-            Bitmap thumbnail = BitmapFactory.decodeByteArray(data, 0, data.length);
-            if ( null != mMarker ) {
-                mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(thumbnail));
-            }
-        }	    
+		@Override
+		public void done(byte[] data, ParseException e) {
+			Bitmap thumbnail = BitmapFactory.decodeByteArray(data, 0, data.length);
+			if (null != mMarker) {
+				mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(thumbnail));
+			}
+		}
 	}
 }
