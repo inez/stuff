@@ -299,27 +299,4 @@ public class AddFragment extends Fragment {
 
 }
 
-class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    ImageView ivImage;
 
-    public DownloadImageTask(ImageView ivImage) {
-        this.ivImage = ivImage;
-    }
-
-    protected Bitmap doInBackground(String... urls) {
-        String urldisplay = urls[0];
-        Bitmap bitmap = null;
-        try {
-            InputStream in = new java.net.URL(urldisplay).openStream();
-            bitmap = BitmapFactory.decodeStream(in);
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    protected void onPostExecute(Bitmap result) {
-        ivImage.setImageBitmap(result);
-    }
-}
