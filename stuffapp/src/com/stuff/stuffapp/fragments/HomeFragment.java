@@ -22,7 +22,7 @@ public class HomeFragment extends Fragment {
 	//TODO: SJ Clean this up. 
 	public interface OnItemClickedListener {
         public void onItemClicked(Item item);
-        public void onMessageCompose(Conversation conversation);
+        public void onMessageCompose(Conversation conversation,Item item);
     }
 	
 	private static String TAG = "HomeFragment";

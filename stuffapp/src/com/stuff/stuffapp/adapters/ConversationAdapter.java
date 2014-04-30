@@ -40,6 +40,15 @@ public class ConversationAdapter extends BaseAdapter{
 		 ParseQuery<ConversationReply> query = null;
          //This should never be null?
          if(c != null) {
+        	 
+        	 if(c.getObjectId() == null) {
+        		 try {
+					c.fetchIfNeeded();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	 }
          	
          	query = new ParseQuery<ConversationReply>(ConversationReply.class);
          	query.whereEqualTo(ConversationReply.ATTR_CONVERSATION, c);
@@ -48,15 +57,8 @@ public class ConversationAdapter extends BaseAdapter{
          	//something is broken handle this case. 
          }
          
-         //query.findInBackground(new FindCallbackImpl(this));
-         try {
-			conversationReplies = query.find();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-                              		
-	}
+         query.findInBackground(new FindCallbackImpl(this));
+	} 
 	
 	
 	@Override
