@@ -3,10 +3,12 @@ package com.stuff.stuffapp.fragments;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,12 @@ public class SearchFragment extends Fragment {
 
 	// END BUG FIX
 
+	// listener interface for parent activity
+	public interface OnSearchViewChangedListener {
+	    public void onChangeView(int position);
+	}
+	private OnSearchViewChangedListener mToggleListener;
+	
 	private SearchListFragment searchListFragment;
 
 	private SearchMapFragment searchMapFragment;
@@ -95,6 +103,18 @@ public class SearchFragment extends Fragment {
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+	    Log.d(TAG, "onAttach");
+	    super.onAttach(activity);
+
+	    if ( activity instanceof OnSearchViewChangedListener ) {
+	        mToggleListener = (OnSearchViewChangedListener) activity;
+	    }
+	    else
+	        throw new ClassCastException(activity.toString() + " must implement SearchFragment.OnToggleSearchViewListener");
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
 		view = inflater.inflate(R.layout.fragment_search, container, false);
@@ -105,6 +125,19 @@ public class SearchFragment extends Fragment {
 		vpResultFragments = (CustomViewPager) view.findViewById(R.id.vpResultFragments);
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
 		vpResultFragments.setAdapter(adapter);
+		vpResultFragments.setOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                Log.i(TAG, "CustomViewPager.onPageSelected: " + position);
+                mToggleListener.onChangeView(position);
+            }
+            
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
 
 		if (searchListFragment == null) {
 			searchListFragment = SearchListFragment.newInstance();
@@ -115,6 +148,15 @@ public class SearchFragment extends Fragment {
 
 		return view;
 	}
+
+    /**
+     * Sets the currently selected view in the vpResultFragments view pager.
+     * 
+     * @param position the numerical item to send to the PagerAdapter
+     */
+    public void changeSearchView(int position) {
+        vpResultFragments.setCurrentItem(position, true);
+    }
 
 	private class ResultFragmentsPagerAdapter extends FragmentPagerAdapter {
 

@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,11 +45,11 @@ public class SearchMapFragment extends Fragment {
 
 	// for Google Maps info window
 	private LayoutInflater mInflater;
-	private Map<Item, Bitmap> mThumbnails; 
+	private Map<Item, Bitmap> mThumbnails;
 
-    // for map info window
-    private Item pendingItem;
-    private Marker markerShowingInfoWindow;
+	// for map info window
+	private Item pendingItem;
+	private Marker markerShowingInfoWindow;
 
 	// BEGIN BUG FIX for fragment within fragment
 	// http://stackoverflow.com/questions/14929907/causing-a-java-illegalstateexception-error-no-activity-only-when-navigating-to
@@ -102,7 +103,8 @@ public class SearchMapFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
 
 		mInflater = inflater;
-		if ( null == mThumbnails ) mThumbnails = new HashMap<Item, Bitmap>();
+		if (null == mThumbnails)
+			mThumbnails = new HashMap<Item, Bitmap>();
 
 		view = inflater.inflate(R.layout.fragment_map_search, container, false);
 		searchSlidingLayout = (SlidingUpPanelLayout) view.findViewById(R.id.searchSlidingLayout);
@@ -123,13 +125,13 @@ public class SearchMapFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-	    Log.d(TAG, "onResume");
-	    super.onResume();
+		Log.d(TAG, "onResume");
+		super.onResume();
 
-	    GoogleMap map = mapFragment.getMap();
-	    if ( null != map ) {
-	        map.setInfoWindowAdapter(new ItemInfoAdapter(mInflater));
-	    }
+		GoogleMap map = mapFragment.getMap();
+		if (null != map) {
+			map.setInfoWindowAdapter(new ItemInfoAdapter(mInflater));
+		}
 	}
 
 	private void hideSlidingPanel() {
@@ -155,23 +157,25 @@ public class SearchMapFragment extends Fragment {
 			if (item.getLocation() != null) {
 				currentResults.add(item);
 				// asynchronously load thumbnail images and cache them
-				// TODO: clear hashmap intelligently to avoid large memory footprint
-				if ( !mThumbnails.containsKey(item) ) {
-				    item.getPhotoFile100().getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] data, ParseException e) {
-                            if ( null != data ) {
-                                mThumbnails.put(item, BitmapFactory.decodeByteArray(data, 0, data.length));
-                                // refresh marker's info window if it waited for image to load
-                                if ( null != pendingItem && item == pendingItem ) {
-                                    Log.d(TAG, "Refreshing marker for pending item");
-                                    pendingItem = null;
-                                    if ( null != markerShowingInfoWindow && markerShowingInfoWindow.isInfoWindowShown() )
-                                        markerShowingInfoWindow.showInfoWindow();
-                                }
-                            }
-                        }
-                    });
+				// TODO: clear hashmap intelligently to avoid large memory
+				// footprint
+				if (!mThumbnails.containsKey(item)) {
+					item.getPhotoFile100().getDataInBackground(new GetDataCallback() {
+						@Override
+						public void done(byte[] data, ParseException e) {
+							if (null != data) {
+								mThumbnails.put(item, BitmapFactory.decodeByteArray(data, 0, data.length));
+								// refresh marker's info window if it waited for
+								// image to load
+								if (null != pendingItem && item == pendingItem) {
+									Log.d(TAG, "Refreshing marker for pending item");
+									pendingItem = null;
+									if (null != markerShowingInfoWindow && markerShowingInfoWindow.isInfoWindowShown())
+										markerShowingInfoWindow.showInfoWindow();
+								}
+							}
+						}
+					});
 				}
 			}
 		}
@@ -182,62 +186,65 @@ public class SearchMapFragment extends Fragment {
 		}
 		markers.clear();
 
-		if (currentResults.size() == 0) {
-			Log.d(TAG, "Do somethings for no results");
-		}
-
-		// Create new markers and bounds
-		LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-		for (Item item : currentResults) {
-			Marker marker = mapFragment.getMap().addMarker(
-					new MarkerOptions().position(
-							new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(
-							item.getName()));
-
-			// asynchronously load the item's thumbnail image and set icon when
-			// loaded -- temporarily disabled
-			//item.getPhotoFile100().getDataInBackground(new MarkerGetDataCallback(marker));
-
-			markers.add(marker);
-			boundsBuilder.include(marker.getPosition());
-		}
-
-		int padding = 250; // offset from edges of the map in pixels
-		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), padding);
-		mapFragment.getMap().animateCamera(cu);
-
 		vpResults = (ViewPager) view.findViewById(R.id.vpResults);
 		adapter = new ResultFragmentsPagerAdapter(getChildFragmentManager());
 		vpResults.setAdapter(adapter);
 
 		adapter.notifyDataSetChanged();
+		
+		if (currentResults.size() == 0) {
+			hideSlidingPanel();
+			Toast.makeText(getActivity(), "No results", Toast.LENGTH_LONG).show();
+		} else {
+			showSlidingPanel();
+			// Create new markers and bounds
+			LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+			for (Item item : currentResults) {
+				Marker marker = mapFragment.getMap().addMarker(
+						new MarkerOptions().position(
+								new LatLng(item.getLocation().getLatitude(), item.getLocation().getLongitude())).title(
+								item.getName()));
 
-		vpResults.setOnPageChangeListener(new OnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				markers.get(position).showInfoWindow();
-				CameraUpdate cu = CameraUpdateFactory.newLatLng(markers.get(position).getPosition());
-				mapFragment.getMap().animateCamera(cu);
+				// asynchronously load the item's thumbnail image and set icon
+				// when
+				// loaded -- temporarily disabled
+				// item.getPhotoFile100().getDataInBackground(new
+				// MarkerGetDataCallback(marker));
+
+				markers.add(marker);
+				boundsBuilder.include(marker.getPosition());
 			}
 
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-			}
+			int padding = 250; // offset from edges of the map in pixels
+			CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), padding);
+			mapFragment.getMap().animateCamera(cu);
+			vpResults.setOnPageChangeListener(new OnPageChangeListener() {
+				@Override
+				public void onPageSelected(int position) {
+					markers.get(position).showInfoWindow();
+					CameraUpdate cu = CameraUpdateFactory.newLatLng(markers.get(position).getPosition());
+					mapFragment.getMap().animateCamera(cu);
+				}
 
-			@Override
-			public void onPageScrollStateChanged(int state) {
-			}
-		});
+				@Override
+				public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				}
 
-		mapFragment.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
-			@Override
-			public boolean onMarkerClick(Marker marker) {
-				vpResults.setCurrentItem(markers.indexOf(marker));
-				return false;
-			}
-		});
+				@Override
+				public void onPageScrollStateChanged(int state) {
+				}
+			});
 
-		markers.get(vpResults.getCurrentItem()).showInfoWindow();
+			mapFragment.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					vpResults.setCurrentItem(markers.indexOf(marker));
+					return false;
+				}
+			});
+
+			markers.get(vpResults.getCurrentItem()).showInfoWindow();
+		}
 	}
 
 	// extends FragmentStatePagerAdapter instead of FragmentPagerAdapter to
@@ -273,37 +280,36 @@ public class SearchMapFragment extends Fragment {
 	}
 
 	private class ItemInfoAdapter implements InfoWindowAdapter {
-	    LayoutInflater inflater;
-	    
-	    ItemInfoAdapter(LayoutInflater inflater) {
-	        this.inflater = inflater;
-	    }
+		LayoutInflater inflater;
 
-        @Override
-        public View getInfoContents(Marker marker) {
-            Log.d(TAG, "ItemInfoAdapter.getInfoContents");
-            markerShowingInfoWindow = marker;
+		ItemInfoAdapter(LayoutInflater inflater) {
+			this.inflater = inflater;
+		}
 
-            Item item = currentResults.get(vpResults.getCurrentItem());
+		@Override
+		public View getInfoContents(Marker marker) {
+			Log.d(TAG, "ItemInfoAdapter.getInfoContents");
+			markerShowingInfoWindow = marker;
 
-            View infoWindow = inflater.inflate(R.layout.item_info_window, null);
+			Item item = currentResults.get(vpResults.getCurrentItem());
 
-            if ( mThumbnails.containsKey(item) ) {
-                ImageView ivItem = (ImageView) infoWindow.findViewById(R.id.ivInfoWindowItem);
-                ivItem.setImageBitmap(mThumbnails.get(item));
-            }
-            else {
-                Log.w(TAG, "Thumbnail not available");
-                pendingItem = item;
-            }
-            
-            return infoWindow;
-        }
+			View infoWindow = inflater.inflate(R.layout.item_info_window, null);
 
-        @Override
-        public View getInfoWindow(Marker marker) {
-            return null;
-        }
+			if (mThumbnails.containsKey(item)) {
+				ImageView ivItem = (ImageView) infoWindow.findViewById(R.id.ivInfoWindowItem);
+				ivItem.setImageBitmap(mThumbnails.get(item));
+			} else {
+				Log.w(TAG, "Thumbnail not available");
+				pendingItem = item;
+			}
+
+			return infoWindow;
+		}
+
+		@Override
+		public View getInfoWindow(Marker marker) {
+			return null;
+		}
 	}
 
 	/* currently unused */
