@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -15,6 +16,8 @@ import com.stuff.stuffapp.adapters.ConversationAdapter;
 import com.stuff.stuffapp.helpers.ConversationListener;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
+import com.stuff.stuffapp.models.Item;
+
 import android.os.Bundle;
 
 import android.support.v4.app.ListFragment;
@@ -30,6 +33,7 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 
 	private static final String TAG = "ConversationsFragment";
 	private static final String KEY_CONVERSATION = "conversation";	
+	private static final String KEY_ITEM="item";
 	private static final String  KEY_DEVICE_TYPE = "deviceType";
 		private static final String  VALUE_ANDROID = "android";
 	private static final String KEY_ALERT = "alert";
@@ -37,14 +41,16 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 	 
 	private Button btSendMessage = null;
 	private Conversation conversation = null;
+	private Item item = null;
 	ConversationAdapter adapter;
 	EditText text;	
 	static String sender;
 
-	public static ConversationsFragment newInstance(Conversation conversation) {
+	public static ConversationsFragment newInstance(Conversation conversation,Item item) {
 		ConversationsFragment fragment = new ConversationsFragment();
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(KEY_CONVERSATION, conversation);
+		bundle.putSerializable(KEY_ITEM, item);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
@@ -54,13 +60,15 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		conversation =  (Conversation)args.getSerializable(KEY_CONVERSATION);
+		item = (Item)args.getSerializable(KEY_ITEM);
+		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inf, ViewGroup parent,
 			Bundle savedInstanceState) {
 
-		View view = inf.inflate(R.layout.converesation, parent,
+		View view = inf.inflate(R.layout.conversation, parent,
 				false);
 
 		
@@ -77,9 +85,24 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 			}
 		});
 		
-	
-		adapter = new ConversationAdapter(getActivity(),conversation);
-		setListAdapter(adapter);	
+        if(conversation !=null ) 
+        {
+			adapter = new ConversationAdapter(getActivity(),conversation);
+			setListAdapter(adapter);	
+			
+        }else {
+
+				// We dont have any conversation about this item between
+				// these people. create one.
+
+				conversation = new Conversation();
+				conversation.setItem(ParseObject.createWithoutData(Item.class, item.getObjectId()));
+				conversation.setUserOne(ParseUser.getCurrentUser());
+				conversation.setUserTwo(ParseObject.createWithoutData(ParseUser.class, item.getOwner()
+						.getObjectId()));
+				conversation.saveInBackground(new SaveCallbackImpl(conversation));
+
+        }
 
 		return view;
 		
@@ -114,7 +137,10 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		query.whereEqualTo(KEY_DEVICE_TYPE, VALUE_ANDROID);		
 		JSONObject data = null;
 		try {
-			data = new JSONObject("{'"+KEY_ALERT+"': '"+text.getText().toString()+"','"+KEY_CONVERSATION_ID+"':'"+conversation.getObjectId()+"'}");
+			//data = new JSONObject("{'"+KEY_ALERT+"': '"+text.getText().toString()+"','"+KEY_CONVERSATION_ID+"':'"+conversation.getObjectId()+"'}");
+			data = new JSONObject();
+			data.put(KEY_ALERT, text.getText().toString());
+			data.put(KEY_CONVERSATION_ID, conversation.getObjectId());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -189,6 +215,30 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 	@Override
 	public void conversationAvailable(Conversation conversation) {
 		
+		
+	}
+	
+	private class SaveCallbackImpl extends SaveCallback {
+		
+		Conversation conversation;
+		public SaveCallbackImpl(Conversation conversation){
+			this.conversation = conversation;
+		}
+		@Override
+		public void done(ParseException ex) {
+			// TODO Auto-generated method stub
+			if (ex != null) {
+				Log.d(TAG, "Error saving conversation. ex :" + ex);
+				ex.printStackTrace();
+			}
+			else {
+				adapter = new ConversationAdapter(getActivity(),conversation);
+				setListAdapter(adapter);	
+			}
+		
+
+			
+		}
 		
 	}
 

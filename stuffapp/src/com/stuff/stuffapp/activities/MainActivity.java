@@ -116,9 +116,11 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 				}
 				// We could display the conversations fragment.
 				// For now just displaying message fragment.
-				displayFragment(Ids.CONVERSATIONS, conversation);
+
+				displayFragment(Ids.CONVERSATIONS, conversation,conversation.getItem());
 			}
 			else {
+
 				displayFragment(Ids.HOME);
 			}
 		}
@@ -262,10 +264,10 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	}
 
 	private void displayFragment(int fragmentId) {
-		displayFragment(fragmentId, null);
+		displayFragment(fragmentId, null,null);
 	}
 
-	private void displayFragment(int fragmentId, Conversation conversation) {
+	private void displayFragment(int fragmentId, Conversation conversation,Item item) {
 		Log.d(TAG, "displayFragment: " + String.valueOf(fragmentId));
 
 		Fragment fragment = fragments.get(fragmentId);
@@ -289,7 +291,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 				break;
 			case Ids.CONVERSATIONS:
 				// Load the conversation based on the query.
-				fragment = ConversationsFragment.newInstance(conversation);
+				fragment = ConversationsFragment.newInstance(conversation,item);
 				break;
 			}
 			fragments.append(fragmentId, fragment);
@@ -383,7 +385,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	}
 
 	@Override
-	public void onMessageCompose(Conversation conversation) {
+	public void onMessageCompose(Conversation conversation, Item item) {
 		Log.d(TAG, "onMessageCompose: " + conversation);
 
 		// FragmentTransaction ft =
@@ -394,7 +396,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		// ft.commit();
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, ConversationsFragment.newInstance(conversation));
+		ft.replace(R.id.flContainer, ConversationsFragment.newInstance(conversation,item));
 		ft.addToBackStack("messageCompose");
 		ft.commit();
 

@@ -5,22 +5,30 @@
 
     <com.stuff.stuffapp.RoundedImageView
         android:id="@+id/roundedImageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="21dp"
-        android:layout_marginTop="21dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_profile" />
 
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/roundedImageView1"
+        android:layout_toLeftOf="@+id/roundedImageView1"
+        android:layout_alignLeft="@+id/roundedImageView1"
+        android:background="@drawable/com_facebook_button_blue"
+         >
+         
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/roundedImageView1"
-        android:layout_toRightOf="@+id/roundedImageView1"
         android:text="Medium Text"
+        android:layout_alignParentRight="true"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
 
 </RelativeLayout>

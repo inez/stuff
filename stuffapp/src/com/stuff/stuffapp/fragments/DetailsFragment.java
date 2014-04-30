@@ -140,9 +140,9 @@ public class DetailsFragment extends Fragment implements ConversationListener {
 		// btContactOwner
 		//
 		Button btContactOwner = (Button) view.findViewById(R.id.btContactOwner);
-		if (item.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-			btContactOwner.setVisibility(View.INVISIBLE);
-		} else {
+//		if (item.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+//			btContactOwner.setVisibility(View.INVISIBLE);
+//		} else {
 			btContactOwner.setVisibility(View.VISIBLE);
 			btContactOwner.setOnClickListener(new OnClickListener() {
 				@Override
@@ -150,35 +150,12 @@ public class DetailsFragment extends Fragment implements ConversationListener {
 					// Toast.makeText(getActivity(), "Contact owner clicked",
 					// Toast.LENGTH_LONG).show();
 
-					if (conversation == null) {
-						// We dont have any conversation about this item between
-						// these people. create one.
-
-						conversation = new Conversation();
-						conversation.setItem(ParseObject.createWithoutData(Item.class, item.getObjectId()));
-						conversation.setUserOne(ParseUser.getCurrentUser());
-						conversation.setUserTwo(ParseObject.createWithoutData(ParseUser.class, item.getOwner()
-								.getObjectId()));
-						conversation.saveInBackground(new SaveCallback() {
-
-							@Override
-							public void done(ParseException ex) {
-
-								if (ex != null) {
-									Log.d(TAG, "Error saving conversation. ex :" + ex);
-									ex.printStackTrace();
-								}
-
-							}
-						});
-
-					}
-
-					((OnItemClickedListener) getActivity()).onMessageCompose(conversation);
+                   
+					((OnItemClickedListener) getActivity()).onMessageCompose(conversation,item);
 				}
 
 			});
-		}
+//		}
 		// Start the find conversation query
 		Helper.findConversation(item, this);
 
@@ -191,5 +168,7 @@ public class DetailsFragment extends Fragment implements ConversationListener {
 		this.conversation = conversation;
 
 	}
+	
+
 
 }
