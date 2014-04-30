@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -79,13 +80,15 @@ public class SearchFragment extends Fragment {
 	
 	public void search(String query) {
 	    Log.d(TAG, "Issuing search for '" + query + "'");
-		ParseQuery<Item> searchQuery = new ParseQuery<Item>(Item.class).whereContains("searchable",
+        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.please_wait), true);
+	    ParseQuery<Item> searchQuery = new ParseQuery<Item>(Item.class).whereContains("searchable",
 				query.trim().toLowerCase()).whereNear("location",
 				((MainActivity) SearchFragment.this.getActivity()).getLastKnownLocation());
 		searchQuery.include("owner");
 		searchQuery.findInBackground(new FindCallback<Item>() {
 			@Override
 			public void done(List<Item> objects, ParseException e) {
+			    progressDialog.dismiss();
 				if (objects != null) {
 					Log.d(TAG, "Got " + objects.size() + " results");
 					if ( searchListFragment != null ) {
