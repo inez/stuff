@@ -4,9 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
-import android.app.ActionBar.LayoutParams;
 import android.content.Context;
-import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -40,10 +38,10 @@ import com.stuff.stuffapp.fragments.ConversationsFragment;
 import com.stuff.stuffapp.fragments.DetailsFragment;
 import com.stuff.stuffapp.fragments.HomeFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
-import com.stuff.stuffapp.fragments.SearchFragment.OnSearchViewChangedListener;
 import com.stuff.stuffapp.fragments.MessagesFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
 import com.stuff.stuffapp.fragments.SearchFragment;
+import com.stuff.stuffapp.fragments.SearchFragment.OnSearchViewChangedListener;
 import com.stuff.stuffapp.helpers.Ids;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.Item;
@@ -86,16 +84,13 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new LocationListener() {
 			@Override
-			public void onStatusChanged(String provider, int status, Bundle extras) {
-			}
+			public void onStatusChanged(String provider, int status, Bundle extras) {}
 
 			@Override
-			public void onProviderEnabled(String provider) {
-			}
+			public void onProviderEnabled(String provider) {}
 
 			@Override
-			public void onProviderDisabled(String provider) {
-			}
+			public void onProviderDisabled(String provider) {}
 
 			@Override
 			public void onLocationChanged(Location location) {
@@ -122,12 +117,11 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 				// We could display the conversations fragment.
 				// For now just displaying message fragment.
 				displayFragment(Ids.CONVERSATIONS, conversation);
-			} else {
+			}
+			else {
 				displayFragment(Ids.HOME);
 			}
-
 		}
-
 	}
 
 	/**
@@ -197,9 +191,9 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		itemSearch = (MenuItem) menu.findItem(R.id.itemSearch);
 		final SearchView searchView = (SearchView) itemSearch.getActionView();
 		searchView.setIconifiedByDefault(false);
-		Point p = new Point();
-        getWindowManager().getDefaultDisplay().getSize(p);
-        LayoutParams params = new LayoutParams(p.x, LayoutParams.MATCH_PARENT);
+		//Point p = new Point();
+        //getWindowManager().getDefaultDisplay().getSize(p);
+        //LayoutParams params = new LayoutParams(p.x, LayoutParams.MATCH_PARENT);
         //searchView.setLayoutParams(params);
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 			@Override
@@ -229,6 +223,11 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	        if ( null != searchFrag ) {
 	            int newPage = (mCurrentSearchViewId + 1) % 2;
 	            searchFrag.changeSearchView(newPage);
+	            // TODO: don't hard-code this
+	            if ( newPage == 0 )
+	                miSearchToggle.setIcon(R.drawable.ic_map_view);
+	            else
+	                miSearchToggle.setIcon(R.drawable.ic_list_view);
 	        }
 	    }
 	    return true;
