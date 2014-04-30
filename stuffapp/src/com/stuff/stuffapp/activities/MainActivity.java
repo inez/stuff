@@ -190,6 +190,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		
 		itemSearch = (MenuItem) menu.findItem(R.id.itemSearch);
 		final SearchView searchView = (SearchView) itemSearch.getActionView();
+		searchView.setQueryHint("Enter keywords");
 		searchView.setIconifiedByDefault(false);
 		//Point p = new Point();
         //getWindowManager().getDefaultDisplay().getSize(p);
@@ -223,11 +224,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	        if ( null != searchFrag ) {
 	            int newPage = (mCurrentSearchViewId + 1) % 2;
 	            searchFrag.changeSearchView(newPage);
-	            // TODO: don't hard-code this
-	            if ( newPage == 0 )
-	                miSearchToggle.setIcon(R.drawable.ic_map_view);
-	            else
-	                miSearchToggle.setIcon(R.drawable.ic_list_view);
+	            changeSearchViewIcon(newPage);
 	        }
 	    }
 	    return true;
@@ -487,5 +484,19 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
     @Override
     public void onChangeView(int position) {
         mCurrentSearchViewId = position;
+        changeSearchViewIcon(mCurrentSearchViewId);
+    }
+
+    /**
+     * Sets the appropriate icon for the search toggle button.
+     * For list view, the icon should be a map; for map view, the icon should be a list.
+     */
+    private void changeSearchViewIcon(int position) {
+        if ( null != miSearchToggle ) {
+            if ( position == 0 )
+                miSearchToggle.setIcon(R.drawable.ic_map_view);
+            else
+                miSearchToggle.setIcon(R.drawable.ic_list_view);
+        }
     }
 }
