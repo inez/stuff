@@ -68,7 +68,7 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 	public View onCreateView(LayoutInflater inf, ViewGroup parent,
 			Bundle savedInstanceState) {
 
-		View view = inf.inflate(R.layout.converesation, parent,
+		View view = inf.inflate(R.layout.conversation, parent,
 				false);
 
 		
