@@ -39,6 +39,7 @@ import com.stuff.stuffapp.fragments.ConversationsFragment;
 import com.stuff.stuffapp.fragments.DetailsFragment;
 import com.stuff.stuffapp.fragments.HomeFragment;
 import com.stuff.stuffapp.fragments.HomeFragment.OnItemClickedListener;
+import com.stuff.stuffapp.fragments.SearchFragment.OnSearchViewChangedListener;
 import com.stuff.stuffapp.fragments.MessagesFragment;
 import com.stuff.stuffapp.fragments.ProfileFragment;
 import com.stuff.stuffapp.fragments.SearchFragment;
@@ -46,22 +47,20 @@ import com.stuff.stuffapp.helpers.Ids;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.Item;
 
-public class MainActivity extends FragmentActivity implements OnItemClickedListener, OnItemAddedListener {
+public class MainActivity extends FragmentActivity implements OnItemClickedListener, OnItemAddedListener, OnSearchViewChangedListener {
 
 	private static final String TAG = "MainActivity";
 
 	private static final int FIVE_MINUTES = 10 * 60 * 1000;
-
 	private static final int LOCATION_UPDATE_INTERVAL = FIVE_MINUTES;
 
 	private SparseArray<Fragment> fragments;
 
 	private int currentFragmentId;
+	private int mCurrentSearchViewId;
 
 	private LocationManager locationManager;
-
 	private LocationListener locationListener;
-
 	private Location lastKnownLocation;
 
 	@Override
@@ -181,6 +180,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	}
 	
 	private MenuItem itemSearch;
+	private MenuItem miSearchToggle;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -193,7 +193,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		Point p = new Point();
         getWindowManager().getDefaultDisplay().getSize(p);
         LayoutParams params = new LayoutParams(p.x, LayoutParams.MATCH_PARENT);
-        searchView.setLayoutParams(params);
+        //searchView.setLayoutParams(params);
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
@@ -208,7 +208,23 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 				return false;
 			}
 		});
+
+		miSearchToggle = (MenuItem) menu.findItem(R.id.miSearchToggle);
+
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    if ( item == miSearchToggle ) {
+	        // toggle the currently selected search view on the underlying search fragment
+	        SearchFragment searchFrag = (SearchFragment) fragments.get(Ids.SEARCH); 
+	        if ( null != searchFrag ) {
+	            int newPage = (mCurrentSearchViewId + 1) % 2;
+	            searchFrag.changeSearchView(newPage);
+	        }
+	    }
+	    return true;
 	}
 
 	public void onMenuItemClick(View view) {
@@ -279,24 +295,26 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		ActionBar ab = getActionBar();
 		ImageView v;
 
-		if(itemSearch != null) {
+		if ( itemSearch != null ) {
 			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			miSearchToggle.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 			ab.setDisplayShowHomeEnabled(true);
 		}
 		
-		v = (ImageView ) findViewById(R.id.ivHome);
+		v = (ImageView) findViewById(R.id.ivHome);
 		if ( fragmentId == Ids.HOME ) {
 			v.setImageResource(R.drawable.ic_home_active);
 			ab.setLogo(R.drawable.stuff);
-			ab.setTitle("");;
+			ab.setTitle("");
 		} else {
 			v.setImageResource(R.drawable.ic_home);
 		}
 
-		v = (ImageView ) findViewById(R.id.ivSearch);
+		v = (ImageView) findViewById(R.id.ivSearch);
 		if ( fragmentId == Ids.SEARCH ) {
 			v.setImageResource(R.drawable.ic_search_active);
-			if(itemSearch != null) {
+			if ( itemSearch != null ) {
+                miSearchToggle.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 				itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				ab.setDisplayShowHomeEnabled(false);
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -306,7 +324,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			v.setImageResource(R.drawable.ic_search);
 		}
 
-		v = (ImageView ) findViewById(R.id.ivAdd);
+		v = (ImageView) findViewById(R.id.ivAdd);
 		if ( fragmentId == Ids.ADD ) {
 			v.setImageResource(R.drawable.ic_add_active);
 			ab.setLogo(R.drawable.ic_launcher);
@@ -315,7 +333,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			v.setImageResource(R.drawable.ic_add);
 		}
 
-		v = (ImageView ) findViewById(R.id.ivMessage);
+		v = (ImageView) findViewById(R.id.ivMessage);
 		if ( fragmentId == Ids.MESSAGE ) {
 			v.setImageResource(R.drawable.ic_message_active);
 			ab.setLogo(R.drawable.ic_launcher);
@@ -324,7 +342,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 			v.setImageResource(R.drawable.ic_message);
 		}
 
-		v = (ImageView ) findViewById(R.id.ivProfile);
+		v = (ImageView) findViewById(R.id.ivProfile);
 		if ( fragmentId == Ids.PROFILE ) {
 			v.setImageResource(R.drawable.ic_profile_active);
 			ab.setLogo(R.drawable.ic_launcher);
@@ -332,8 +350,6 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		} else {
 			v.setImageResource(R.drawable.ic_profile);
 		}
-		
-		
 
 		FragmentManager fm = getSupportFragmentManager();
 		fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -458,4 +474,12 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 	public boolean hasLastKnownLocation() {
 		return null != lastKnownLocation;
 	}
+
+	/**
+	 * Tracks changes when underlying search fragment toggles between list and map views
+	 */
+    @Override
+    public void onChangeView(int position) {
+        mCurrentSearchViewId = position;
+    }
 }
