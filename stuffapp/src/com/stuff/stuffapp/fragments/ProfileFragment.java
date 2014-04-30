@@ -4,12 +4,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.SquareImageView;
+import com.stuff.stuffapp.activities.LoginActivity;
 import com.stuff.stuffapp.models.Item;
 
 public class ProfileFragment extends Fragment {
@@ -81,6 +85,21 @@ public class ProfileFragment extends Fragment {
 		}
 
 		tvNameAndLocation.setText(name + (location != null ? "\n" + location : ""));
+
+		//
+		// btnLogOut
+		//
+		Button btnLogOut = (Button) view.findViewById(R.id.btnLogOut);
+		btnLogOut.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // log user out and return to login activity
+                ParseUser.logOut();
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
+            }
+        });
 		
 		return view;
 	}

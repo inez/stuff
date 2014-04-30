@@ -21,5 +21,6 @@
     <string name="search_query_hint">Find Stuff</string>
     <string name="blank_search_screen">Start finding stuff you want or need</string>
     <string name="no_search_results">Sorry, no results found</string>
+    <string name="log_out">Log Out</string>
 	
 </resources>
