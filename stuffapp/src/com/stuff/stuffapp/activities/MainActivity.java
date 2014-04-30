@@ -25,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -137,7 +138,13 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		super.onResume();
 
 		String channelName = ParseUser.getCurrentUser().getUsername();
-		PushService.subscribe(this, channelName, MainActivity.class);
+		if(channelName !=null) {
+			PushService.subscribe(this, channelName, MainActivity.class);
+		}
+		else {
+			Toast.makeText(this, "Unable to subscribe to null channel", Toast.LENGTH_SHORT).show();
+		}
+		
 
 		// select the right location provider
 		// TODO: check for location permissions, handle error case

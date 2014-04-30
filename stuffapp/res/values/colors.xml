@@ -4,14 +4,14 @@
 	<color name="textColor">#FFF</color>
 	<color name="textFieldColor">#000</color>
 	<color name="textShadow">#FFF</color>
-	<color name="listViewBg">#DADFEE</color>
+	<color name="listViewBg">#FFFFFF</color>
 
 	<color name="sendLightColor">#00b0ff</color>
 	<color name="sendMeduimColor">#00b0ff</color>
 	<color name="sendDarkColor">#515F9F</color>
 
-	<color name="barDarkColor">#CECECE</color>
-	<color name="barMeduimColor">#DFDEE0</color>
-	<color name="barLightColor">#F2F2F2</color>
+	<color name="barDarkColor">#222222</color>
+	<color name="barMeduimColor">#222222</color>
+	<color name="barLightColor">#222222</color>
 
 </resources>
