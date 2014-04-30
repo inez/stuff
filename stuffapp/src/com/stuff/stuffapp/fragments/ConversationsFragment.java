@@ -83,6 +83,12 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			ParseUser owner = i.getOwner().fetchIfNeeded();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		imageLoader.displayImage(i.getPhotoFile100().getUrl(),((ImageView)view.findViewById(R.id.ivMessageItemPhoto)));
 		TextView tvMessageItemName = (TextView) view.findViewById(R.id.tvMessageItemName);
 		TextView tvMessageOwner = (TextView) view.findViewById(R.id.tvMessageItemOwner);
