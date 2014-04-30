@@ -3,6 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <LinearLayout
+        android:id="@+id/llEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/ivEmptyBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/empty_box" />
+
+        <TextView
+            android:id="@+id/tvEmptyString"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:text="@string/blank_search_screen" />
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/lvHome"
         android:layout_width="match_parent"

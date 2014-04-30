@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickedListe
 		
 		itemSearch = (MenuItem) menu.findItem(R.id.itemSearch);
 		final SearchView searchView = (SearchView) itemSearch.getActionView();
-		searchView.setQueryHint("Enter keywords");
+        searchView.setQueryHint(getResources().getString(R.string.search_query_hint));
 		searchView.setIconifiedByDefault(false);
 		//Point p = new Point();
         //getWindowManager().getDefaultDisplay().getSize(p);

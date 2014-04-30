@@ -56,6 +56,8 @@ public class SearchListFragment extends Fragment {
 				searchListAdapter = new SearchListAdapter(getActivity(), items);
 			}
 			ListView lvHome = (ListView) view.findViewById(R.id.lvHome);
+			// attach a view that displays when list has no items
+			lvHome.setEmptyView(view.findViewById(R.id.llEmpty));
 			lvHome.setAdapter(searchListAdapter);
     		lvHome.setOnItemClickListener(new OnItemClickListener() {
 				@Override
@@ -69,8 +71,16 @@ public class SearchListFragment extends Fragment {
 		return view;
 	}
 
-	public void displayResults(List<Item> results) {
-		Log.d(TAG, "displayResults, size: " + results.size());
+    public void displayResults(List<Item> results) {
+        Log.d(TAG, "displayResults, size: " + results.size());
+
+        if ( results.size() == 0 ) {
+            TextView tvEmptyString = (TextView) view.findViewById(R.id.tvEmptyString);
+            if ( null != tvEmptyString ) {
+                tvEmptyString.setText(getResources().getString(R.string.no_search_results));
+            }
+        }
+
 		searchListAdapter.clear();
 		searchListAdapter.addAll(results);
 	}
