@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
+import com.stuff.stuffapp.models.Item;
 
 public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 
@@ -83,17 +84,23 @@ public class ConversationListAdapter extends ParseQueryAdapter<Conversation> {
 		
 		//
 		// ivPhoto
-		//
-		imageLoader.displayImage(conversation.getItem().getPhotoFile100().getUrl(), holder.ivPhoto);
 		
 		//
-		// ivProfile
-		//
-		try {
-    		imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=square", holder.ivProfilePicture);
-        } catch (JSONException e) {
-        	e.printStackTrace();
+		Item i = conversation.getItem();
+
+        if(i !=null) {
+        	imageLoader.displayImage(i.getPhotoFile100().getUrl(), holder.ivPhoto);
+    		
+    		//
+    		// ivProfile
+    		//
+    		try {
+        		imageLoader.displayImage("http://graph.facebook.com/" + profileData.get("facebookId").toString() + "/picture?type=square", holder.ivProfilePicture);
+            } catch (JSONException e) {
+            	e.printStackTrace();
+            }
         }
+		
 		
 		//
 		// tvText

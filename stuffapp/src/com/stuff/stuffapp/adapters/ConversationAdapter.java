@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.FindCallback;
@@ -24,6 +25,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.RoundedImageView;
+import com.stuff.stuffapp.helpers.ConversationReplyListener;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
 
@@ -31,12 +33,14 @@ public class ConversationAdapter extends BaseAdapter{
 	private Context mContext;
     private Map<String,Bitmap> userImageMap;
     List<ConversationReply> conversationReplies;
+    ConversationReplyListener conversationReplyListener;
+    
 	
-	public ConversationAdapter(Context context, final Conversation c) {
+	public ConversationAdapter(Context context, final Conversation c,ConversationReplyListener listener) {
 		super();
 		this.mContext = context;
 		userImageMap = new HashMap<String,Bitmap>();
-		
+		this.conversationReplyListener = listener;
 		 ParseQuery<ConversationReply> query = null;
          //This should never be null?
          if(c != null) {
@@ -56,8 +60,17 @@ public class ConversationAdapter extends BaseAdapter{
          } else  {
          	//something is broken handle this case. 
          }
-         
-         query.findInBackground(new FindCallbackImpl(this));
+         FindCallback callback = new FindCallbackImpl(this);
+         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+         query.findInBackground(callback);
+//         try {
+//        	//query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+//			conversationReplies = query.find();
+//			conversationReplyListener.conversationRepliesAvailable(conversationReplies);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	} 
 	
 	
@@ -196,12 +209,29 @@ private void loadProfileImage(ConversationReply message, ViewHolder holder) {
 			if(ex== null) {
 				adapter.conversationReplies = results;
 				adapter.notifyDataSetChanged();
+				if(adapter.conversationReplyListener != null) {
+					
+					adapter.conversationReplyListener.conversationRepliesAvailable(results);
+				}
+				
 			}
 			else {
 				ex.printStackTrace();
 			}
 			
 		}
+		
+	}
+
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+		if(conversationReplies !=null) {
+			conversationReplies.clear();
+			notifyDataSetChanged();
+			notifyDataSetInvalidated();
+		}
+		
 		
 	}
 }
