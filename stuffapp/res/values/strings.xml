@@ -19,7 +19,7 @@
     <string name="hello">Hello</string>
 	<string name="main_empty_list">There is no recent conversation, write new message to start one.</string>
     <string name="search_query_hint">Find Stuff</string>
-    <string name="blank_search_screen">Start finding stuff you want or need</string>
+    <string name="blank_search_screen">Start finding and sharing stuff in your area</string>
     <string name="no_search_results">Sorry, no results found</string>
     <string name="log_out">Log Out</string>
 	
