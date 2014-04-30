@@ -3,6 +3,7 @@ package com.stuff.stuffapp.fragments;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -14,6 +15,7 @@ import com.parse.SendCallback;
 import com.stuff.stuffapp.R;
 import com.stuff.stuffapp.adapters.ConversationAdapter;
 import com.stuff.stuffapp.helpers.ConversationListener;
+import com.stuff.stuffapp.helpers.Helper;
 import com.stuff.stuffapp.models.Conversation;
 import com.stuff.stuffapp.models.ConversationReply;
 import com.stuff.stuffapp.models.Item;
@@ -28,6 +30,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ConversationsFragment extends ListFragment implements ConversationListener {
 
@@ -71,7 +75,19 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 		View view = inf.inflate(R.layout.conversation, parent,
 				false);
 
-		
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		Item i = null;
+		try {
+			i = item.fetchIfNeeded();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		imageLoader.displayImage(i.getPhotoFile100().getUrl(),((ImageView)view.findViewById(R.id.ivMessageItemPhoto)));
+		TextView tvMessageItemName = (TextView) view.findViewById(R.id.tvMessageItemName);
+		TextView tvMessageOwner = (TextView) view.findViewById(R.id.tvMessageItemOwner);
+		tvMessageItemName.setText(i.getName());
+		tvMessageOwner.setText(Helper.getUserName(i.getOwner()));
 		text = (EditText) view.findViewById(R.id.text);
 		btSendMessage = (Button) view.findViewById(R.id.btSendMessage);
 		//TODO: Set title on the activity bar. 		
