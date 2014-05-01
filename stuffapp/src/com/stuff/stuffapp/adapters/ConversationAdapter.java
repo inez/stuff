@@ -118,7 +118,7 @@ public class ConversationAdapter extends BaseAdapter{
 		if(message.isStatusMessage())
 		{
 			holder.message.setBackgroundDrawable(null);
-			
+			lpRoundedImageView.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 			lpMessage.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 			holder.message.setTextColor(R.color.textFieldColor);
 		}
@@ -131,13 +131,16 @@ public class ConversationAdapter extends BaseAdapter{
 
 				lpRoundedImageView.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
 				lpRoundedImageView.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				lpMessage.removeRule(RelativeLayout.RIGHT_OF);
 				lpMessage.addRule(RelativeLayout.LEFT_OF,R.id.rivMessageProfilePicture);
+				
 			}
 			//If not mine then it is from sender to show their profile picture and align to left
 			else
 			{
 				lpRoundedImageView.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);	
 				lpRoundedImageView.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				lpMessage.removeRule(RelativeLayout.LEFT_OF);
 				lpMessage.addRule(RelativeLayout.RIGHT_OF,R.id.rivMessageProfilePicture);
 			}
 			holder.message.setLayoutParams(lpMessage);
