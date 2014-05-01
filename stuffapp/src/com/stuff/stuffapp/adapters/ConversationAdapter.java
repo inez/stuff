@@ -129,13 +129,14 @@ public class ConversationAdapter extends BaseAdapter{
 			if(message.isMine())
 			{
 
+				lpRoundedImageView.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
 				lpRoundedImageView.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				lpMessage.addRule(RelativeLayout.LEFT_OF,R.id.rivMessageProfilePicture);
 			}
 			//If not mine then it is from sender to show their profile picture and align to left
 			else
 			{
-
+				lpRoundedImageView.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);	
 				lpRoundedImageView.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 				lpMessage.addRule(RelativeLayout.RIGHT_OF,R.id.rivMessageProfilePicture);
 			}
