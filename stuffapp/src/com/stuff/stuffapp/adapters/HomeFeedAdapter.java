@@ -44,7 +44,7 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 
 	@Override
 	public View getItemView(Item item, View v, ViewGroup parent) {
-		ViewHolder holder;
+		final ViewHolder holder;
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.item_list_home, null);
 			holder = new ViewHolder();
@@ -66,7 +66,32 @@ public class HomeFeedAdapter extends ParseQueryAdapter<Item> {
 		//
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		// TODO: Use proper size image
-		imageLoader.displayImage(item.getPhotoFile().getUrl(), holder.ivItemPicture);
+		holder.ivItemPicture.setVisibility(View.INVISIBLE);
+		imageLoader.displayImage(item.getPhotoFile().getUrl(), holder.ivItemPicture, new ImageLoadingListener() {
+			
+			@Override
+			public void onLoadingStarted(String arg0, View arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+				holder.ivItemPicture.setVisibility(View.VISIBLE);
+			}
+			
+			@Override
+			public void onLoadingCancelled(String arg0, View arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		//
 		// tvDistanceAndTime
