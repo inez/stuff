@@ -232,9 +232,10 @@ public class ConversationsFragment extends ListFragment implements ConversationL
 						
 		//Create a new conversation Reply - 
 		ConversationReply reply = new ConversationReply();
-		reply.setConversation(thisConversation);
+
+		reply.setConversation(ParseObject.createWithoutData(Conversation.class, thisConversation.getObjectId()));
 		reply.setText(etMessage.getText().toString());
-		reply.setUser(ParseUser.getCurrentUser());
+		reply.setUser(ParseObject.createWithoutData(ParseUser.class, ParseUser.getCurrentUser().getObjectId()));
 
 		thisConversation.setRecentReply(reply);
 		
